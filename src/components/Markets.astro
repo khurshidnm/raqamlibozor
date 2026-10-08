@@ -9,13 +9,19 @@ interface Props {
 
 const { landing, frames } = Astro.props;
 const { markets, a11y } = landing.data;
+const external = /^https?:\/\//.test(markets.cta.href);
 ---
 
 <section class="markets" id="bozorlar">
   <header class="markets__head">
     <h2 class="markets__title">{markets.title}</h2>
     {markets.cta.href && (
-      <a class="btn-sm" href={markets.cta.href}>
+      <a
+        class="btn-sm"
+        href={markets.cta.href}
+        target={external ? '_blank' : undefined}
+        rel={external ? 'noopener' : undefined}
+      >
         {markets.cta.label}
       </a>
     )}

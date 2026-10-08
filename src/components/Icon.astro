@@ -1,0 +1,21 @@
+---
+import { icons, type IconName } from './icons';
+
+interface Props {
+  name: IconName;
+  class?: string;
+  size?: number;
+}
+
+const { name, class: className, size } = Astro.props;
+---
+
+<svg
+  class:list={['icon', className]}
+  viewBox="0 0 24 24"
+  width={size}
+  height={size}
+  aria-hidden="true"
+  focusable="false"
+  set:html={icons[name]}
+/>

@@ -1,0 +1,91 @@
+/* ==========================================================================
+   Intro sentence
+   ========================================================================== */
+.intro {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 100px 0 150px;
+}
+.intro__text {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  width: 100%;
+  font-weight: 500;
+  font-size: 48px;
+  line-height: 1.04;
+  letter-spacing: -0.05em;
+  color: #000;
+  text-align: center;
+}
+.intro__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 5px 10px;
+  width: 100%;
+  max-width: 900px;
+}
+.intro .w {
+  display: block;
+}
+.intro .muted {
+  color: rgba(0, 0, 0, 0.5);
+}
+.chip {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px 10px;
+  border-radius: 14px;
+}
+.chip--green {
+  background: rgba(23, 143, 32, 0.25);
+  color: var(--green-700);
+}
+.chip--orange {
+  background: rgba(255, 153, 0, 0.25);
+  color: var(--orange-ink);
+}
+
+@media (scripting: enabled) {
+  .intro .w {
+    opacity: 0;
+    transform: translateY(25px);
+  }
+}
+.intro__text.is-in .w {
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity var(--sp-appear-d) var(--sp-appear) var(--d, 0s),
+    transform var(--sp-appear-d) var(--sp-appear) var(--d, 0s);
+}
+
+@media (max-width: 809.98px) {
+  .intro {
+    padding: 60px 0;
+  }
+  .intro__text {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 11px 10px;
+    font-size: 24px;
+  }
+  .intro__row {
+    display: contents;
+  }
+  .chip {
+    padding: 3px 10px;
+    border-radius: 8px;
+  }
+  .intro .intro__text .w {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}

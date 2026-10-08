@@ -1,0 +1,9 @@
+---
+import NewsListPage from '../../components/NewsListPage.astro';
+import { getLanding, getSettings } from '../../lib/content';
+
+const settings = await getSettings();
+const landing = await getLanding(settings.defaultLocale);
+---
+
+<NewsListPage landing={landing} settings={settings} page={1} />

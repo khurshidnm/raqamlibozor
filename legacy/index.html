@@ -1,0 +1,392 @@
+<!doctype html>
+<html lang="uz">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Raqamli Bozor</title>
+  <meta name="description" content="Har bir rasta, har bir to‘lov va har bir ijara hisobi — bozoringizni boshqarish uchun kerakli ma’lumotlar bir joyda.">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Raqamli Bozor">
+  <meta property="og:description" content="Har bir rasta, har bir to‘lov va har bir ijara hisobi — bozoringizni boshqarish uchun kerakli ma’lumotlar bir joyda.">
+  <meta name="theme-color" content="#178f20">
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+
+  <link rel="preload" href="assets/fonts/gilroy-bold.woff" as="font" type="font/woff" crossorigin>
+  <link rel="preload" href="assets/fonts/gilroy-medium.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/img/hero-basket.png" as="image">
+  <link rel="stylesheet" href="css/style.css">
+  <script>document.documentElement.className += " js";</script>
+</head>
+<body>
+
+<div class="page" id="page">
+
+  <!-- ============ NAVIGATION ============ -->
+  <header class="nav" id="nav">
+    <div class="nav__bar">
+      <a class="nav__logo" href="#bosh-sahifa" aria-label="Raqamli Bozor">
+        <img src="assets/img/logo.svg" width="95" height="33" alt="Raqamli Bozor">
+      </a>
+
+      <nav class="nav__links" aria-label="Asosiy menyu">
+        <a class="roll" href="#bozorlar"><span class="roll__in"><span>Bozorlar</span><span aria-hidden="true">Bozorlar</span></span></a>
+        <a class="roll" href="#imkoniyatlar"><span class="roll__in"><span>Imkoniyatlar</span><span aria-hidden="true">Imkoniyatlar</span></span></a>
+        <a class="roll" href="#yechimlar"><span class="roll__in"><span>Yechimlar</span><span aria-hidden="true">Yechimlar</span></span></a>
+        <a class="roll" href="#joriy-etish"><span class="roll__in"><span>Joriy etish</span><span aria-hidden="true">Joriy etish</span></span></a>
+        <a class="roll" href="#savollar"><span class="roll__in"><span>Savollar</span><span aria-hidden="true">Savollar</span></span></a>
+      </nav>
+
+      <a class="nav__cta" href="#boglanish">
+        <span class="nav__cta-in">
+          <span class="nav__cta-row">
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M7 7h10v10"/></svg>
+            <span>Demo so‘rash</span>
+          </span>
+          <span class="nav__cta-row" aria-hidden="true">
+            <svg class="icon" viewBox="0 0 24 24"><path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5zM16 8 2 22M17.5 15H9"/></svg>
+            <span>Demo so‘rash</span>
+          </span>
+        </span>
+      </a>
+    </div>
+  </header>
+
+  <main class="main">
+
+    <!-- ============ HERO ============ -->
+    <section class="hero" id="bosh-sahifa">
+      <h1 class="hero__title" id="heroTitle"><span class="hero__title-in">Yuqori aniqlikdagi
+sun’iy intellekt</span></h1>
+      <div class="hero__actions">
+        <a class="btn btn--orange" href="#" data-todo="link">Sinab ko’rish</a>
+        <a class="btn btn--green" href="#" data-todo="link">Profilga kirish</a>
+      </div>
+    </section>
+
+    <div class="banner">
+      <div class="banner__bg">
+        <img class="banner__pattern" src="assets/img/hero-pattern.svg" width="2602" height="1514" alt="" aria-hidden="true">
+        <div class="banner__stage" id="heroStage" aria-hidden="true"></div>
+      </div>
+    </div>
+
+    <div class="spacer"></div>
+
+    <!-- ============ INTRO ============ -->
+    <section class="intro" id="haqimizda">
+      <h2 class="intro__text">
+        <span class="intro__row">
+          <span class="w" style="--d:0s">Har bir </span>
+          <span class="chip chip--green"><span class="w" style="--d:.1s">rasta,</span></span>
+          <span class="w" style="--d:.2s">har bir</span>
+          <span class="chip chip--orange"><span class="w" style="--d:.3s">to‘lov</span></span>
+          <span class="w" style="--d:.4s">va har bir</span>
+          <span class="chip chip--green intro__chip-m">ijara hisobi</span>
+        </span>
+        <span class="intro__row">
+          <span class="chip chip--green intro__chip-d"><span class="w" style="--d:0s">ijara hisobi</span></span>
+          <span class="w muted" style="--d:.2s"><b>— </b>bozoringizni boshqarish </span>
+        </span>
+        <span class="intro__row intro__row--last">
+          <span class="w muted" style="--d:0s">uchun kerakli ma’lumotlar<b> bir joyda.</b></span>
+        </span>
+      </h2>
+    </section>
+
+    <!-- ============ FEATURES ============ -->
+    <section class="features" id="imkoniyatlar">
+      <header class="sec-head">
+        <span class="pill">Imkoniyatlar</span>
+        <h2 class="sec-title">Rastalar <br>va to‘lovlar nazorati qilish</h2>
+      </header>
+
+      <div class="features__grid">
+        <!-- 1 -->
+        <article class="fcard appear" data-appear="a">
+          <div class="fcard__visual">
+            <i class="glow glow--1"></i><i class="glow glow--2"></i><i class="glow glow--3"></i>
+            <img class="fcard__dash" src="assets/img/card-dashboard.svg" width="534" height="261" alt="" loading="lazy">
+            <i class="fcard__fade"></i>
+          </div>
+          <h3 class="fcard__label"><span>To‘lovlar va qarzdorlik nazorati</span></h3>
+        </article>
+
+        <!-- 2 -->
+        <article class="fcard fcard--alt appear" data-appear="c">
+          <div class="fcard__visual">
+            <i class="glow glow--1"></i><i class="glow glow--2"></i><i class="glow glow--3"></i>
+            <div class="notif" id="notifStack" aria-hidden="true">
+              <div class="notif__item"><div class="notif__body"><div><strong>To‘lov qabul qilindi</strong><small>Avtoturargoh · Bugun, 10:24</small></div><em>10 000</em></div></div>
+              <div class="notif__item"><div class="notif__body"><div><strong>To‘lov qabul qilindi</strong><small>Supermarket · Bugun, 14:15</small></div><em>45 000</em></div></div>
+              <div class="notif__item"><div class="notif__body"><div><strong>To‘lov qabul qilindi</strong><small>Restoran · Kecha, 20:30</small></div><em>125 000</em></div></div>
+            </div>
+            <i class="fcard__fade"></i>
+          </div>
+          <h3 class="fcard__label fcard__label--wide"><span>Avtoturargoh tushumlari nazorati</span></h3>
+        </article>
+
+        <!-- 3 -->
+        <article class="fcard appear" data-appear="b">
+          <div class="fcard__visual">
+            <i class="glow glow--1"></i><i class="glow glow--2"></i><i class="glow glow--3"></i>
+            <div class="orbit" aria-hidden="true">
+              <div class="orbit__center">
+                <i class="orbit__halo orbit__halo--1"></i>
+                <i class="orbit__halo orbit__halo--2"></i>
+                <i class="orbit__halo orbit__halo--3"></i>
+                <div class="orbit__core">
+                  <svg class="icon" viewBox="0 0 24 24"><path d="m23 7-7 5 7 5zM3 5h11a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2z"/></svg>
+                </div>
+                <div class="orbit__ring orbit__ring--outer"><div class="orbit__pos"><div class="orbit__spin"><div class="orbit__dot">
+                  <svg class="icon icon--scan" viewBox="0 0 24 24"><path d="M9.25 4.75h-.5a4 4 0 0 0-4 4v.5M9.25 19.25h-.5a4 4 0 0 1-4-4v-.5M14.75 4.75h.5a4 4 0 0 1 4 4v.5M14.75 19.25h.5a4 4 0 0 0 4-4v-.5M8.75 12.75s.25 2.5 3.25 2.5 3.25-2.5 3.25-2.5"/><circle cx="10" cy="10" r=".5" fill="currentColor" stroke-width="1"/><circle cx="14" cy="10" r=".5" fill="currentColor" stroke-width="1"/></svg>
+                </div></div></div></div>
+                <div class="orbit__ring orbit__ring--mid"><div class="orbit__pos"><div class="orbit__spin"><div class="orbit__dot">
+                  <svg class="icon icon--24" viewBox="0 0 24 24"><g transform="translate(1.719 2)"><path d="M 7.281 0 C 8.01 0.146 9.76 1.031 10.186 3.393 M 13.186 0 C 12.96 0.045 12.634 0.162 12.281 0.372 M 1.243 4.731 C -0.557 8.583 -1.096 16.148 4.498 19.599 C 5.569 20.259 6.918 20.125 8.002 19.486 L 8.051 19.457 C 9.28 18.733 10.804 18.733 12.033 19.457 C 13.141 20.11 14.528 20.213 15.602 19.505 C 21.188 15.819 20.937 8.503 19.289 4.749 C 18.41 2.747 16.069 2.346 13.967 2.947 C 11.558 3.635 9.004 3.635 6.595 2.947 C 4.493 2.346 2.169 2.75 1.243 4.731 Z"/></g></svg>
+                </div></div></div></div>
+                <div class="orbit__ring orbit__ring--inner"><div class="orbit__pos"><div class="orbit__spin"><div class="orbit__dot">
+                  <svg class="icon icon--24" viewBox="0 0 24 24"><g transform="translate(2 3.222)"><path d="M 3 15.278 L 3 17.778 L 6 17.778 L 6 15.278 M 14 15.278 L 14 17.778 L 17 17.778 L 17 15.278 M 18 6.278 L 20 6.278 M 2 6.278 L 0 6.278 M 16 11.278 L 15.99 11.278 M 4 11.278 L 3.99 11.278 M 11 11.278 L 9 11.278 M 2 6.778 L 4 0.278 L 4.685 0.221 C 8.222 -0.074 11.778 -0.074 15.315 0.221 L 16 0.278 L 18 6.778 M 1.812 7.278 C 1.338 7.278 0.931 7.611 0.843 8.078 C 0.717 8.75 0.551 9.692 0.5 10.278 C 0.395 11.489 0.67 13.398 0.853 14.473 C 0.933 14.942 1.34 15.278 1.816 15.278 L 18.184 15.278 C 18.66 15.278 19.067 14.942 19.147 14.473 C 19.329 13.398 19.605 11.489 19.5 10.278 C 19.449 9.692 19.283 8.75 19.157 8.078 C 19.069 7.611 18.662 7.278 18.188 7.278 Z"/></g></svg>
+                </div></div></div></div>
+              </div>
+            </div>
+            <i class="fcard__fade"></i>
+          </div>
+          <h3 class="fcard__label"><span>Rastalar bandligi nazorati</span></h3>
+        </article>
+
+        <!-- 4 -->
+        <article class="fcard appear" data-appear="c">
+          <div class="fcard__visual">
+            <i class="glow glow--1"></i><i class="glow glow--2"></i><i class="glow glow--3"></i>
+            <div class="tiles" id="tiles" aria-hidden="true">
+              <div class="tiles__item"><svg class="icon" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zM14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg></div>
+              <div class="tiles__item"><svg class="icon" viewBox="0 0 24 24"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2M9 2h6a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1z"/></svg></div>
+              <div class="tiles__item"><svg class="icon" viewBox="0 0 24 24"><path d="m19 21-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg></div>
+            </div>
+            <i class="fcard__fade"></i>
+          </div>
+          <h3 class="fcard__label"><span>Ijara hujjatlarini avtomatlashtirish</span></h3>
+        </article>
+      </div>
+    </section>
+
+    <!-- ============ SOLUTIONS (sticky stack) ============ -->
+    <section class="solutions" id="yechimlar">
+      <div class="solutions__list" id="stack">
+
+        <article class="scard scard--left scard--1" id="work-1">
+          <div class="scard__text">
+            <div class="scard__head">
+              <h2 class="scard__title">Har bir rasta — nazoratda</h2>
+              <p class="scard__desc">Qaysi rastalar bandligini, patta to‘lovlari holatini va ijara qarzdorligini bir joyda kuzating.</p>
+            </div>
+            <ul class="scard__list">
+              <li>Band va bo‘sh rastalar</li>
+              <li>Patta to‘lovlari holati</li>
+              <li>Ijara va qarzdorlik hisobi</li>
+            </ul>
+            <a class="btn-sm" href="#boglanish">Demo so‘rash</a>
+          </div>
+          <i class="scard__blur"></i>
+          <img class="scard__img" src="assets/img/solution-stalls.png" width="3387" height="1866" alt="" loading="lazy">
+        </article>
+
+        <article class="scard scard--right scard--2" id="work-2">
+          <div class="scard__text">
+            <div class="scard__head">
+              <h2 class="scard__title">Avtoturargoh — aniq hisobda</h2>
+              <p class="scard__desc">Avtomobillarning kirishi va chiqishini qayd eting. To‘lovlar holatini kuzating va avtoturargoh tushumlari bo‘yicha hisobot oling.</p>
+            </div>
+            <ul class="scard__list">
+              <li>Kirish va chiqish qaydi</li>
+              <li>To‘lovlar monitoringi</li>
+              <li>Tushumlar hisoboti</li>
+            </ul>
+            <a class="btn-sm" href="#boglanish">Demo so‘rash</a>
+          </div>
+          <img class="scard__img" src="assets/img/solution-parking.png" width="3983" height="2868" alt="" loading="lazy">
+          <i class="scard__blur"></i>
+        </article>
+
+        <article class="scard scard--left scard--3" id="work-3">
+          <div class="scard__text">
+            <div class="scard__head">
+              <h2 class="scard__title">Ijara hujjatlari — bir joyda</h2>
+              <p class="scard__desc">Ijara shartnomalarini avtomatik yarating va har bir ijarachining shaxsiy hisobini yuriting. To‘lovlar hamda qarzdorlik holatini kuzatib boring.</p>
+            </div>
+            <ul class="scard__list">
+              <li>Shartnomalarni yaratish</li>
+              <li>Shaxsiy hisobvaraqlar</li>
+              <li>Ijara va qarzdorlik hisobi</li>
+            </ul>
+            <a class="btn-sm" href="#boglanish">Demo so‘rash</a>
+          </div>
+          <img class="scard__img" src="assets/img/solution-rent.png" width="3387" height="1636" alt="" loading="lazy">
+          <i class="scard__blur"></i>
+        </article>
+
+        <article class="scard scard--right scard--4" id="work-4">
+          <div class="scard__text">
+            <div class="scard__head">
+              <h2 class="scard__title">Chorva bozori — aniq hisobda</h2>
+              <p class="scard__desc">Bozorga hayvonlarning kirishi va chiqishini qayd eting. Toʻlovlar holatini kuzating va chorva bozori tushumlari boʻyicha hisobot oling.</p>
+            </div>
+            <ul class="scard__list">
+              <li>Hayvonlar kirish-chiqish qaydi</li>
+              <li>To‘lovlar monitoringi</li>
+              <li>Tushumlar hisoboti</li>
+            </ul>
+            <a class="btn-sm" href="#boglanish">Demo so‘rash</a>
+          </div>
+          <img class="scard__img" src="assets/img/solution-livestock.png" width="3387" height="1428" alt="" loading="lazy">
+          <i class="scard__blur"></i>
+        </article>
+
+      </div>
+      <a class="btn-sm btn-sm--block solutions__cta-m" href="#boglanish">Demo so‘rash</a>
+    </section>
+
+    <div class="duo">
+
+      <!-- ============ STEPS ============ -->
+      <section class="steps" id="joriy-etish">
+        <header class="sec-head sec-head--steps">
+          <span class="pill pill--sm">Integratsiya</span>
+          <h2 class="sec-title sec-title--tight">Raqamli bozorga uch qadam</h2>
+        </header>
+
+        <div class="steps__body">
+          <div class="steps__col steps__col--left">
+            <article class="step step--1 appear" data-appear="c">
+              <div class="step__top">
+                <h3 class="step__title step__title--p">1. Ehtiyojlarni <br>aniqlaymiz</h3>
+                <img class="step__icon step__icon--1" src="assets/img/step-1.png" width="516" height="516" alt="" loading="lazy">
+              </div>
+              <p class="step__desc">Bozoringizdagi jarayonlarni muhokama qilib, sizga kerakli imkoniyatlarni belgilaymiz.</p>
+            </article>
+            <article class="step step--3 appear" data-appear="c">
+              <div class="step__top">
+                <h3 class="step__title">3. Joriy etishni <br>rejalashtiramiz</h3>
+                <img class="step__icon step__icon--3" src="assets/img/step-3.png" width="456" height="456" alt="" loading="lazy">
+              </div>
+              <p class="step__desc">Kerakli jihozlar, ish hajmi, muddat va narxni kelishib olamiz.</p>
+            </article>
+          </div>
+
+          <div class="steps__rail" aria-hidden="true">
+            <div class="steps__rail-fade"></div>
+            <div class="steps__dots" id="stepDots"></div>
+          </div>
+
+          <div class="steps__col steps__col--right">
+            <article class="step step--2 appear" data-appear="c">
+              <div class="step__top">
+                <h3 class="step__title">2. Tizimni <br>namoyish qilamiz</h3>
+                <img class="step__icon step__icon--2" src="assets/img/step-2.png" width="1920" height="1920" alt="" loading="lazy">
+              </div>
+              <p class="step__desc">Rastalar, to‘lovlar va ijara hisobi tizimda qanday boshqarilishini ko‘rsatamiz.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ MARKETS / GLOBE ============ -->
+      <section class="markets" id="bozorlar">
+        <header class="markets__head">
+          <h2 class="markets__title">Bizga ishongan bozorlar</h2>
+          <a class="btn-sm" href="#" data-todo="link">Barchasini ko'rish</a>
+        </header>
+        <div class="globe" id="globe">
+          <canvas class="globe__canvas" width="1600" height="900" role="img" aria-label="Yer shari"></canvas>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- ============ FAQ ============ -->
+    <section class="faq" id="savollar">
+      <header class="faq__head">
+        <span class="pill pill--faq">FAQ</span>
+        <h2 class="faq__title">Savol va Javoblar</h2>
+      </header>
+
+      <div class="faq__list">
+        <div class="faq__item is-open">
+          <button class="faq__q" type="button" aria-expanded="true" aria-controls="faq-a1" id="faq-q1">
+            <span class="faq__q-text">1   Tizim kimlar uchun mo‘ljallangan?</span>
+            <span class="faq__toggle" aria-hidden="true"></span>
+          </button>
+          <div class="faq__a" id="faq-a1" role="region" aria-labelledby="faq-q1"><div class="faq__a-in"><p>Raqamli Bozor bozor rahbariyati, nazoratchilar va ijara hisobini yurituvchi xodimlar uchun mo‘ljallangan.</p></div></div>
+        </div>
+
+        <div class="faq__item">
+          <button class="faq__q" type="button" aria-expanded="false" aria-controls="faq-a2" id="faq-q2">
+            <span class="faq__q-text">2   Mavjud kameralar bilan ishlash mumkinmi?</span>
+            <span class="faq__toggle" aria-hidden="true"></span>
+          </button>
+          <div class="faq__a" id="faq-a2" role="region" aria-labelledby="faq-q2"><div class="faq__a-in"><p>Mavjud kameralar bilan moslik demo davomida tekshiriladi. Kerakli ulanishlar va jihozlar siz bilan kelishiladi.</p></div></div>
+        </div>
+
+        <div class="faq__item">
+          <button class="faq__q" type="button" aria-expanded="false" aria-controls="faq-a3" id="faq-q3">
+            <span class="faq__q-text">3   Tizimni joriy etish qancha turadi?</span>
+            <span class="faq__toggle" aria-hidden="true"></span>
+          </button>
+          <div class="faq__a" id="faq-a3" role="region" aria-labelledby="faq-q3"><div class="faq__a-in"><p>Narx kerakli imkoniyatlar, jihozlar va ish hajmiga bog‘liq. Demo davomida ehtiyojlaringizni aniqlab, narxni kelishib olamiz.</p></div></div>
+        </div>
+
+        <div class="faq__item">
+          <button class="faq__q" type="button" aria-expanded="false" aria-controls="faq-a4" id="faq-q4">
+            <span class="faq__q-text">4   Tizimni ishga tushirish qancha vaqt oladi?</span>
+            <span class="faq__toggle" aria-hidden="true"></span>
+          </button>
+          <div class="faq__a" id="faq-a4" role="region" aria-labelledby="faq-q4"><div class="faq__a-in"><p>Muddat kerakli ulanishlar va ish hajmiga qarab belgilanadi. Demo davomida joriy etish rejasini tuzib, muddatni siz bilan kelishib olamiz.</p></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ CONTACT + FOOTER ============ -->
+    <section class="contact" id="boglanish">
+      <div class="cta">
+        <img class="cta__bg" src="assets/img/cta-market.png" width="3720" height="2094" alt="" loading="lazy">
+        <div class="cta__content">
+          <h2 class="cta__title">Bozoringiz uchun yechimni birga tanlaymiz</h2>
+          <!-- Set data-endpoint to your API URL to receive demo requests (POST, JSON: {"phone": "+998..."}). -->
+          <form class="cta__form" id="demoForm" novalidate data-endpoint="">
+            <label class="sr-only" for="demoPhone">Telefon raqamingiz</label>
+            <input class="cta__input" id="demoPhone" name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="+998 __ ___ __ __" maxlength="17">
+            <button class="btn-sm" type="submit">Demo so‘rash</button>
+          </form>
+        </div>
+      </div>
+
+      <footer class="footer">
+        <div class="footer__top">
+          <p class="footer__brand">Raqamli bozor</p>
+          <div class="footer__cols">
+            <ul class="footer__col">
+              <li><a href="#" data-todo="link">Ommaviy oferta</a></li>
+              <li><a href="#" data-todo="link">RealSoft rezidenti</a></li>
+              <li><a href="#" data-todo="link">Maxfiylik siyosati</a></li>
+            </ul>
+            <ul class="footer__col">
+              <li><a href="#" data-todo="link">Raqamli Bozor tasdiqnoma</a></li>
+              <li><a href="#" data-todo="link">Guvohnoma</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="footer__bottom">
+          <hr class="footer__line">
+          <div class="footer__legal">
+            <p>© Raqamli Bozor 2026. Barcha huquqlar himoyalangan.</p>
+            <p class="footer__made">Made by RealSoft</p>
+          </div>
+        </div>
+      </footer>
+    </section>
+
+  </main>
+</div>
+
+<script src="js/main.js" defer></script>
+</body>
+</html>

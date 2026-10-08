@@ -1,0 +1,13 @@
+{
+  "siteName": "Raqamli Bozor",
+  "siteUrl": "https://raqamlibozor.uz",
+  "defaultLocale": "uz",
+  "themeColor": "#178f20",
+  "demoEndpoint": "",
+  "organization": {
+    "name": "RealSoft",
+    "url": "https://realsoft.uz"
+  },
+  "socialImage": "cta-market",
+  "globeFrames": 80
+}

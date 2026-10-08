@@ -1,0 +1,41 @@
+---
+import '../styles/footer.css';
+import type { Landing } from '../lib/content';
+import { withYear } from '../lib/text';
+
+interface Props {
+  landing: Landing;
+}
+
+const { footer } = Astro.props.landing.data;
+---
+
+<footer class="footer">
+  <div class="footer__top">
+    <p class="footer__brand">{footer.brand}</p>
+    <div class="footer__cols">
+      {footer.columns.map((col) => (
+        <ul class="footer__col">
+          {col.links.map((link) => (
+            <li>{link.href ? <a href={link.href}>{link.label}</a> : <span>{link.label}</span>}</li>
+          ))}
+        </ul>
+      ))}
+    </div>
+  </div>
+  <div class="footer__bottom">
+    <hr class="footer__line" />
+    <div class="footer__legal">
+      <p>{withYear(footer.copyright)}</p>
+      <p class="footer__made">
+        {footer.madeBy.href ? (
+          <a href={footer.madeBy.href} rel="noopener">
+            {footer.madeBy.label}
+          </a>
+        ) : (
+          footer.madeBy.label
+        )}
+      </p>
+    </div>
+  </div>
+</footer>

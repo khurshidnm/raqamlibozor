@@ -1,0 +1,9 @@
+---
+import LandingPage from '../components/LandingPage.astro';
+import { getLanding, getSettings } from '../lib/content';
+
+const settings = await getSettings();
+const landing = await getLanding(settings.defaultLocale);
+---
+
+<LandingPage landing={landing} settings={settings} />

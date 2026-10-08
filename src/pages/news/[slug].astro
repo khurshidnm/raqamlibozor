@@ -1,0 +1,23 @@
+---
+import NewsPostPage from '../../components/NewsPostPage.astro';
+import type { Landing, Settings } from '../../lib/content';
+import { getLanding, getSettings } from '../../lib/content';
+import { getNews, type NewsPost } from '../../lib/news';
+
+export async function getStaticPaths() {
+  const settings = await getSettings();
+  const landing = await getLanding(settings.defaultLocale);
+  const posts = await getNews(landing.id);
+  return posts.map((post) => ({ params: { slug: post.id }, props: { landing, settings, post } }));
+}
+
+interface Props {
+  landing: Landing;
+  settings: Settings;
+  post: NewsPost;
+}
+
+const { landing, settings, post } = Astro.props;
+---
+
+<NewsPostPage landing={landing} settings={settings} post={post} />

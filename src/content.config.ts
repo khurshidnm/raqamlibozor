@@ -1,0 +1,28 @@
+import { defineCollection, reference } from 'astro:content';
+import { glob } from 'astro/loaders';
+import { landingSchema, mediaSchema, newsSchema, settingsSchema } from './content/schema';
+
+/** Asset library managed in Keystatic. `image()` turns the stored path into an optimisable import. */
+const media = defineCollection({
+  loader: glob({ pattern: '*.json', base: './src/content/media' }),
+  schema: ({ image }) => mediaSchema(image()),
+});
+
+/** One entry per locale; the file name is the locale code and the URL prefix. */
+const landing = defineCollection({
+  loader: glob({ pattern: '*.json', base: './src/content/landing' }),
+  schema: landingSchema(reference('media')),
+});
+
+/** News posts: Markdown files with front matter, written by Keystatic. Drafts are hidden in production builds. */
+const news = defineCollection({
+  loader: glob({ pattern: '*.md', base: './src/content/news' }),
+  schema: newsSchema(reference('media')),
+});
+
+const settings = defineCollection({
+  loader: glob({ pattern: 'settings.json', base: './src/content' }),
+  schema: settingsSchema(reference('media')),
+});
+
+export const collections = { media, landing, news, settings };

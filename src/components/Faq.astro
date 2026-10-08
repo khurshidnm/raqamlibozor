@@ -1,0 +1,44 @@
+---
+import '../styles/faq.css';
+import type { Landing } from '../lib/content';
+
+interface Props {
+  landing: Landing;
+}
+
+const { faq } = Astro.props.landing.data;
+---
+
+<section class="faq" id="savollar">
+  <header class="faq__head">
+    <span class="pill pill--faq">{faq.pill}</span>
+    <h2 class="faq__title">{faq.title}</h2>
+  </header>
+
+  <div class="faq__list">
+    {faq.items.map((item, i) => (
+      <div class:list={['faq__item', { 'is-open': i === 0 }]}>
+        <button
+          class="faq__q"
+          type="button"
+          aria-expanded={i === 0 ? 'true' : 'false'}
+          aria-controls={`faq-a${i + 1}`}
+          id={`faq-q${i + 1}`}
+        >
+          <span class="faq__q-text">{item.question}</span>
+          <span class="faq__toggle" aria-hidden="true"></span>
+        </button>
+        <div class="faq__a" id={`faq-a${i + 1}`} role="region" aria-labelledby={`faq-q${i + 1}`}>
+          <div class="faq__a-in">
+            <p>{item.answer}</p>
+          </div>
+        </div>
+      </div>
+    ))}
+  </div>
+</section>
+
+<script>
+  import { initFaq } from '../scripts/faq';
+  initFaq();
+</script>

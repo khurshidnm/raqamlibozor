@@ -1,0 +1,117 @@
+---
+import '../styles/global.css';
+import type { Landing, Settings } from '../lib/content';
+import { localePath } from '../lib/content';
+import { PAGE_ZOOM_INLINE } from '../lib/inline-scripts';
+
+export interface Preload {
+  imagesrcset: string;
+  imagesizes: string;
+  media?: string;
+}
+
+interface Props {
+  settings: Settings;
+  landing: Landing;
+  /** Every landing entry, for hreflang alternates. */
+  alternates: Landing[];
+  title: string;
+  description: string;
+  /** Absolute URL of the share image. */
+  ogImage: { url: string; width: number; height: number; alt: string };
+  jsonLd?: Record<string, unknown>[];
+  preloads?: Preload[];
+  /** Path of this page, e.g. "/" or "/ru/". */
+  path: string;
+  ogType?: 'website' | 'article';
+  /** ISO date for article pages. */
+  publishedTime?: string;
+  /** Path of an RSS feed to advertise. */
+  rss?: string;
+}
+
+const {
+  settings,
+  landing,
+  alternates,
+  title,
+  description,
+  ogImage,
+  jsonLd = [],
+  preloads = [],
+  path,
+  ogType = 'website',
+  publishedTime,
+  rss,
+} = Astro.props;
+const site = Astro.site ?? new URL(settings.siteUrl);
+const canonical = new URL(path, site).href;
+const a11y = landing.data.a11y;
+---
+
+<!doctype html>
+<html lang={landing.data.lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script is:inline set:html={PAGE_ZOOM_INLINE} />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {alternates.map((alt) => (
+      <link
+        rel="alternate"
+        hreflang={alt.data.lang}
+        href={new URL(localePath(alt.id, settings.defaultLocale), site).href}
+      />
+    ))}
+    <link rel="alternate" hreflang="x-default" href={new URL('/', site).href} />
+
+    <meta property="og:type" content={ogType} />
+    {publishedTime && <meta property="article:published_time" content={publishedTime} />}
+    <meta property="og:site_name" content={settings.siteName} />
+    <meta property="og:locale" content={landing.data.lang.replace('-', '_')} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImage.url} />
+    <meta property="og:image:width" content={String(ogImage.width)} />
+    <meta property="og:image:height" content={String(ogImage.height)} />
+    <meta property="og:image:alt" content={ogImage.alt} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage.url} />
+
+    <meta name="theme-color" content={settings.themeColor} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/icons/favicon-32.png" type="image/png" sizes="32x32" />
+    <link rel="icon" href="/icons/favicon-16.png" type="image/png" sizes="16x16" />
+    <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    {rss && <link rel="alternate" type="application/rss+xml" title={settings.siteName} href={rss} />}
+
+    <link rel="preload" href="/fonts/gilroy-bold.woff" as="font" type="font/woff" crossorigin />
+    <link rel="preload" href="/fonts/gilroy-medium.woff2" as="font" type="font/woff2" crossorigin />
+    {preloads.map((p) => (
+      <link rel="preload" as="image" imagesrcset={p.imagesrcset} imagesizes={p.imagesizes} media={p.media} />
+    ))}
+
+    {jsonLd.map((item) => (
+      <script type="application/ld+json" set:html={JSON.stringify(item).replaceAll('<', '\\u003c')} />
+    ))}
+  </head>
+  <body>
+    <a class="skip-link" href="#main">
+      {a11y.skipToContent}
+    </a>
+    <slot />
+    <script>
+      import { initPageZoom } from '../scripts/page-zoom';
+      import { initAppear } from '../scripts/appear';
+      initPageZoom();
+      initAppear();
+    </script>
+  </body>
+</html>

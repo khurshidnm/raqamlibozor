@@ -1,0 +1,195 @@
+/* ==========================================================================
+   Hero: rotating headline + banner with image slides
+   ========================================================================== */
+.hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 30px;
+  padding: 65px 0;
+}
+.hero__title {
+  position: relative;
+  display: grid;
+  align-content: start;
+  width: 100%;
+  max-width: 900px;
+  font-weight: 700;
+  font-size: 93px;
+  line-height: 1.04;
+  letter-spacing: -0.05em;
+  color: var(--green-hero);
+  text-align: center;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+}
+.hero__title-in {
+  grid-area: 1 / 1;
+  align-self: start;
+}
+.hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 12px 16px;
+  width: 100%;
+}
+
+.banner {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  width: 100%;
+  height: 310px;
+  border-radius: 32px;
+  overflow: hidden;
+  overflow: clip;
+}
+.banner__bg {
+  position: relative;
+  flex: 1;
+  height: 279px;
+  border-radius: 32px;
+  background: linear-gradient(142deg, #178f20 12.4138%, #e8ecac 86.8965%);
+}
+.banner__pattern {
+  position: absolute;
+  left: calc(37.5833% - 1301px);
+  top: calc(13.2616% - 757px);
+  width: 2602px;
+  height: 1514px;
+  pointer-events: none;
+}
+.banner__stage {
+  position: absolute;
+  top: -31px;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  overflow: hidden;
+}
+
+.slide {
+  position: absolute;
+  inset: 0;
+}
+/* placement comes from CSS variables set per slide: --wd/--xd/--yd (desktop) and --wm/--xm/--ym (phone) */
+.slide__img {
+  position: absolute;
+  z-index: 2;
+  left: var(--xd);
+  top: var(--yd);
+  width: var(--wd);
+  transform: translate(-50%, -50%);
+}
+.slide__img img {
+  width: 100%;
+  height: auto;
+}
+.slide__tag {
+  position: absolute;
+  z-index: 3;
+  transform: translate(-50%, -50%);
+}
+.slide__tag span {
+  display: block;
+  padding: 10px 22px;
+  background: rgba(255, 255, 255, 0.05);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 20px;
+  font-weight: 500;
+  font-size: 28px;
+  line-height: 1.15;
+  color: #fff;
+  white-space: nowrap;
+}
+
+/* pause / resume the rotation (WCAG 2.2.2) */
+.hero__pause {
+  position: absolute;
+  right: 14px;
+  top: 45px;
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.28);
+  color: #fff;
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  transition: background-color 0.2s ease;
+}
+.hero__pause:hover {
+  background: rgba(0, 0, 0, 0.42);
+}
+.hero__pause .icon {
+  width: 18px;
+  height: 18px;
+}
+.hero__pause .icon--play {
+  display: none;
+}
+.hero__pause.is-paused .icon--pause {
+  display: none;
+}
+.hero__pause.is-paused .icon--play {
+  display: block;
+}
+.hero__pause[hidden] {
+  display: none;
+}
+
+.spacer {
+  height: 77px;
+}
+
+@media (min-width: 810px) and (max-width: 1439.98px) {
+  .hero__title {
+    font-size: 68px;
+  }
+  .banner {
+    height: 328px;
+  }
+}
+@media (max-width: 809.98px) {
+  .hero {
+    gap: 45px;
+    padding: 32px 0;
+  }
+  .hero__title {
+    font-size: 57px;
+    line-height: 1;
+  }
+  .hero__actions {
+    flex-direction: column;
+    flex-wrap: nowrap;
+    gap: 12px;
+  }
+  .hero__actions .btn {
+    width: 100%;
+  }
+  .banner {
+    height: 368px;
+  }
+  .banner__bg {
+    height: 319px;
+  }
+  .slide__img {
+    left: var(--xm);
+    top: var(--ym);
+    width: var(--wm);
+  }
+  .slide__tags {
+    display: none;
+  }
+  .hero__pause {
+    top: 61px;
+  }
+}

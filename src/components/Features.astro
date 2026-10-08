@@ -1,0 +1,134 @@
+---
+import '../styles/features.css';
+import dashboard from '../assets/ui/card-dashboard.svg';
+import Icon from './Icon.astro';
+import type { Landing } from '../lib/content';
+import { lines } from '../lib/text';
+
+interface Props {
+  landing: Landing;
+}
+
+const { features } = Astro.props.landing.data;
+const appearOrder = ['a', 'c', 'b', 'c'] as const;
+---
+
+<section class="features" id="imkoniyatlar">
+  <header class="sec-head">
+    <span class="pill">{features.pill}</span>
+    <h2 class="sec-title">
+      {lines(features.title).map((line, i) => (
+        <>
+          {i > 0 && <br />}
+          {line}
+        </>
+      ))}
+    </h2>
+  </header>
+
+  <div class="features__grid">
+    {features.cards.map((card, i) => (
+      <article
+        class:list={['fcard', 'appear', { 'fcard--alt': card.visual === 'notifications' }]}
+        data-appear={appearOrder[i % appearOrder.length]}
+      >
+        <div class="fcard__visual">
+          <i class="glow glow--1"></i>
+          <i class="glow glow--2"></i>
+          <i class="glow glow--3"></i>
+
+          {card.visual === 'dashboard' && (
+            <img
+              class="fcard__dash"
+              src={dashboard.src}
+              width={dashboard.width}
+              height={dashboard.height}
+              alt=""
+              loading="lazy"
+            />
+          )}
+
+          {card.visual === 'notifications' && (
+            <div class="notif" id="notifStack" aria-hidden="true">
+              {features.notifications.map((n) => (
+                <div class="notif__item">
+                  <div class="notif__body">
+                    <div>
+                      <strong>{n.title}</strong>
+                      <small>{n.meta}</small>
+                    </div>
+                    <em>{n.amount}</em>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {card.visual === 'orbit' && (
+            <div class="orbit" aria-hidden="true">
+              <div class="orbit__center">
+                <i class="orbit__halo orbit__halo--1"></i>
+                <i class="orbit__halo orbit__halo--2"></i>
+                <i class="orbit__halo orbit__halo--3"></i>
+                <div class="orbit__core">
+                  <Icon name="video" />
+                </div>
+                <div class="orbit__ring orbit__ring--outer">
+                  <div class="orbit__pos">
+                    <div class="orbit__spin">
+                      <div class="orbit__dot">
+                        <Icon name="scan" class="icon--scan" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="orbit__ring orbit__ring--mid">
+                  <div class="orbit__pos">
+                    <div class="orbit__spin">
+                      <div class="orbit__dot">
+                        <Icon name="cow" class="icon--24" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="orbit__ring orbit__ring--inner">
+                  <div class="orbit__pos">
+                    <div class="orbit__spin">
+                      <div class="orbit__dot">
+                        <Icon name="car" class="icon--24" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {card.visual === 'tiles' && (
+            <div class="tiles" id="tiles" aria-hidden="true">
+              <div class="tiles__item">
+                <Icon name="file" />
+              </div>
+              <div class="tiles__item">
+                <Icon name="clipboard" />
+              </div>
+              <div class="tiles__item">
+                <Icon name="bookmark" />
+              </div>
+            </div>
+          )}
+
+          <i class="fcard__fade"></i>
+        </div>
+        <h3 class:list={['fcard__label', { 'fcard__label--wide': card.wideLabel }]}>
+          <span>{card.label}</span>
+        </h3>
+      </article>
+    ))}
+  </div>
+</section>
+
+<script>
+  import { initFeatureCards } from '../scripts/feature-cards';
+  initFeatureCards();
+</script>

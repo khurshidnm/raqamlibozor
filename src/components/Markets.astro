@@ -1,0 +1,40 @@
+---
+import '../styles/markets.css';
+import type { Landing } from '../lib/content';
+
+interface Props {
+  landing: Landing;
+  frames: number;
+}
+
+const { landing, frames } = Astro.props;
+const { markets, a11y } = landing.data;
+---
+
+<section class="markets" id="bozorlar">
+  <header class="markets__head">
+    <h2 class="markets__title">{markets.title}</h2>
+    {markets.cta.href && (
+      <a class="btn-sm" href={markets.cta.href}>
+        {markets.cta.label}
+      </a>
+    )}
+  </header>
+  <div class="globe" id="globe" data-frames={frames} data-src="/earth/earth-{i}.webp">
+    <img
+      class="globe__fallback"
+      src="/earth/earth-00.webp"
+      width="1600"
+      height="900"
+      alt={a11y.globeLabel}
+      loading="lazy"
+      decoding="async"
+    />
+    <canvas class="globe__canvas" width="1600" height="900" role="img" aria-label={a11y.globeLabel}></canvas>
+  </div>
+</section>
+
+<script>
+  import { initGlobe } from '../scripts/globe';
+  initGlobe();
+</script>

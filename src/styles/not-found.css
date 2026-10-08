@@ -1,0 +1,27 @@
+.nf {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  min-height: 60vh;
+  padding: 120px 20px;
+  text-align: center;
+}
+.nf__code {
+  font-weight: 700;
+  font-size: 120px;
+  line-height: 1;
+  letter-spacing: -0.05em;
+  color: var(--green-hero);
+}
+.nf__title {
+  font-weight: 700;
+  font-size: 42px;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+}
+.nf__text {
+  max-width: 520px;
+  font-size: 18px;
+  color: rgba(0, 0, 0, 0.6);
+}

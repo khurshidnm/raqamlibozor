@@ -1,0 +1,29 @@
+---
+import NewsListPage from '../../../../components/NewsListPage.astro';
+import type { Landing, Settings } from '../../../../lib/content';
+import { getLandingEntries, getSettings } from '../../../../lib/content';
+import { getNews, NEWS_PAGE_SIZE } from '../../../../lib/news';
+
+export async function getStaticPaths() {
+  const settings = await getSettings();
+  const entries = (await getLandingEntries()).filter((entry) => entry.id !== settings.defaultLocale);
+  const paths = [];
+  for (const landing of entries) {
+    const total = Math.ceil((await getNews(landing.id)).length / NEWS_PAGE_SIZE);
+    for (let page = 2; page <= total; page++) {
+      paths.push({ params: { locale: landing.id, page: String(page) }, props: { landing, settings, page } });
+    }
+  }
+  return paths;
+}
+
+interface Props {
+  landing: Landing;
+  settings: Settings;
+  page: number;
+}
+
+const { landing, settings, page } = Astro.props;
+---
+
+<NewsListPage landing={landing} settings={settings} page={page} />

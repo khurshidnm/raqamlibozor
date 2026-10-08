@@ -1,0 +1,218 @@
+/* ==========================================================================
+   Navigation (fixed pill bar; hamburger panel on phones)
+   ========================================================================== */
+.nav {
+  position: fixed;
+  top: 0;
+  left: 50%;
+  z-index: 10;
+  width: 1300px;
+  padding: 25px;
+  transform: translateX(-50%);
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
+}
+.nav.is-hidden {
+  transform: translate(-50%, -140px);
+}
+.nav__bar {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  height: 74px;
+  padding: 15px 25px;
+  background: rgba(245, 245, 245, 0.82);
+  -webkit-backdrop-filter: blur(var(--nav-blur));
+  backdrop-filter: blur(var(--nav-blur));
+  border-radius: 9999px;
+}
+.nav__bar::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: inherit;
+  pointer-events: none;
+}
+.nav__logo {
+  display: flex;
+  flex: none;
+}
+.nav__logo img {
+  width: 95px;
+  height: 33px;
+}
+.nav__links {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* link whose label rolls up on hover */
+.roll {
+  display: block;
+  height: 19px;
+  overflow: hidden;
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 1.2;
+  color: #000;
+  white-space: pre;
+}
+.roll__in {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  transition: transform var(--sp-roll-d) var(--sp-roll);
+}
+.roll:hover .roll__in,
+.roll:focus-visible .roll__in {
+  transform: translateY(-26.2px);
+}
+
+.nav__cta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  height: 44px;
+  padding: 0 20px;
+  overflow: hidden;
+  background: var(--green-700);
+  border-radius: 999px;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 1.2;
+  color: #fafafa;
+  white-space: nowrap;
+}
+.nav__cta-in {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  height: 20px;
+  overflow: hidden;
+}
+.nav__cta-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 20px;
+  flex: none;
+  transition: transform var(--sp-btn-d) var(--sp-btn);
+}
+.nav__cta-row .icon {
+  width: 20px;
+  height: 20px;
+}
+.nav__cta:hover .nav__cta-row,
+.nav__cta:focus-visible .nav__cta-row {
+  transform: translateY(-30px);
+}
+.nav__cta:active {
+  padding: 0 17px;
+}
+
+/* phone menu */
+.nav__menu-btn {
+  display: none;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.06);
+  color: #000;
+}
+.nav__menu-btn .icon--close {
+  display: none;
+}
+.nav.is-open .nav__menu-btn .icon--menu {
+  display: none;
+}
+.nav.is-open .nav__menu-btn .icon--close {
+  display: block;
+}
+.nav__panel {
+  display: none;
+  flex-direction: column;
+  gap: 4px;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(100% + 8px);
+  padding: 10px;
+  background: rgba(245, 245, 245, 0.96);
+  -webkit-backdrop-filter: blur(var(--nav-blur));
+  backdrop-filter: blur(var(--nav-blur));
+  border-radius: 24px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.12);
+}
+.nav__panel a {
+  display: block;
+  padding: 14px 16px;
+  border-radius: 14px;
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 1.2;
+  color: #000;
+}
+.nav__panel a:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+@media (min-width: 810px) and (max-width: 1439.98px) {
+  .nav {
+    width: min(1300px, 100vw);
+  }
+  .nav__bar {
+    height: 70px;
+    padding: 14px 18px;
+  }
+  .nav__links {
+    gap: 8px;
+  }
+  .nav__cta {
+    height: 42px;
+  }
+}
+/* the inline link list needs ~900px; below that the links move into the panel */
+@media (max-width: 1023.98px) {
+  .nav__links {
+    display: none;
+  }
+  .nav__cta {
+    margin-left: auto;
+  }
+  .nav__menu-btn {
+    display: inline-flex;
+  }
+  .nav.is-open .nav__panel {
+    display: flex;
+  }
+}
+@media (max-width: 809.98px) {
+  .nav {
+    width: min(390px, 100vw);
+    padding: 16px;
+  }
+  .nav__bar {
+    height: 64px;
+    padding: 12px 14px;
+  }
+  .nav__cta {
+    height: 40px;
+  }
+}
+@media (max-width: 379.98px) {
+  .nav__cta {
+    padding: 0 14px;
+  }
+  .nav__cta-row {
+    gap: 6px;
+  }
+}

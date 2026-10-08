@@ -1,0 +1,533 @@
+/* ==========================================================================
+   Raqamli Bozor — global styles: fonts, tokens, base, shared primitives.
+   Breakpoints (same as the original design):
+     phone   : up to 809.98px
+     tablet  : 810px – 1439.98px
+     desktop : 1440px and up (fixed 1440px canvas, gently zoomed on larger screens)
+   ========================================================================== */
+
+/* ---------- Fonts (self-hosted, see public/fonts) ---------- */
+@font-face {
+  font-family: 'Gilroy';
+  src: url('/fonts/gilroy-regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Gilroy';
+  src: url('/fonts/gilroy-medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Gilroy';
+  src: url('/fonts/gilroy-semibold.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Gilroy';
+  src: url('/fonts/gilroy-bold.woff') format('woff');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Inter';
+  src: url('/fonts/inter-400.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Inter';
+  src: url('/fonts/inter-700.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ---------- Tokens ---------- */
+:root {
+  /* Brand colours */
+  --green: #178f20; /* large surfaces, gradients, glows */
+  --green-700: #107a18; /* green behind white text (buttons, pills, cards) — 5.5:1 */
+  --green-ink: #0f6e17; /* green text on light backgrounds — 5.9:1 on #f5f5f5 */
+  --green-hero: #15921d; /* hero headline (large text) */
+  --orange: #ff9900;
+  --orange-2: #fe9e00;
+  --orange-ink: #c25400; /* orange text on light chips — 3.8:1 at display sizes */
+  --on-orange: #1b1b1b; /* text on orange buttons; white would be 2.1:1 */
+  --gray: #f5f5f5;
+  --ink: #111111;
+  --ink-2: #1b1b1b;
+  --error: #b3261e;
+
+  --nav-blur: 24px;
+
+  --font: 'Gilroy', system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+  --font-ui: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+
+  /* Spring curves (fallbacks; real springs are set below where linear() is supported) */
+  --sp-appear: cubic-bezier(0.2, 0.9, 0.3, 1.05);
+  --sp-appear-d: 0.39s;
+  --sp-card-a: cubic-bezier(0.2, 1.1, 0.4, 1.1);
+  --sp-card-a-d: 0.2s;
+  --sp-card-b: cubic-bezier(0.2, 1.1, 0.4, 1.1);
+  --sp-card-b-d: 0.29s;
+  --sp-card-c: cubic-bezier(0.2, 1.1, 0.4, 1.1);
+  --sp-card-c-d: 0.48s;
+  --sp-roll: cubic-bezier(0.3, 0.9, 0.3, 1.03);
+  --sp-roll-d: 0.57s;
+  --sp-btn: cubic-bezier(0.2, 0.9, 0.3, 1.05);
+  --sp-btn-d: 0.39s;
+  --sp-hero-img: cubic-bezier(0.25, 1, 0.4, 1.08);
+  --sp-hero-img-d: 0.53s;
+  --sp-hero-tag: cubic-bezier(0.25, 1.2, 0.4, 1.1);
+  --sp-hero-tag-d: 0.64s;
+  --sp-notif: cubic-bezier(0.25, 0.9, 0.35, 1);
+  --sp-notif-d: 0.5s;
+  --sp-tiles: cubic-bezier(0.25, 0.9, 0.35, 1);
+  --sp-tiles-d: 0.5s;
+  --sp-stack: cubic-bezier(0.2, 0.7, 0.3, 1);
+  --sp-stack-d: 0.8s;
+}
+@supports (transition-timing-function: linear(0, 1)) {
+  :root {
+    --sp-appear: linear(0, 0.1667, 0.4559, 0.7038, 0.8684, 0.9594, 1.0007, 1.014, 1.0144, 1.0105, 1.0063, 1.0031, 1);
+    --sp-card-a: linear(0, 0.2265, 0.592, 0.8626, 1.0004, 1.0438, 1.0409, 1.0244, 1.0099, 1.0016, 0.9983, 0.9979, 1);
+    --sp-card-b: linear(0, 0.2165, 0.5732, 0.8454, 0.9907, 1.0415, 1.043, 1.0278, 1.0127, 1.0031, 0.9989, 0.9979, 1);
+    --sp-card-c: linear(
+      0,
+      0.1645,
+      0.4659,
+      0.7347,
+      0.9145,
+      1.0087,
+      1.0428,
+      1.0439,
+      1.0318,
+      1.0181,
+      1.0076,
+      1.0014,
+      0.9986,
+      0.9979,
+      1
+    );
+    --sp-roll: linear(
+      0,
+      0.09,
+      0.2767,
+      0.4783,
+      0.6545,
+      0.791,
+      0.8873,
+      0.9497,
+      0.9866,
+      1.0057,
+      1.0136,
+      1.0151,
+      1.0134,
+      1.0105,
+      1.0074,
+      1.0049,
+      1.0029,
+      1
+    );
+    --sp-btn: linear(0, 0.1667, 0.4559, 0.7038, 0.8684, 0.9594, 1.0007, 1.014, 1.0144, 1.0105, 1.0063, 1.0031, 1);
+    --sp-hero-img: linear(
+      0,
+      0.1065,
+      0.3237,
+      0.5506,
+      0.7391,
+      0.8745,
+      0.9601,
+      1.0068,
+      1.0268,
+      1.031,
+      1.027,
+      1.0201,
+      1.0132,
+      1.0075,
+      1.0035,
+      1
+    );
+    --sp-hero-tag: linear(
+      0,
+      0.1114,
+      0.3463,
+      0.5973,
+      0.8063,
+      0.9519,
+      1.036,
+      1.0717,
+      1.0757,
+      1.0625,
+      1.0433,
+      1.0248,
+      1.0103,
+      1.0009,
+      0.9959,
+      0.9942,
+      0.9944,
+      0.9957,
+      0.9972,
+      1
+    );
+    --sp-notif: linear(
+      0,
+      0.1185,
+      0.3316,
+      0.5321,
+      0.6887,
+      0.8003,
+      0.8753,
+      0.9239,
+      0.9544,
+      0.9732,
+      0.9844,
+      0.9911,
+      0.995,
+      0.9972,
+      1
+    );
+    --sp-tiles: linear(
+      0,
+      0.1074,
+      0.3151,
+      0.5234,
+      0.6932,
+      0.8165,
+      0.8987,
+      0.9496,
+      0.9788,
+      0.9941,
+      1.0012,
+      1.0037,
+      1.004,
+      1.0034,
+      1.0025,
+      1
+    );
+    --sp-stack: linear(
+      0,
+      0.0793,
+      0.2318,
+      0.3895,
+      0.5276,
+      0.6402,
+      0.7285,
+      0.7964,
+      0.8478,
+      0.8865,
+      0.9155,
+      0.9372,
+      0.9533,
+      0.9653,
+      0.9742,
+      0.9808,
+      0.9858,
+      0.9894,
+      0.9922,
+      0.9942,
+      0.9957,
+      0.9968,
+      0.9976,
+      1
+    );
+  }
+}
+
+/* ---------- Base ---------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+body {
+  margin: 0;
+  background: #fff;
+  color: #000;
+  font-family: var(--font);
+  font-weight: 500;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+h1,
+h2,
+h3,
+p,
+ul,
+figure {
+  margin: 0;
+  padding: 0;
+}
+ul {
+  list-style: none;
+}
+a {
+  color: inherit;
+  text-decoration: none;
+}
+img,
+picture {
+  display: block;
+  max-width: none;
+}
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+i {
+  font-style: normal;
+  display: block;
+}
+.icon {
+  width: 24px;
+  height: 24px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  flex: none;
+}
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+:focus-visible {
+  outline: 2px solid var(--green-700);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+section[id],
+.hero {
+  scroll-margin-top: 160px;
+}
+
+.skip-link {
+  position: absolute;
+  left: 16px;
+  top: -100px;
+  z-index: 100;
+  padding: 12px 18px;
+  border-radius: 999px;
+  background: var(--green-700);
+  color: #fff;
+  font-weight: 600;
+}
+.skip-link:focus {
+  top: 16px;
+}
+
+/* ---------- Page shell ---------- */
+.page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 25px;
+  background: #fff;
+  overflow-x: clip;
+}
+.shell {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 1200px;
+  padding-top: 75px;
+}
+.main {
+  display: flex;
+  flex-direction: column;
+}
+
+/* ---------- Buttons ---------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px 25px;
+  border-radius: 999px;
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 1.2;
+  color: #fff;
+  white-space: nowrap;
+  transition:
+    filter 0.2s ease,
+    transform 0.2s ease;
+}
+.btn--orange {
+  background: var(--orange);
+  color: var(--on-orange);
+}
+.btn--green {
+  background: var(--green-700);
+}
+.btn:hover {
+  filter: brightness(1.06);
+}
+.btn:active {
+  transform: scale(0.98);
+}
+
+.btn-sm {
+  position: relative;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 15px 20px;
+  border-radius: 43px;
+  background: var(--orange-2);
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--on-orange);
+  white-space: nowrap;
+  transition:
+    filter 0.2s ease,
+    transform 0.2s ease;
+}
+.btn-sm:hover {
+  filter: brightness(1.06);
+}
+.btn-sm:active {
+  transform: scale(0.98);
+}
+.btn-sm:disabled {
+  cursor: default;
+  filter: saturate(0.6) brightness(1.05);
+}
+.btn-sm--block {
+  display: flex;
+  width: 100%;
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px 10px;
+  border-radius: 999px;
+  background: var(--green-700);
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 1;
+  color: #fff;
+  white-space: nowrap;
+}
+.pill--sm {
+  font-size: 11px;
+}
+.pill--faq {
+  padding: 8px;
+  border-radius: 50px;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 1.2;
+}
+
+.sec-head {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  width: 100%;
+}
+.sec-title {
+  font-weight: 700;
+  font-size: 42px;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  text-align: center;
+}
+.sec-title--tight {
+  letter-spacing: -0.04em;
+}
+
+/* ---------- Appear-on-scroll (only hidden when scripts can run) ---------- */
+@media (scripting: enabled) {
+  .appear {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+}
+.appear.is-in {
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity var(--ad) var(--ae),
+    transform var(--ad) var(--ae);
+}
+.appear[data-appear='a'] {
+  --ad: var(--sp-card-a-d);
+  --ae: var(--sp-card-a);
+}
+.appear[data-appear='b'] {
+  --ad: var(--sp-card-b-d);
+  --ae: var(--sp-card-b);
+}
+.appear[data-appear='c'] {
+  --ad: var(--sp-card-c-d);
+  --ae: var(--sp-card-c);
+}
+
+/* ---------- Desktop ≥ 1440: fixed 1440 canvas, half-speed zoom on bigger screens ---------- */
+@media (min-width: 1440px) {
+  .page {
+    width: 1440px;
+    margin: 0 auto;
+    zoom: var(--page-zoom, 1);
+  }
+}
+
+/* ---------- Tablet / phone shell ---------- */
+@media (min-width: 810px) and (max-width: 1439.98px) {
+  .shell {
+    padding: 25px;
+  }
+}
+@media (max-width: 809.98px) {
+  .shell {
+    padding: 90px 15px 0;
+  }
+}
+
+/* ---------- Reduced motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+  .appear,
+  .intro .w {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}

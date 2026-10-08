@@ -1,0 +1,32 @@
+---
+import '../styles/intro.css';
+import type { Landing } from '../lib/content';
+
+interface Props {
+  landing: Landing;
+}
+
+const { intro } = Astro.props.landing.data;
+---
+
+<section class="intro" id="haqimizda">
+  <h2 class="intro__text">
+    {intro.rows.map((row) => (
+      <span class="intro__row">
+        {row.segments.map((seg, i) =>
+          seg.style.startsWith('chip-') ? (
+            <span class:list={['chip', seg.style]}>
+              <span class="w" style={`--d:${(i * 0.1).toFixed(1)}s`}>
+                {seg.text}
+              </span>
+            </span>
+          ) : (
+            <span class:list={['w', { muted: seg.style === 'muted' }]} style={`--d:${(i * 0.1).toFixed(1)}s`}>
+              {seg.text}
+            </span>
+          ),
+        )}
+      </span>
+    ))}
+  </h2>
+</section>

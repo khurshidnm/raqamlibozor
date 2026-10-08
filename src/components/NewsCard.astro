@@ -1,0 +1,48 @@
+---
+import { Image } from 'astro:assets';
+import Icon from './Icon.astro';
+import type { Landing } from '../lib/content';
+import { getMedia } from '../lib/content';
+import { formatDate, isoDate, type NewsPost } from '../lib/news';
+
+interface Props {
+  post: NewsPost;
+  href: string;
+  landing: Landing;
+  /** Above-the-fold cards can load eagerly. */
+  eager?: boolean;
+}
+
+const { post, href, landing, eager = false } = Astro.props;
+const cover = await getMedia(post.data.cover);
+const { news } = landing.data;
+---
+
+<article class="ncard">
+  <a class="ncard__media" href={href} tabindex="-1" aria-hidden="true">
+    <Image
+      src={cover.image}
+      alt=""
+      format="webp"
+      width={800}
+      height={500}
+      widths={[480, 800, 1200].filter((w) => w <= cover.image.width)}
+      sizes="(max-width: 809.98px) 92vw, (max-width: 1439.98px) 46vw, 380px"
+      loading={eager ? 'eager' : 'lazy'}
+      decoding="async"
+    />
+  </a>
+  <div class="ncard__body">
+    <time class="ncard__date" datetime={isoDate(post.data.publishedAt)}>
+      {formatDate(post.data.publishedAt, landing.data.lang)}
+    </time>
+    <h3 class="ncard__title">
+      <a href={href}>{post.data.title}</a>
+    </h3>
+    <p class="ncard__excerpt">{post.data.excerpt}</p>
+    <span class="ncard__more" aria-hidden="true">
+      {news.readMore}
+      <Icon name="arrow" />
+    </span>
+  </div>
+</article>

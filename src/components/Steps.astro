@@ -1,0 +1,58 @@
+---
+import '../styles/steps.css';
+import { Image } from 'astro:assets';
+import type { Landing } from '../lib/content';
+import { getMedia } from '../lib/content';
+import { lines } from '../lib/text';
+
+interface Props {
+  landing: Landing;
+}
+
+const { steps } = Astro.props.landing.data;
+const items = await Promise.all(steps.items.map(async (item) => ({ ...item, media: await getMedia(item.icon) })));
+const DOTS = 67;
+---
+
+<section class="steps" id="joriy-etish">
+  <header class="sec-head sec-head--steps">
+    <span class="pill pill--sm">{steps.pill}</span>
+    <h2 class="sec-title sec-title--tight">{steps.title}</h2>
+  </header>
+
+  <div class="steps__body">
+    {items.map((item, i) => (
+      <article class:list={['step', `step--${i + 1}`, 'appear']} data-appear="c">
+        <div class="step__top">
+          <h3 class:list={['step__title', { 'step__title--p': i === 0 }]}>
+            {lines(item.title).map((line, n) => (
+              <>
+                {n > 0 && <br />}
+                {line}
+              </>
+            ))}
+          </h3>
+          <Image
+            class:list={['step__icon', `step__icon--${i + 1}`]}
+            src={item.media.image}
+            alt={item.media.alt ?? ''}
+            format="webp"
+            width={Math.min(216, item.media.image.width)}
+            loading="lazy"
+            decoding="async"
+          />
+        </div>
+        <p class="step__desc">{item.description}</p>
+      </article>
+    ))}
+
+    <div class="steps__rail" aria-hidden="true">
+      <div class="steps__rail-fade"></div>
+      <div class="steps__dots">
+        {Array.from({ length: DOTS }, () => (
+          <i></i>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,125 @@
+---
+import '../styles/news.css';
+import { Image, getImage } from 'astro:assets';
+import { render } from 'astro:content';
+import logo from '../assets/ui/logo.svg';
+import Base from '../layouts/Base.astro';
+import Nav from './Nav.astro';
+import Footer from './Footer.astro';
+import NewsCard from './NewsCard.astro';
+import Icon from './Icon.astro';
+import type { Landing, Settings } from '../lib/content';
+import { getMedia, localePath } from '../lib/content';
+import { formatDate, getNews, isoDate, newsPath, type NewsPost } from '../lib/news';
+import { buildNewsArticleJsonLd } from '../lib/jsonld';
+
+interface Props {
+  landing: Landing;
+  settings: Settings;
+  post: NewsPost;
+}
+
+const { landing, settings, post } = Astro.props;
+const { news } = landing.data;
+const home = localePath(landing.id, settings.defaultLocale);
+const site = Astro.site ?? new URL(settings.siteUrl);
+const path = newsPath(landing.id, settings.defaultLocale, post.id);
+const listPath = newsPath(landing.id, settings.defaultLocale);
+
+const cover = await getMedia(post.data.cover);
+const ogImage = await getImage({
+  src: cover.image,
+  width: 1200,
+  height: 630,
+  fit: 'cover',
+  format: 'jpeg',
+  quality: 82,
+});
+const ogUrl = new URL(ogImage.src, site).href;
+const { Content } = await render(post);
+const others = (await getNews(landing.id)).filter((p) => p.id !== post.id).slice(0, 3);
+const jsonLd = buildNewsArticleJsonLd({
+  settings,
+  landing,
+  post,
+  pageUrl: new URL(path, site).href,
+  listUrl: new URL(listPath, site).href,
+  coverUrl: ogUrl,
+  logoUrl: new URL(logo.src, site).href,
+});
+---
+
+<Base
+  settings={settings}
+  landing={landing}
+  alternates={[]}
+  title={`${post.data.title} — ${settings.siteName}`}
+  description={post.data.excerpt}
+  ogImage={{ url: ogUrl, width: 1200, height: 630, alt: cover.alt || post.data.title }}
+  ogType="article"
+  publishedTime={post.data.publishedAt.toISOString()}
+  jsonLd={jsonLd}
+  path={path}
+  rss={landing.id === settings.defaultLocale ? '/news/rss.xml' : undefined}
+>
+  <div class="page">
+    <Nav landing={landing} siteName={settings.siteName} home={home} />
+    <div class="shell">
+      <main class="main post" id="main">
+        <a class="post__back" href={listPath}>
+          <Icon name="arrow" />
+          {news.back}
+        </a>
+
+        <article class="post__article" style="display: contents">
+          <header class="post__head">
+            <div class="post__meta">
+              <span class="pill">{news.pill}</span>
+              <time class="post__date" datetime={isoDate(post.data.publishedAt)}>
+                {formatDate(post.data.publishedAt, landing.data.lang)}
+              </time>
+            </div>
+            <h1 class="post__title">{post.data.title}</h1>
+            <p class="post__lead">{post.data.excerpt}</p>
+          </header>
+
+          <div class="post__cover">
+            <Image
+              src={cover.image}
+              alt={cover.alt ?? ''}
+              format="webp"
+              width={1200}
+              height={600}
+              widths={[800, 1200, 2400].filter((w) => w <= cover.image.width)}
+              sizes="(max-width: 1439.98px) 100vw, 1200px"
+              loading="eager"
+              fetchpriority="high"
+              decoding="async"
+            />
+          </div>
+
+          <div class="prose">
+            <Content />
+          </div>
+        </article>
+
+        {others.length > 0 && (
+          <section class="news post__more" aria-label={news.more}>
+            <header class="sec-head">
+              <h2 class="sec-title">{news.more}</h2>
+            </header>
+            <div class="news__grid">
+              {others.map((p) => (
+                <NewsCard post={p} href={newsPath(landing.id, settings.defaultLocale, p.id)} landing={landing} />
+              ))}
+            </div>
+            <a class="btn-sm" href={listPath}>
+              {news.viewAll}
+            </a>
+          </section>
+        )}
+      </main>
+      <Footer landing={landing} />
+    </div>
+  </div>
+</Base>

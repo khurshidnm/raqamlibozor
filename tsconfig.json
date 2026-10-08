@@ -1,0 +1,22 @@
+{
+  "extends": "astro/tsconfigs/strict",
+  "compilerOptions": {
+    "noUncheckedIndexedAccess": true,
+    "noImplicitOverride": true,
+    "baseUrl": ".",
+    "paths": { "@/*": ["./src/*"] },
+    "jsx": "react-jsx",
+    "jsxImportSource": "react"
+  },
+  "include": [
+    ".astro/types.d.ts",
+    "src/**/*",
+    "tests/**/*",
+    "scripts/**/*",
+    "astro.config.ts",
+    "keystatic.config.ts",
+    "vitest.config.ts",
+    "eslint.config.js"
+  ],
+  "exclude": ["dist", "node_modules", "legacy"]
+}

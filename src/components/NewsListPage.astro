@@ -1,0 +1,98 @@
+---
+import '../styles/news.css';
+import { getImage } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import Nav from './Nav.astro';
+import Footer from './Footer.astro';
+import NewsCard from './NewsCard.astro';
+import type { Landing, Settings } from '../lib/content';
+import { getMedia, localePath } from '../lib/content';
+import { getNews, newsPath, paginateNews } from '../lib/news';
+
+interface Props {
+  landing: Landing;
+  settings: Settings;
+  page: number;
+}
+
+const { landing, settings, page } = Astro.props;
+const { news } = landing.data;
+const home = localePath(landing.id, settings.defaultLocale);
+const site = Astro.site ?? new URL(settings.siteUrl);
+const { items, current, totalPages } = paginateNews(await getNews(landing.id), page);
+if (page > 1 && current !== page) throw new Error(`News page ${page} does not exist`);
+
+const path = newsPath(landing.id, settings.defaultLocale, { page: current });
+const og = await getMedia(settings.socialImage);
+const ogImage = await getImage({ src: og.image, width: 1200, height: 630, fit: 'cover', format: 'jpeg', quality: 82 });
+const title =
+  current > 1
+    ? `${news.listTitle} (${current}/${totalPages}) — ${settings.siteName}`
+    : `${news.listTitle} — ${settings.siteName}`;
+const rss = landing.id === settings.defaultLocale ? '/news/rss.xml' : undefined;
+---
+
+<Base
+  settings={settings}
+  landing={landing}
+  alternates={[]}
+  title={title}
+  description={news.listDescription}
+  ogImage={{ url: new URL(ogImage.src, site).href, width: 1200, height: 630, alt: og.alt || settings.siteName }}
+  path={path}
+  rss={rss}
+>
+  <div class="page">
+    <Nav landing={landing} siteName={settings.siteName} home={home} />
+    <div class="shell">
+      <main class="main news-page" id="main">
+        <header class="news-page__head">
+          <span class="pill pill--faq">{news.pill}</span>
+          <h1 class="news-page__title">{news.listTitle}</h1>
+          <p class="news-page__desc">{news.listDescription}</p>
+        </header>
+
+        <section class="news" aria-label={news.listTitle}>
+          {items.length > 0 ? (
+            <div class="news__grid">
+              {items.map((post, i) => (
+                <NewsCard
+                  post={post}
+                  href={newsPath(landing.id, settings.defaultLocale, post.id)}
+                  landing={landing}
+                  eager={i < 3}
+                />
+              ))}
+            </div>
+          ) : (
+            <p class="news__empty">{news.empty}</p>
+          )}
+          {totalPages > 1 && (
+            <nav class="pagination" aria-label={news.listTitle}>
+              <a
+                class="btn-sm"
+                href={current > 1 ? newsPath(landing.id, settings.defaultLocale, { page: current - 1 }) : undefined}
+                aria-disabled={current > 1 ? undefined : 'true'}
+              >
+                {news.prev}
+              </a>
+              <span class="pagination__info">
+                {news.pageOf.replace('{current}', String(current)).replace('{total}', String(totalPages))}
+              </span>
+              <a
+                class="btn-sm"
+                href={
+                  current < totalPages ? newsPath(landing.id, settings.defaultLocale, { page: current + 1 }) : undefined
+                }
+                aria-disabled={current < totalPages ? undefined : 'true'}
+              >
+                {news.next}
+              </a>
+            </nav>
+          )}
+        </section>
+      </main>
+      <Footer landing={landing} />
+    </div>
+  </div>
+</Base>

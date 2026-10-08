@@ -1,0 +1,75 @@
+---
+import '../styles/contact.css';
+import { Picture } from 'astro:assets';
+import type { Landing } from '../lib/content';
+import { getMedia } from '../lib/content';
+import { UZ_DISPLAY_MAX_LENGTH } from '../lib/phone';
+
+interface Props {
+  landing: Landing;
+  endpoint: string;
+}
+
+const { landing, endpoint } = Astro.props;
+const { contact } = landing.data;
+const bg = await getMedia(contact.image);
+const { form } = contact;
+---
+
+<section class="contact" id="boglanish">
+  <div class="cta">
+    <Picture
+      class="cta__bg"
+      src={bg.image}
+      alt={bg.alt ?? ''}
+      formats={['avif', 'webp']}
+      fallbackFormat="jpeg"
+      width={Math.min(1242, bg.image.width)}
+      widths={[800, 1242, 1800, 2484].filter((w) => w <= bg.image.width)}
+      sizes="(max-width: 809.98px) 941px, 1242px"
+      loading="lazy"
+      decoding="async"
+    />
+    <div class="cta__content">
+      <h2 class="cta__title">{contact.title}</h2>
+      <form
+        class="cta__form"
+        id="demoForm"
+        novalidate
+        data-endpoint={endpoint}
+        data-msg-invalid={form.invalid}
+        data-msg-network={form.networkError}
+        data-msg-success={form.success}
+        data-msg-sending={form.sending}
+      >
+        <label class="sr-only" for="demoPhone">
+          {form.label}
+        </label>
+        <input
+          class="cta__input"
+          id="demoPhone"
+          name="phone"
+          type="tel"
+          inputmode="tel"
+          autocomplete="tel"
+          placeholder={form.placeholder}
+          maxlength={UZ_DISPLAY_MAX_LENGTH}
+          aria-describedby="demoMsg"
+        />
+        <div class="cta__hp" aria-hidden="true">
+          <label for="demoWebsite">Website</label>
+          <input id="demoWebsite" name="website" type="text" tabindex="-1" autocomplete="off" />
+        </div>
+        <button class="btn-sm" type="submit">
+          {form.submit}
+        </button>
+      </form>
+      <p class="cta__msg" id="demoMsg" role="status" aria-live="polite"></p>
+    </div>
+  </div>
+</section>
+
+<script>
+  import { initDemoForm } from '../scripts/demo-form';
+  initDemoForm();
+</script>

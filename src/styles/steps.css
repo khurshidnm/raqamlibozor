@@ -1,0 +1,186 @@
+/* ==========================================================================
+   Implementation steps (staggered grid with a dotted rail)
+   ========================================================================== */
+.steps {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 35px;
+  min-height: 1299px;
+  padding: 60px 35px 0;
+  background: var(--gray);
+  border-radius: 32px;
+  overflow: hidden;
+  overflow: clip;
+}
+.sec-head--steps {
+  max-width: 452px;
+  min-height: 125px;
+  flex: none;
+}
+.steps__body {
+  display: grid;
+  grid-template-columns: 1fr 110px 1fr;
+  width: 100%;
+  row-gap: 94px;
+}
+.step {
+  position: relative;
+  z-index: 1;
+  align-self: start;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 24px;
+  min-height: 270px;
+  padding: 30px;
+  background: #fff;
+  border-radius: 32px;
+  overflow: hidden;
+}
+/* staggered: 1 left, 2 right, 3 left — one card per row, rail in the middle column */
+.step--1 {
+  grid-column: 1;
+  grid-row: 1;
+  margin-top: 35px;
+}
+.step--2 {
+  grid-column: 3;
+  grid-row: 2;
+}
+.step--3 {
+  grid-column: 1;
+  grid-row: 3;
+}
+.step__top {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  width: 100%;
+}
+.step__title {
+  flex: 1 0 0;
+  min-width: 0;
+  font-weight: 700;
+  font-size: 32px;
+  line-height: 1.2;
+  letter-spacing: -0.025em;
+  color: #000;
+}
+.step__title--p {
+  letter-spacing: normal;
+}
+.step__icon {
+  flex: none;
+  height: auto;
+  aspect-ratio: 1;
+  object-fit: cover;
+}
+.step__icon--1 {
+  width: 107px;
+}
+.step__icon--2 {
+  width: 90px;
+}
+.step__icon--3 {
+  width: 102px;
+}
+.step__desc {
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  color: #000;
+}
+
+.steps__rail {
+  position: relative;
+  grid-column: 2;
+  grid-row: 1 / span 3;
+  min-height: 1033px;
+  overflow: hidden;
+  overflow: clip;
+}
+.steps__rail-fade {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  width: 100%;
+  height: 104vh;
+  background: linear-gradient(
+    180deg,
+    #f5f5f5 0%,
+    rgba(245, 245, 245, 0.62) 32.4138%,
+    rgba(245, 245, 245, 0) 50%,
+    rgba(245, 245, 245, 0.8) 65.8621%,
+    #f5f5f5 100%
+  );
+}
+.steps__dots {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  width: 78px;
+  padding-top: 25px;
+  transform: translateX(-50%);
+}
+.steps__dots i {
+  width: 5px;
+  height: 5px;
+  background: rgba(23, 142, 32, 0.76);
+}
+
+@media (min-width: 810px) and (max-width: 1439.98px) {
+  .step__title {
+    font-size: 22px;
+  }
+  .step__icon--1,
+  .step__icon--2,
+  .step__icon--3 {
+    width: 64px;
+  }
+}
+@media (max-width: 809.98px) {
+  .steps {
+    gap: 16px;
+    min-height: 0;
+    padding: 33px 12px 24px;
+  }
+  .sec-head--steps {
+    max-width: none;
+    min-height: 0;
+  }
+  .steps .sec-title {
+    font-size: 32px;
+  }
+  .steps__body {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .steps__rail {
+    display: none;
+  }
+  .step {
+    width: 100%;
+    min-height: 260px;
+    margin-top: 0;
+    padding: 20px;
+  }
+  .step--2 {
+    min-height: 200px;
+  }
+  .step__title {
+    font-size: 22px;
+  }
+  .step__icon--1,
+  .step__icon--2,
+  .step__icon--3 {
+    width: 64px;
+  }
+}

@@ -1,0 +1,89 @@
+---
+import '../styles/hero.css';
+import pattern from '../assets/ui/hero-pattern.svg';
+import Icon from './Icon.astro';
+import type { Landing } from '../lib/content';
+import { jsonForScript } from '../lib/text';
+import type { HeroData, SlideData } from '../scripts/hero-slider';
+
+interface Props {
+  landing: Landing;
+  data: HeroData;
+}
+
+const { landing, data } = Astro.props;
+const { hero, a11y } = landing.data;
+const first = data.slides[0];
+if (!first) throw new Error('The hero needs at least one slide');
+
+const placementStyle = (s: SlideData) =>
+  `--wd:${s.d.w}px;--xd:${50 + s.d.x}%;--yd:${50 + s.d.y}%;--wm:${s.m.w}px;--xm:${50 + s.m.x}%;--ym:${50 + s.m.y}%`;
+---
+
+<section class="hero" id="bosh-sahifa">
+  <h1 class="hero__title" id="heroTitle">
+    <span class="hero__title-in">{first.title}</span>
+  </h1>
+  {hero.buttons.length > 0 && (
+    <div class="hero__actions">
+      {hero.buttons.map((b) => (
+        <a class:list={['btn', `btn--${b.variant}`]} href={b.href || '#boglanish'}>
+          {b.label}
+        </a>
+      ))}
+    </div>
+  )}
+</section>
+
+<div class="banner">
+  <div class="banner__bg">
+    <img
+      class="banner__pattern"
+      src={pattern.src}
+      width={pattern.width}
+      height={pattern.height}
+      alt=""
+      aria-hidden="true"
+    />
+    <div class="banner__stage" id="heroStage" aria-hidden="true">
+      <div class="slide">
+        <div class="slide__img" style={placementStyle(first)}>
+          <picture>
+            <source media="(max-width: 809.98px)" srcset={first.m.srcset} sizes={first.m.sizes} type="image/webp" />
+            <img
+              src={first.d.src}
+              srcset={first.d.srcset}
+              sizes={first.d.sizes}
+              width={first.d.width}
+              height={first.d.height}
+              alt=""
+              decoding="async"
+              fetchpriority="high"
+            />
+          </picture>
+        </div>
+        <div class="slide__tags">
+          {first.tags.map((t) => (
+            <div class="slide__tag" style={`left:${50 + t.x}%;top:${50 + t.y}%`}>
+              <span>{t.label}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </div>
+  {data.slides.length > 1 && (
+    <button class="hero__pause" type="button" aria-label={a11y.sliderPause}>
+      <Icon name="pause" class="icon--pause" />
+      <Icon name="play" class="icon--play" />
+    </button>
+  )}
+</div>
+
+<div class="spacer"></div>
+
+<script type="application/json" id="hero-data" set:html={jsonForScript(data)} />
+<script>
+  import { initHeroSlider } from '../scripts/hero-slider';
+  initHeroSlider();
+</script>

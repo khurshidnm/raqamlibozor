@@ -1,0 +1,451 @@
+{
+  "language": "Oʻzbekcha",
+  "lang": "uz-Latn",
+  "seo": {
+    "title": "Raqamli Bozor — bozorlarni raqamli boshqarish tizimi",
+    "description": "Har bir rasta, har bir toʻlov va har bir ijara hisobi — bozoringizni boshqarish uchun kerakli maʼlumotlar bir joyda.",
+    "ogImage": "cta-market"
+  },
+  "nav": {
+    "links": [
+      {
+        "label": "Bozorlar",
+        "href": "#bozorlar"
+      },
+      {
+        "label": "Imkoniyatlar",
+        "href": "#imkoniyatlar"
+      },
+      {
+        "label": "Yechimlar",
+        "href": "#yechimlar"
+      },
+      {
+        "label": "Joriy etish",
+        "href": "#joriy-etish"
+      },
+      {
+        "label": "Savollar",
+        "href": "#savollar"
+      },
+      {
+        "label": "Yangiliklar",
+        "href": "/news/"
+      }
+    ],
+    "cta": {
+      "label": "Demo soʻrash",
+      "href": "#boglanish"
+    }
+  },
+  "hero": {
+    "intervalMs": 2000,
+    "buttons": [
+      {
+        "label": "Sinab koʻrish",
+        "href": "#boglanish",
+        "variant": "orange"
+      },
+      {
+        "label": "Profilga kirish",
+        "href": "",
+        "variant": "green"
+      }
+    ],
+    "slides": [
+      {
+        "title": "Yuqori aniqlikdagi\nsunʼiy intellekt",
+        "image": "hero-basket",
+        "imageMobile": "hero-basket",
+        "desktop": {
+          "width": 675,
+          "x": 2,
+          "y": 23
+        },
+        "mobile": {
+          "width": 578,
+          "x": 13,
+          "y": 7
+        },
+        "tags": [
+          {
+            "label": "Xavfsizlik",
+            "x": -30,
+            "y": -3
+          },
+          {
+            "label": "Tekshiruv",
+            "x": 13,
+            "y": 27
+          },
+          {
+            "label": "Aniq hisobot",
+            "x": 24,
+            "y": -5
+          }
+        ]
+      },
+      {
+        "title": "Chorva mollari\nsotuv va savdo",
+        "image": "hero-cow",
+        "imageMobile": "hero-cow-sm",
+        "desktop": {
+          "width": 468,
+          "x": 0,
+          "y": 0
+        },
+        "mobile": {
+          "width": 486,
+          "x": 11,
+          "y": -6
+        },
+        "tags": [
+          {
+            "label": "Sanoq",
+            "x": -20,
+            "y": -15
+          },
+          {
+            "label": "Nazorat",
+            "x": -6,
+            "y": 26
+          },
+          {
+            "label": "Aniq hisob",
+            "x": 18,
+            "y": -3
+          }
+        ]
+      },
+      {
+        "title": "Rastalar va toʻlovlar\nnazorati",
+        "image": "hero-phone",
+        "imageMobile": "hero-phone-sm",
+        "desktop": {
+          "width": 576,
+          "x": 4,
+          "y": 20
+        },
+        "mobile": {
+          "width": 581,
+          "x": 16,
+          "y": 14
+        },
+        "tags": [
+          {
+            "label": "Tekshiruv",
+            "x": -25,
+            "y": -12
+          },
+          {
+            "label": "Kafolat",
+            "x": 24,
+            "y": -14
+          },
+          {
+            "label": "Elektron arxiv",
+            "x": -15,
+            "y": 22
+          }
+        ]
+      },
+      {
+        "title": "Raqamli avtoturargoh\nyechimi",
+        "image": "hero-cars",
+        "imageMobile": "hero-cars-sm",
+        "desktop": {
+          "width": 1101,
+          "x": 0,
+          "y": 10
+        },
+        "mobile": {
+          "width": 956,
+          "x": 50,
+          "y": 16
+        },
+        "tags": [
+          {
+            "label": "Kirish-chiqish",
+            "x": -37,
+            "y": -15
+          },
+          {
+            "label": "Tartib",
+            "x": 32,
+            "y": -12
+          },
+          {
+            "label": "Toʻlov nazorati",
+            "x": -11,
+            "y": -20
+          }
+        ]
+      }
+    ]
+  },
+  "intro": {
+    "rows": [
+      {
+        "segments": [
+          {
+            "text": "Har bir",
+            "style": "plain"
+          },
+          {
+            "text": "rasta,",
+            "style": "chip-green"
+          },
+          {
+            "text": "har bir",
+            "style": "plain"
+          },
+          {
+            "text": "toʻlov",
+            "style": "chip-orange"
+          },
+          {
+            "text": "va har bir",
+            "style": "plain"
+          }
+        ]
+      },
+      {
+        "segments": [
+          {
+            "text": "ijara hisobi",
+            "style": "chip-green"
+          },
+          {
+            "text": "—",
+            "style": "plain"
+          },
+          {
+            "text": "bozoringizni boshqarish",
+            "style": "muted"
+          }
+        ]
+      },
+      {
+        "segments": [
+          {
+            "text": "uchun kerakli maʼlumotlar",
+            "style": "muted"
+          },
+          {
+            "text": "bir joyda.",
+            "style": "plain"
+          }
+        ]
+      }
+    ]
+  },
+  "features": {
+    "pill": "Imkoniyatlar",
+    "title": "Rastalar\nva toʻlovlar nazorati",
+    "cards": [
+      {
+        "label": "Toʻlovlar va qarzdorlik nazorati",
+        "visual": "dashboard",
+        "wideLabel": false
+      },
+      {
+        "label": "Avtoturargoh tushumlari nazorati",
+        "visual": "notifications",
+        "wideLabel": true
+      },
+      {
+        "label": "Rastalar bandligi nazorati",
+        "visual": "orbit",
+        "wideLabel": false
+      },
+      {
+        "label": "Ijara hujjatlarini avtomatlashtirish",
+        "visual": "tiles",
+        "wideLabel": false
+      }
+    ],
+    "notifications": [
+      {
+        "title": "Toʻlov qabul qilindi",
+        "meta": "Avtoturargoh · Bugun, 10:24",
+        "amount": "10 000"
+      },
+      {
+        "title": "Toʻlov qabul qilindi",
+        "meta": "Supermarket · Bugun, 14:15",
+        "amount": "45 000"
+      },
+      {
+        "title": "Toʻlov qabul qilindi",
+        "meta": "Restoran · Kecha, 20:30",
+        "amount": "125 000"
+      }
+    ]
+  },
+  "solutions": {
+    "cta": {
+      "label": "Demo soʻrash",
+      "href": "#boglanish"
+    },
+    "cards": [
+      {
+        "title": "Har bir rasta — nazoratda",
+        "description": "Qaysi rastalar bandligini, patta toʻlovlari holatini va ijara qarzdorligini bir joyda kuzating.",
+        "items": ["Band va boʻsh rastalar", "Patta toʻlovlari holati", "Ijara va qarzdorlik hisobi"],
+        "image": "solution-stalls",
+        "side": "left"
+      },
+      {
+        "title": "Avtoturargoh — aniq hisobda",
+        "description": "Avtomobillarning kirishi va chiqishini qayd eting. Toʻlovlar holatini kuzating va avtoturargoh tushumlari boʻyicha hisobot oling.",
+        "items": ["Kirish va chiqish qaydi", "Toʻlovlar monitoringi", "Tushumlar hisoboti"],
+        "image": "solution-parking",
+        "side": "right"
+      },
+      {
+        "title": "Ijara hujjatlari — bir joyda",
+        "description": "Ijara shartnomalarini avtomatik yarating va har bir ijarachining shaxsiy hisobini yuriting. Toʻlovlar hamda qarzdorlik holatini kuzatib boring.",
+        "items": ["Shartnomalarni yaratish", "Shaxsiy hisobvaraqlar", "Ijara va qarzdorlik hisobi"],
+        "image": "solution-rent",
+        "side": "left"
+      },
+      {
+        "title": "Chorva bozori — aniq hisobda",
+        "description": "Bozorga hayvonlarning kirishi va chiqishini qayd eting. Toʻlovlar holatini kuzating va chorva bozori tushumlari boʻyicha hisobot oling.",
+        "items": ["Hayvonlar kirish-chiqish qaydi", "Toʻlovlar monitoringi", "Tushumlar hisoboti"],
+        "image": "solution-livestock",
+        "side": "right"
+      }
+    ]
+  },
+  "steps": {
+    "pill": "Integratsiya",
+    "title": "Raqamli bozorga uch qadam",
+    "items": [
+      {
+        "title": "1. Ehtiyojlarni\naniqlaymiz",
+        "description": "Bozoringizdagi jarayonlarni muhokama qilib, sizga kerakli imkoniyatlarni belgilaymiz.",
+        "icon": "step-1"
+      },
+      {
+        "title": "2. Tizimni\nnamoyish qilamiz",
+        "description": "Rastalar, toʻlovlar va ijara hisobi tizimda qanday boshqarilishini koʻrsatamiz.",
+        "icon": "step-2"
+      },
+      {
+        "title": "3. Joriy etishni\nrejalashtiramiz",
+        "description": "Kerakli jihozlar, ish hajmi, muddat va narxni kelishib olamiz.",
+        "icon": "step-3"
+      }
+    ]
+  },
+  "markets": {
+    "title": "Bizga ishongan bozorlar",
+    "cta": {
+      "label": "Barchasini koʻrish",
+      "href": ""
+    }
+  },
+  "news": {
+    "label": "Yangiliklar",
+    "pill": "Yangiliklar",
+    "title": "Soʻnggi yangiliklar",
+    "listTitle": "Yangiliklar",
+    "listDescription": "Raqamli Bozor yangiliklari: tizim yangilanishlari, yangi imkoniyatlar va joriy etish tajribasi.",
+    "viewAll": "Barcha yangiliklar",
+    "readMore": "Batafsil",
+    "back": "Barcha yangiliklar",
+    "more": "Boshqa yangiliklar",
+    "empty": "Hozircha yangiliklar yoʻq.",
+    "prev": "Oldingi",
+    "next": "Keyingi",
+    "pageOf": "{current} / {total}"
+  },
+  "faq": {
+    "pill": "FAQ",
+    "title": "Savol va Javoblar",
+    "items": [
+      {
+        "question": "Tizim kimlar uchun moʻljallangan?",
+        "answer": "Raqamli Bozor bozor rahbariyati, nazoratchilar va ijara hisobini yurituvchi xodimlar uchun moʻljallangan."
+      },
+      {
+        "question": "Mavjud kameralar bilan ishlash mumkinmi?",
+        "answer": "Mavjud kameralar bilan moslik demo davomida tekshiriladi. Kerakli ulanishlar va jihozlar siz bilan kelishiladi."
+      },
+      {
+        "question": "Tizimni joriy etish qancha turadi?",
+        "answer": "Narx kerakli imkoniyatlar, jihozlar va ish hajmiga bogʻliq. Demo davomida ehtiyojlaringizni aniqlab, narxni kelishib olamiz."
+      },
+      {
+        "question": "Tizimni ishga tushirish qancha vaqt oladi?",
+        "answer": "Muddat kerakli ulanishlar va ish hajmiga qarab belgilanadi. Demo davomida joriy etish rejasini tuzib, muddatni siz bilan kelishib olamiz."
+      }
+    ]
+  },
+  "contact": {
+    "title": "Bozoringiz uchun yechimni birga tanlaymiz",
+    "image": "cta-market",
+    "form": {
+      "label": "Telefon raqamingiz",
+      "placeholder": "+998 __ ___ __ __",
+      "submit": "Demo soʻrash",
+      "sending": "Yuborilmoqda…",
+      "success": "Rahmat! Tez orada siz bilan bogʻlanamiz.",
+      "invalid": "Telefon raqamini toʻliq kiriting: +998 XX XXX XX XX",
+      "networkError": "Yuborib boʻlmadi. Birozdan soʻng qayta urinib koʻring."
+    }
+  },
+  "footer": {
+    "brand": "Raqamli bozor",
+    "columns": [
+      {
+        "links": [
+          {
+            "label": "Ommaviy oferta",
+            "href": ""
+          },
+          {
+            "label": "RealSoft rezidenti",
+            "href": ""
+          },
+          {
+            "label": "Maxfiylik siyosati",
+            "href": ""
+          }
+        ]
+      },
+      {
+        "links": [
+          {
+            "label": "Raqamli Bozor tasdiqnoma",
+            "href": ""
+          },
+          {
+            "label": "Guvohnoma",
+            "href": ""
+          }
+        ]
+      }
+    ],
+    "copyright": "© Raqamli Bozor {year}. Barcha huquqlar himoyalangan.",
+    "madeBy": {
+      "label": "Made by RealSoft",
+      "href": "https://realsoft.uz"
+    }
+  },
+  "a11y": {
+    "skipToContent": "Asosiy qismga oʻtish",
+    "mainMenu": "Asosiy menyu",
+    "menuOpen": "Menyuni ochish",
+    "menuClose": "Menyuni yopish",
+    "sliderPause": "Sarlavhalar almashinuvini toʻxtatish",
+    "sliderPlay": "Sarlavhalar almashinuvini davom ettirish",
+    "globeLabel": "Yer shari — Raqamli Bozor bilan ishlaydigan bozorlar"
+  },
+  "notFound": {
+    "title": "Sahifa topilmadi",
+    "text": "Siz izlagan sahifa mavjud emas yoki koʻchirilgan.",
+    "back": "Bosh sahifaga qaytish"
+  }
+}

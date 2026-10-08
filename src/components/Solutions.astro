@@ -1,0 +1,70 @@
+---
+import '../styles/solutions.css';
+import { Image } from 'astro:assets';
+import type { Landing } from '../lib/content';
+import { getMedia } from '../lib/content';
+
+interface Props {
+  landing: Landing;
+}
+
+const { solutions } = Astro.props.landing.data;
+const cards = await Promise.all(solutions.cards.map(async (card) => ({ ...card, media: await getMedia(card.image) })));
+
+/** Rendered widths per breakpoint (phone, tablet, desktop) for each card position, mirroring solutions.css. */
+const sizesByIndex = [
+  '(max-width: 809.98px) 953px, (max-width: 1439.98px) 1211px, 1694px',
+  '(max-width: 809.98px) 898px, (max-width: 1439.98px) 1305px, 1752px',
+  '(max-width: 809.98px) 797px, (max-width: 1439.98px) 1170px, 1694px',
+  '(max-width: 809.98px) 1080px, (max-width: 1439.98px) 1920px, 1694px',
+];
+---
+
+<section class="solutions" id="yechimlar">
+  <div class="solutions__list" id="stack">
+    {cards.map((card, i) => (
+      <article class:list={['scard', `scard--${card.side}`, `scard--${i + 1}`]} id={`work-${i + 1}`}>
+        <div class="scard__text">
+          <div class="scard__head">
+            <h2 class="scard__title">{card.title}</h2>
+            <p class="scard__desc">{card.description}</p>
+          </div>
+          {card.items.length > 0 && (
+            <ul class="scard__list">
+              {card.items.map((item) => (
+                <li>{item}</li>
+              ))}
+            </ul>
+          )}
+          {solutions.cta.href && (
+            <a class="btn-sm" href={solutions.cta.href}>
+              {solutions.cta.label}
+            </a>
+          )}
+        </div>
+        <i class="scard__blur"></i>
+        <Image
+          class="scard__img"
+          src={card.media.image}
+          alt={card.media.alt ?? ''}
+          format="webp"
+          width={Math.min(1700, card.media.image.width)}
+          widths={[900, 1300, 1700, 2400].filter((w) => w <= card.media.image.width)}
+          sizes={sizesByIndex[i % sizesByIndex.length]}
+          loading="lazy"
+          decoding="async"
+        />
+      </article>
+    ))}
+  </div>
+  {solutions.cta.href && (
+    <a class="btn-sm btn-sm--block solutions__cta-m" href={solutions.cta.href}>
+      {solutions.cta.label}
+    </a>
+  )}
+</section>
+
+<script>
+  import { initSolutionsStack } from '../scripts/solutions-stack';
+  initSolutionsStack();
+</script>

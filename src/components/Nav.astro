@@ -1,0 +1,75 @@
+---
+import '../styles/nav.css';
+import logo from '../assets/ui/logo.svg';
+import Icon from './Icon.astro';
+import type { Landing } from '../lib/content';
+
+interface Props {
+  landing: Landing;
+  siteName: string;
+  home: string;
+}
+
+const { landing, siteName, home } = Astro.props;
+const { nav, a11y } = landing.data;
+/* In-page anchors (#bozorlar) only exist on the landing page; prefix them elsewhere. */
+const current = Astro.url.pathname.endsWith('/') ? Astro.url.pathname : `${Astro.url.pathname}/`;
+const isHome = current === home;
+const resolve = (href: string) => (href.startsWith('#') && !isHome ? `${home}${href}` : href);
+---
+
+<header class="nav" id="nav">
+  <div class="nav__bar">
+    <a class="nav__logo" href={home} aria-label={siteName}>
+      <img src={logo.src} width="95" height="33" alt={siteName} />
+    </a>
+
+    <nav class="nav__links" aria-label={a11y.mainMenu}>
+      {nav.links.map((link) => (
+        <a class="roll" href={resolve(link.href)}>
+          <span class="roll__in">
+            <span>{link.label}</span>
+            <span aria-hidden="true">{link.label}</span>
+          </span>
+        </a>
+      ))}
+    </nav>
+
+    <a class="nav__cta" href={resolve(nav.cta.href || '#boglanish')}>
+      <span class="nav__cta-in">
+        <span class="nav__cta-row">
+          <Icon name="arrow" />
+          <span>{nav.cta.label}</span>
+        </span>
+        <span class="nav__cta-row" aria-hidden="true">
+          <Icon name="send" />
+          <span>{nav.cta.label}</span>
+        </span>
+      </span>
+    </a>
+
+    <button
+      class="nav__menu-btn"
+      type="button"
+      aria-expanded="false"
+      aria-controls="navPanel"
+      aria-label={a11y.menuOpen}
+      data-label-open={a11y.menuOpen}
+      data-label-close={a11y.menuClose}
+    >
+      <Icon name="menu" class="icon--menu" />
+      <Icon name="close" class="icon--close" />
+    </button>
+
+    <nav class="nav__panel" id="navPanel" aria-label={a11y.mainMenu}>
+      {nav.links.map((link) => (
+        <a href={resolve(link.href)}>{link.label}</a>
+      ))}
+    </nav>
+  </div>
+</header>
+
+<script>
+  import { initNav } from '../scripts/nav';
+  initNav();
+</script>

@@ -1,0 +1,68 @@
+---
+import { getImage } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import Nav from './Nav.astro';
+import Hero from './Hero.astro';
+import Intro from './Intro.astro';
+import Features from './Features.astro';
+import Solutions from './Solutions.astro';
+import Steps from './Steps.astro';
+import Markets from './Markets.astro';
+import Faq from './Faq.astro';
+import Contact from './Contact.astro';
+import Footer from './Footer.astro';
+import NewsSection from './NewsSection.astro';
+import type { Landing, Settings } from '../lib/content';
+import { getLandingEntries, getMedia, localePath } from '../lib/content';
+import { buildJsonLd } from '../lib/jsonld';
+import { buildHeroData, heroPreloads } from '../lib/hero';
+
+interface Props {
+  landing: Landing;
+  settings: Settings;
+}
+
+const { landing, settings } = Astro.props;
+const path = localePath(landing.id, settings.defaultLocale);
+const site = Astro.site ?? new URL(settings.siteUrl);
+const alternates = await getLandingEntries();
+
+const og = await getMedia(landing.data.seo.ogImage);
+const ogImage = await getImage({ src: og.image, width: 1200, height: 630, fit: 'cover', format: 'jpeg', quality: 82 });
+const ogImageAbs = { url: new URL(ogImage.src, site).href, width: 1200, height: 630, alt: og.alt || settings.siteName };
+
+const heroData = await buildHeroData(landing);
+const endpoint = (import.meta.env.PUBLIC_DEMO_ENDPOINT || settings.demoEndpoint || '').trim();
+const jsonLd = buildJsonLd({ settings, landing, pageUrl: new URL(path, site).href, ogImageUrl: ogImageAbs.url });
+---
+
+<Base
+  settings={settings}
+  landing={landing}
+  alternates={alternates}
+  title={landing.data.seo.title}
+  description={landing.data.seo.description}
+  ogImage={ogImageAbs}
+  jsonLd={jsonLd}
+  preloads={heroPreloads(heroData)}
+  path={path}
+  rss={landing.id === settings.defaultLocale ? '/news/rss.xml' : undefined}
+>
+  <div class="page" id="page">
+    <Nav landing={landing} siteName={settings.siteName} home={path} />
+    <div class="shell">
+      <main class="main" id="main">
+        <Hero landing={landing} data={heroData} />
+        <Intro landing={landing} />
+        <Features landing={landing} />
+        <Solutions landing={landing} />
+        <Steps landing={landing} />
+        <Markets landing={landing} frames={settings.globeFrames} />
+        <NewsSection landing={landing} settings={settings} />
+        <Faq landing={landing} />
+        <Contact landing={landing} endpoint={endpoint} />
+      </main>
+      <Footer landing={landing} />
+    </div>
+  </div>
+</Base>

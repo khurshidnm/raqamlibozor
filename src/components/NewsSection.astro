@@ -1,0 +1,32 @@
+---
+import '../styles/news.css';
+import NewsCard from './NewsCard.astro';
+import type { Landing, Settings } from '../lib/content';
+import { getNews, newsPath } from '../lib/news';
+
+interface Props {
+  landing: Landing;
+  settings: Settings;
+}
+
+const { landing, settings } = Astro.props;
+const { news } = landing.data;
+const posts = (await getNews(landing.id)).slice(0, 3);
+---
+
+{posts.length > 0 && (
+  <section class="news" id="yangiliklar">
+    <header class="sec-head">
+      <span class="pill">{news.pill}</span>
+      <h2 class="sec-title">{news.title}</h2>
+    </header>
+    <div class="news__grid">
+      {posts.map((post) => (
+        <NewsCard post={post} href={newsPath(landing.id, settings.defaultLocale, post.id)} landing={landing} />
+      ))}
+    </div>
+    <a class="btn-sm" href={newsPath(landing.id, settings.defaultLocale)}>
+      {news.viewAll}
+    </a>
+  </section>
+)}

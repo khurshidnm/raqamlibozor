@@ -1,0 +1,43 @@
+---
+import '../styles/not-found.css';
+import { getImage } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import { getLanding, getLandingEntries, getMedia, getSettings } from '../lib/content';
+
+const settings = await getSettings();
+const landing = await getLanding(settings.defaultLocale);
+const alternates = await getLandingEntries();
+const site = Astro.site ?? new URL(settings.siteUrl);
+const og = await getMedia(settings.socialImage);
+const ogImage = await getImage({ src: og.image, width: 1200, height: 630, fit: 'cover', format: 'jpeg', quality: 82 });
+const { notFound } = landing.data;
+---
+
+<Base
+  settings={settings}
+  landing={landing}
+  alternates={alternates}
+  title={`${notFound.title} — ${settings.siteName}`}
+  description={notFound.text}
+  ogImage={{ url: new URL(ogImage.src, site).href, width: 1200, height: 630, alt: og.alt || settings.siteName }}
+  path="/404"
+>
+  <div class="page">
+    <Nav landing={landing} siteName={settings.siteName} home="/" />
+    <div class="shell">
+      <main class="main nf" id="main">
+        <p class="nf__code" aria-hidden="true">
+          404
+        </p>
+        <h1 class="nf__title">{notFound.title}</h1>
+        <p class="nf__text">{notFound.text}</p>
+        <a class="btn btn--green" href="/">
+          {notFound.back}
+        </a>
+      </main>
+      <Footer landing={landing} />
+    </div>
+  </div>
+</Base>

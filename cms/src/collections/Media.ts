@@ -15,7 +15,7 @@ export const Media: CollectionConfig = {
   hooks: { afterChange: [collectionDeployHook] },
   upload: {
     staticDir: path.resolve(dirname, '../../media'),
-    mimeTypes: ['image/png', 'image/jpeg', 'image/webp'],
+    mimeTypes: ['image/png', 'image/jpeg', 'image/webp', 'image/avif'],
     adminThumbnail: ({ doc }) => (doc.url as string | undefined) ?? null,
   },
   fields: [

@@ -17,10 +17,7 @@ export function launchIssues(env: Record<string, string | undefined>, settings: 
   } else if (!/^https:\/\//.test(endpoint)) {
     issues.push(`The demo-request endpoint must be an https:// URL (got “${endpoint}”).`);
   }
-  if (!env.SITE_URL) {
-    issues.push(
-      `SITE_URL is not set, so canonical URLs, Open Graph and the sitemap use “${settings.siteUrl}” from Site settings.`,
-    );
-  }
+  const siteUrl = env.SITE_URL || settings.siteUrl;
+  if (!/^https:\/\//.test(siteUrl)) issues.push(`The site URL must be an https:// URL (got “${siteUrl}”).`);
   return issues;
 }

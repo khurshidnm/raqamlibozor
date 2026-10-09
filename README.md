@@ -2,8 +2,6 @@
 
 Astro 7 + TypeScript static site with a git-based headless CMS (Keystatic). Visitors get plain HTML, CSS and a few small ES modules — no framework runtime. Editors get an admin UI at `/keystatic` that writes to the JSON files in `src/content/`.
 
-The previous hand-written build is kept in [`legacy/`](legacy/) for reference and can be deleted once this version is live.
-
 ## Stack and why
 
 | Concern   | Choice                    | Reason                                                                                                                                                                                                                                               |
@@ -59,7 +57,6 @@ src/
   pages/                  index, [locale]/index, news/*, [locale]/news/*, 404, robots.txt
 public/                   fonts, globe frames (earth/), icons, manifest
 tests/                    Vitest
-legacy/                   previous static build (reference only)
 ```
 
 ## Editing content
@@ -119,14 +116,13 @@ The endpoint must answer CORS preflight requests from the site origin and return
 
 ## Launch checklist
 
-Every `npm run build` reports the first two items below as warnings. Set `STRICT_BUILD=true` on the production deploy to turn them into a failed build.
+Every `npm run build` reports a missing form endpoint (and a non-https site URL) as warnings. Set `STRICT_BUILD=true` on the production deploy to turn them into a failed build.
 
-- [ ] Set the real domain in Site settings (currently `https://raqamlibozor.uz` as a placeholder) or `SITE_URL`.
+- [ ] Set the real domain in Site settings (currently `https://raqamli-bozor.uz`) or `SITE_URL`.
 - [ ] Set the demo-request endpoint.
 - [ ] Fill the links that had no destination in the Framer design: "Profilga kirish" (app login), "Barchasini koʻrish" (markets list), and the five footer documents. Items without a link render as plain text, so nothing is a dead link in the meantime.
-- [ ] Confirm the Gilroy web-font licence covers self-hosting (Inter is SIL OFL).
+- [ ] Gilroy is self-hosted without a purchased licence for now. Buy one or swap `--font` in `src/styles/global.css` for a free font before a public launch (Inter, already bundled, is SIL OFL).
 - [ ] Add analytics if needed (the CSP `script-src` / `connect-src` must then list its host).
-- [ ] Delete `legacy/` once the new site is live.
 
 ## What changed from the previous build
 

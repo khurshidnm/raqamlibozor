@@ -2,7 +2,6 @@
 import '../styles/news.css';
 import { Image, getImage } from 'astro:assets';
 import { render } from 'astro:content';
-import logo from '../assets/ui/logo.svg';
 import Base from '../layouts/Base.astro';
 import Nav from './Nav.astro';
 import Footer from './Footer.astro';
@@ -12,6 +11,7 @@ import type { Landing, Settings } from '../lib/content';
 import { getMedia, localePath } from '../lib/content';
 import { formatDate, getNews, isoDate, newsPath, type NewsPost } from '../lib/news';
 import { buildNewsArticleJsonLd } from '../lib/jsonld';
+import { applyTitleTemplate, truncate } from '../lib/seo';
 
 interface Props {
   landing: Landing;
@@ -27,8 +27,10 @@ const path = newsPath(landing.id, settings.defaultLocale, post.id);
 const listPath = newsPath(landing.id, settings.defaultLocale);
 
 const cover = await getMedia(post.data.cover);
+const { seo } = post.data;
+const share = seo.ogImage ? await getMedia(seo.ogImage) : cover;
 const ogImage = await getImage({
-  src: cover.image,
+  src: share.image,
   width: 1200,
   height: 630,
   fit: 'cover',
@@ -45,7 +47,7 @@ const jsonLd = buildNewsArticleJsonLd({
   pageUrl: new URL(path, site).href,
   listUrl: new URL(listPath, site).href,
   coverUrl: ogUrl,
-  logoUrl: new URL(logo.src, site).href,
+  logoUrl: new URL('/icons/icon-512.png', site).href,
 });
 ---
 
@@ -53,14 +55,17 @@ const jsonLd = buildNewsArticleJsonLd({
   settings={settings}
   landing={landing}
   alternates={[{ hreflang: landing.data.lang, path }]}
-  title={`${post.data.title} — ${settings.siteName}`}
-  description={post.data.excerpt}
-  ogImage={{ url: ogUrl, width: 1200, height: 630, alt: cover.alt || post.data.title }}
+  title={applyTitleTemplate(settings.seo.titleTemplate, seo.metaTitle || post.data.title, settings.siteName)}
+  description={seo.metaDescription || truncate(post.data.excerpt)}
+  ogImage={{ url: ogUrl, width: 1200, height: 630, alt: share.alt || post.data.title }}
+  canonical={seo.canonical}
+  noindex={seo.noindex}
+  modifiedTime={post.data.updatedAt ? post.data.updatedAt.toISOString() : undefined}
   ogType="article"
   publishedTime={post.data.publishedAt.toISOString()}
   jsonLd={jsonLd}
   path={path}
-  rss={landing.id === settings.defaultLocale ? '/news/rss.xml' : undefined}
+  rss={`${newsPath(landing.id, settings.defaultLocale)}rss.xml`}
 >
   <div class="page">
     <Nav landing={landing} siteName={settings.siteName} home={home} defaultLocale={settings.defaultLocale} />

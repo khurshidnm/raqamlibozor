@@ -3,6 +3,7 @@
 export interface LaunchSettings {
   siteUrl: string;
   demoEndpoint?: string | null;
+  seo?: { indexable?: boolean };
 }
 
 /** Problems that would ship a visibly broken site. Empty when the build is ready to publish. */
@@ -19,5 +20,8 @@ export function launchIssues(env: Record<string, string | undefined>, settings: 
   }
   const siteUrl = env.SITE_URL || settings.siteUrl;
   if (!/^https:\/\//.test(siteUrl)) issues.push(`The site URL must be an https:// URL (got “${siteUrl}”).`);
+  if (settings.seo?.indexable === false) {
+    issues.push('Search engines are blocked: “Allow search engines to index the site” is off in SEO settings.');
+  }
   return issues;
 }

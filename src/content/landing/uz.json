@@ -4,7 +4,11 @@
   "seo": {
     "title": "Raqamli Bozor — bozorlarni raqamli boshqarish tizimi",
     "description": "Har bir rasta, har bir toʻlov va har bir ijara hisobi — bozoringizni boshqarish uchun kerakli maʼlumotlar bir joyda.",
-    "ogImage": "cta-market"
+    "ogImage": "cta-market",
+    "ogTitle": "",
+    "ogDescription": "",
+    "canonical": "",
+    "noindex": false
   },
   "nav": {
     "links": [
@@ -359,7 +363,8 @@
     "empty": "Hozircha yangiliklar yoʻq.",
     "prev": "Oldingi",
     "next": "Keyingi",
-    "pageOf": "{current} / {total}"
+    "pageOf": "{current} / {total}",
+    "metaTitle": ""
   },
   "faq": {
     "pill": "FAQ",

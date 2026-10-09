@@ -4,12 +4,36 @@
   "defaultLocale": "uz",
   "themeColor": "#178f20",
   "demoEndpoint": "",
-  "gtmId": "",
-  "yandexMetrikaId": "",
   "organization": {
     "name": "RealSoft",
-    "url": "https://realsoft.uz"
+    "url": "https://realsoft.uz",
+    "email": "",
+    "phone": ""
   },
   "socialImage": "cta-market",
-  "globeFrames": 80
+  "globeFrames": 80,
+  "seo": {
+    "indexable": true,
+    "titleTemplate": "%s — {siteName}",
+    "twitterSite": "",
+    "socials": [],
+    "robotsExtra": "",
+    "verification": {
+      "google": "",
+      "yandex": "",
+      "bing": "",
+      "facebook": "",
+      "pinterest": ""
+    },
+    "customMeta": []
+  },
+  "tracking": {
+    "gtm": "",
+    "ga4": "",
+    "yandexMetrica": "",
+    "metaPixel": "",
+    "customHead": "",
+    "customBodyStart": "",
+    "cspHosts": []
+  }
 }

@@ -8,6 +8,7 @@ import NewsCard from './NewsCard.astro';
 import type { Landing, Settings } from '../lib/content';
 import { getLandingEntries, getMedia, localePath } from '../lib/content';
 import { getNews, newsPath, paginateNews } from '../lib/news';
+import { applyTitleTemplate } from '../lib/seo';
 
 interface Props {
   landing: Landing;
@@ -25,10 +26,12 @@ if (page > 1 && current !== page) throw new Error(`News page ${page} does not ex
 const path = newsPath(landing.id, settings.defaultLocale, { page: current });
 const og = await getMedia(settings.socialImage);
 const ogImage = await getImage({ src: og.image, width: 1200, height: 630, fit: 'cover', format: 'jpeg', quality: 82 });
-const title =
-  current > 1
-    ? `${news.listTitle} (${current}/${totalPages}) — ${settings.siteName}`
-    : `${news.listTitle} — ${settings.siteName}`;
+const heading = news.metaTitle || news.listTitle;
+const title = applyTitleTemplate(
+  settings.seo.titleTemplate,
+  current > 1 ? `${heading} (${current}/${totalPages})` : heading,
+  settings.siteName,
+);
 /* Only the first page has a counterpart in every language; deeper pages reference themselves. */
 const alternates =
   current === 1
@@ -37,7 +40,7 @@ const alternates =
         path: newsPath(entry.id, settings.defaultLocale),
       }))
     : [{ hreflang: landing.data.lang, path }];
-const rss = localePath(landing.id, settings.defaultLocale) + 'news/rss.xml';
+const rss = `${newsPath(landing.id, settings.defaultLocale)}rss.xml`;
 ---
 
 <Base

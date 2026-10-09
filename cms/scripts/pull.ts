@@ -13,7 +13,7 @@ import { contentRoot, mediaKeys } from './shared';
 const content = path.join(contentRoot, 'src/content');
 const assets = path.join(contentRoot, 'src/assets/media');
 const mediaDir = path.resolve(path.dirname(new URL(import.meta.url).pathname), '../media');
-const emptyStrings = new Set(['href', 'alt', 'demoEndpoint', 'gtmId', 'yandexMetrikaId', 'note']);
+const emptyStrings = new Set(['href', 'alt', 'demoEndpoint', 'note']);
 
 /** Drops CMS bookkeeping, resolves media relations to ids and unwraps string lists. */
 function toSite(value: unknown, key = ''): unknown {
@@ -80,6 +80,17 @@ for (const market of await all('markets')) {
   await writeJson(path.join(content, 'markets', `${slug}.json`), rest);
 }
 
+/**
+ * Front-matter `seo`, left out while every field is at its default. The share image is a one-item
+ * list in the CMS (see collections/News.ts) and a media id on the site.
+ */
+function newsSeo(seo: unknown): { seo?: Record<string, unknown> } {
+  const { ogImage, ...rest } = (seo ?? {}) as { ogImage?: { slug: string }[] | null };
+  const first = ogImage?.[0];
+  const out: Record<string, unknown> = { ...(toSite(rest) as object), ...(first ? { ogImage: first.slug } : {}) };
+  return Object.values(out).some((v) => v !== '' && v !== false) ? { seo: out } : {};
+}
+
 const bodyField = payload.collections.news.config.fields.find((f) => 'name' in f && f.name === 'body') as RichTextField;
 const editorConfig = editorConfigFactory.fromField({ field: bodyField });
 for (const post of await all('news')) {
@@ -92,6 +103,9 @@ for (const post of await all('news')) {
       excerpt: post.excerpt,
       cover: (post.cover as { slug: string }).slug,
       draft: false,
+      ...(post.modifiedAt ? { updatedAt: String(post.modifiedAt).slice(0, 10) } : {}),
+      ...(post.author ? { author: post.author } : {}),
+      ...newsSeo(post.seo),
     },
     { lineWidth: 0 },
   );

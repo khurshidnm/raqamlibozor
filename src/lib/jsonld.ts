@@ -3,28 +3,48 @@ import type { NewsPost } from './news';
 
 type JsonLd = Record<string, unknown>;
 
+/** Organization node shared by every page; optional CMS fields are only emitted when filled in. */
+export function organizationNode(settings: Settings, logoUrl: string): JsonLd {
+  const { organization, seo } = settings;
+  return {
+    '@type': 'Organization',
+    '@id': `${organization.url.replace(/\/$/, '')}/#organization`,
+    name: organization.name,
+    url: organization.url,
+    logo: logoUrl,
+    brand: { '@type': 'Brand', name: settings.siteName },
+    ...(seo.socials.length ? { sameAs: seo.socials.map((s) => s.url) } : {}),
+    ...(organization.email || organization.phone
+      ? {
+          contactPoint: {
+            '@type': 'ContactPoint',
+            contactType: 'sales',
+            ...(organization.email ? { email: organization.email } : {}),
+            ...(organization.phone ? { telephone: organization.phone } : {}),
+          },
+        }
+      : {}),
+  };
+}
+
 export function buildJsonLd(opts: {
   settings: Settings;
   landing: Landing;
   pageUrl: string;
   ogImageUrl: string;
+  logoUrl: string;
 }): JsonLd[] {
-  const { settings, landing, pageUrl, ogImageUrl } = opts;
+  const { settings, landing, pageUrl, ogImageUrl, logoUrl } = opts;
   const data = landing.data;
   return [
-    {
-      '@context': 'https://schema.org',
-      '@type': 'Organization',
-      name: settings.organization.name,
-      url: settings.organization.url,
-      brand: { '@type': 'Brand', name: settings.siteName },
-    },
+    { '@context': 'https://schema.org', ...organizationNode(settings, logoUrl) },
     {
       '@context': 'https://schema.org',
       '@type': 'WebSite',
       name: settings.siteName,
       url: settings.siteUrl,
       inLanguage: data.lang,
+      publisher: { '@id': `${settings.organization.url.replace(/\/$/, '')}/#organization` },
     },
     {
       '@context': 'https://schema.org',
@@ -57,12 +77,8 @@ export function buildNewsArticleJsonLd(opts: {
   logoUrl: string;
 }): JsonLd[] {
   const { settings, landing, post, pageUrl, listUrl, coverUrl, logoUrl } = opts;
-  const org = {
-    '@type': 'Organization',
-    name: settings.organization.name,
-    url: settings.organization.url,
-    logo: logoUrl,
-  };
+  const org = organizationNode(settings, logoUrl);
+  const author = post.data.author ? { '@type': 'Person', name: post.data.author } : org;
   return [
     {
       '@context': 'https://schema.org',
@@ -71,10 +87,10 @@ export function buildNewsArticleJsonLd(opts: {
       description: post.data.excerpt,
       image: [coverUrl],
       datePublished: post.data.publishedAt.toISOString(),
-      dateModified: post.data.publishedAt.toISOString(),
+      dateModified: (post.data.updatedAt ?? post.data.publishedAt).toISOString(),
       inLanguage: landing.data.lang,
       mainEntityOfPage: pageUrl,
-      author: org,
+      author,
       publisher: org,
     },
     {

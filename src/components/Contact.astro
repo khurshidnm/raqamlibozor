@@ -8,9 +8,11 @@ import { UZ_DISPLAY_MAX_LENGTH } from '../lib/phone';
 interface Props {
   landing: Landing;
   endpoint: string;
+  /** Yandex Metrica counter id, for conversion goals. */
+  ym?: string;
 }
 
-const { landing, endpoint } = Astro.props;
+const { landing, endpoint, ym = '' } = Astro.props;
 const { contact } = landing.data;
 const bg = await getMedia(contact.image);
 const { form, sent } = contact;
@@ -37,6 +39,7 @@ const { form, sent } = contact;
         id="demoForm"
         novalidate
         data-endpoint={endpoint}
+        data-ym={ym}
         data-msg-invalid={form.invalid}
         data-msg-network={form.networkError}
         data-msg-success={form.success}

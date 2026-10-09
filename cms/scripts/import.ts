@@ -102,6 +102,17 @@ for (const slug of await names(path.join(content, 'markets'), '.json')) {
 }
 console.log(`markets: ${count}`);
 
+/** YAML parses bare dates into Date objects. */
+const dateOnly = (value: unknown): string => (value instanceof Date ? value.toISOString().slice(0, 10) : String(value));
+
+/** The share image is a media id on the site and a one-item list in the CMS (see collections/News.ts). */
+function newsSeo(seo: unknown): Record<string, unknown> {
+  const { ogImage, ...rest } = (seo ?? {}) as { ogImage?: string | null };
+  const id = ogImage ? mediaIds.get(ogImage) : undefined;
+  if (ogImage && id === undefined) throw new Error(`Unknown media id "${ogImage}"`);
+  return { ...(toCms(rest, mediaIds) as object), ogImage: id === undefined ? [] : [id] };
+}
+
 const bodyField = payload.collections.news.config.fields.find((f) => 'name' in f && f.name === 'body') as RichTextField;
 const editorConfig = editorConfigFactory.fromField({ field: bodyField });
 count = 0;
@@ -110,8 +121,7 @@ for (const slug of await names(path.join(content, 'news'), '.md')) {
   const match = /^---\n([\s\S]*?)\n---\n?([\s\S]*)$/.exec(raw);
   if (!match) throw new Error(`${slug}.md has no front matter`);
   const meta = parseYaml(match[1]!) as Record<string, unknown>;
-  const date =
-    meta.publishedAt instanceof Date ? meta.publishedAt.toISOString().slice(0, 10) : String(meta.publishedAt);
+  const date = dateOnly(meta.publishedAt);
   await upsert(payload, 'news', 'slug', slug, {
     slug,
     title: meta.title,
@@ -119,6 +129,9 @@ for (const slug of await names(path.join(content, 'news'), '.md')) {
     publishedAt: `${date}T12:00:00.000Z`,
     excerpt: meta.excerpt,
     cover: mediaIds.get(String(meta.cover)),
+    modifiedAt: meta.updatedAt ? `${dateOnly(meta.updatedAt)}T12:00:00.000Z` : null,
+    author: meta.author ?? '',
+    seo: newsSeo(meta.seo),
     body: convertMarkdownToLexical({ editorConfig, markdown: match[2]!.trim() }),
     _status: meta.draft ? 'draft' : 'published',
   });

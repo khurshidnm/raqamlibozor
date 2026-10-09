@@ -4,7 +4,11 @@
   "seo": {
     "title": "Raqamli Bozor — система цифрового управления рынками",
     "description": "Каждая торговая точка, каждый платёж и каждый расчёт аренды — вся информация для управления вашим рынком в одном месте.",
-    "ogImage": "cta-market"
+    "ogImage": "cta-market",
+    "ogTitle": "",
+    "ogDescription": "",
+    "canonical": "",
+    "noindex": false
   },
   "nav": {
     "links": [
@@ -490,7 +494,8 @@
     "empty": "Пока новостей нет.",
     "prev": "Назад",
     "next": "Далее",
-    "pageOf": "{current} / {total}"
+    "pageOf": "{current} / {total}",
+    "metaTitle": ""
   },
   "faq": {
     "pill": "FAQ",

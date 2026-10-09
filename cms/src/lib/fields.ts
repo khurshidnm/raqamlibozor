@@ -1,4 +1,13 @@
-import type { ArrayField, Field, GroupField, NumberField, RelationshipField, SelectField, TextField } from 'payload';
+import type {
+  ArrayField,
+  CheckboxField,
+  Field,
+  GroupField,
+  NumberField,
+  RelationshipField,
+  SelectField,
+  TextField,
+} from 'payload';
 
 type Opts<T> = Partial<Omit<T, 'name' | 'type' | 'label'>>;
 
@@ -13,6 +22,9 @@ export const text = (name: string, label: string, opts: Opts<TextField> = {}): T
 
 export const textarea = (name: string, label: string, opts: Opts<Field> & { maxLength?: number } = {}): Field =>
   ({ name, label, type: 'textarea', required: true, ...opts }) as Field;
+
+export const optionalTextarea = (name: string, label: string, opts: Opts<Field> & { maxLength?: number } = {}): Field =>
+  textarea(name, label, { required: false, ...opts } as never);
 
 export const optionalText = (name: string, label: string, opts: Opts<TextField> = {}): TextField =>
   text(name, label, { required: false, ...opts });
@@ -34,8 +46,8 @@ export const select = (
 ): SelectField =>
   ({ name, label, type: 'select', options, defaultValue: options[0]?.value, required: true, ...opts }) as SelectField;
 
-export const checkbox = (name: string, label: string, opts: Opts<Field> = {}): Field =>
-  ({ name, label, type: 'checkbox', defaultValue: false, ...opts }) as Field;
+export const checkbox = (name: string, label: string, opts: Opts<CheckboxField> = {}): CheckboxField =>
+  ({ name, label, type: 'checkbox', defaultValue: false, ...opts }) as CheckboxField;
 
 export const media = (name: string, label: string, description?: string): RelationshipField => ({
   name,
@@ -62,6 +74,14 @@ export const array = (name: string, label: string, fields: Field[], opts: Opts<A
   ...opts,
   admin: { initCollapsed: true, ...opts.admin },
 });
+
+/** Empty or an absolute URL; empty means the page's own address. */
+export const canonicalField = (): TextField =>
+  optionalText('canonical', 'Canonical URL override', {
+    admin: { description: 'Leave empty to use this page’s own address.' },
+    validate: (value: string | null | undefined) =>
+      !value || URL.canParse(value) || 'Use a full URL like https://raqamlibozor.uz/',
+  });
 
 /** A label plus an optional link target. */
 export const link = (name: string, label: string, description?: string): GroupField =>

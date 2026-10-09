@@ -5,10 +5,12 @@ import { isStaff, publicRead } from '../lib/access';
 import { collectionDeployHook } from '../lib/deploy-hook';
 import {
   array,
+  canonicalField,
   checkbox,
   group,
   link,
   media,
+  optionalTextarea,
   num,
   optionalText,
   placement,
@@ -26,6 +28,16 @@ const tabs: Tab[] = [
     text('title', 'Page title', { maxLength: 70 }),
     metaDescription(),
     media('ogImage', 'Social share image', 'Cropped to 1200×630 automatically.'),
+    optionalText('ogTitle', 'Share title', {
+      maxLength: 95,
+      admin: { description: 'Shown when the page is shared. Empty uses the page title.' },
+    }),
+    optionalTextarea('ogDescription', 'Share description', {
+      maxLength: 200,
+      admin: { description: 'Empty uses the meta description.' },
+    } as never),
+    canonicalField(),
+    checkbox('noindex', 'Hide from search engines (noindex)'),
   ]),
   tab('nav', 'Navigation', [
     array('links', 'Menu links', [text('label', 'Label'), optionalText('href', 'Link')], { minRows: 1, maxRows: 7 }),
@@ -182,6 +194,10 @@ const tabs: Tab[] = [
     text('title', 'Home page section title'),
     text('listTitle', 'News page title'),
     textarea('listDescription', 'News page description (also the meta description)', { maxLength: 170 } as never),
+    optionalText('metaTitle', 'News page SEO title', {
+      maxLength: 70,
+      admin: { description: 'Empty uses the news page title.' },
+    }),
     text('viewAll', '“All news” button'),
     text('readMore', '“Read more” label'),
     text('back', 'Back link on an article'),

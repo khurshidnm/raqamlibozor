@@ -16,6 +16,49 @@ export const linkSchema = z.object({
 });
 export type Link = z.infer<typeof linkSchema>;
 
+/** An optional URL: Keystatic stores an empty field as "". */
+const optionalUrl = z.union([z.literal(''), z.url()]).default('');
+
+/* ---------- tracking / site-wide SEO (settings) ---------- */
+
+export const gtmIdSchema = z.string().regex(/^(GTM-[A-Z0-9]{4,10})?$/, 'Use a Google Tag Manager ID like GTM-ABC1234');
+export const ga4IdSchema = z.string().regex(/^(G-[A-Z0-9]{6,12})?$/, 'Use a GA4 measurement ID like G-ABCDE12345');
+export const digitsIdSchema = z.string().regex(/^(\d{5,20})?$/, 'Digits only');
+/** One https origin per line, e.g. https://cdn.example.com or https://*.example.com */
+export const cspHostSchema = z
+  .string()
+  .regex(/^https:\/\/(\*\.)?[a-z0-9.-]+\.[a-z]{2,}(:\d+)?$/i, 'Use https://host.example');
+
+export const seoSettingsSchema = z.object({
+  indexable: z.boolean().default(true),
+  titleTemplate: z.string().min(1).default('%s — {siteName}'),
+  twitterSite: z.string().default(''),
+  socials: z.array(z.object({ url: z.url() })).default([]),
+  robotsExtra: z.string().default(''),
+  verification: z
+    .object({
+      google: z.string().default(''),
+      yandex: z.string().default(''),
+      bing: z.string().default(''),
+      facebook: z.string().default(''),
+      pinterest: z.string().default(''),
+    })
+    .prefault({}),
+  customMeta: z.array(z.object({ name: z.string().min(1), content: z.string() })).default([]),
+});
+export type SeoSettings = z.infer<typeof seoSettingsSchema>;
+
+export const trackingSettingsSchema = z.object({
+  gtm: gtmIdSchema.default(''),
+  ga4: ga4IdSchema.default(''),
+  yandexMetrica: digitsIdSchema.default(''),
+  metaPixel: digitsIdSchema.default(''),
+  customHead: z.string().default(''),
+  customBodyStart: z.string().default(''),
+  cspHosts: z.array(z.object({ host: cspHostSchema })).default([]),
+});
+export type TrackingSettings = z.infer<typeof trackingSettingsSchema>;
+
 export const placementSchema = z.object({
   width: z.number().positive(),
   x: z.number(),
@@ -38,6 +81,7 @@ export const newsStringsSchema = z.object({
   title: z.string().min(1),
   listTitle: z.string().min(1),
   listDescription: z.string().min(1).max(170),
+  metaTitle: z.string().max(70).default(''),
   viewAll: z.string().min(1),
   readMore: z.string().min(1),
   back: z.string().min(1),
@@ -110,6 +154,10 @@ export function landingSchema<M extends z.ZodType>(media: M) {
       title: z.string().min(1).max(70),
       description: z.string().min(1).max(170),
       ogImage: media,
+      ogTitle: z.string().max(95).default(''),
+      ogDescription: z.string().max(200).default(''),
+      canonical: optionalUrl,
+      noindex: z.boolean().default(false),
     }),
 
     nav: z.object({
@@ -247,17 +295,14 @@ export function settingsSchema<M extends z.ZodType>(media: M) {
     defaultLocale: z.string().min(2),
     themeColor: z.string().regex(/^#[0-9a-f]{6}$/i),
     demoEndpoint: z.string().nullable().default(''),
-    gtmId: z
-      .string()
-      .regex(/^(GTM-[A-Z0-9]+)?$/)
-      .nullable()
-      .default(''),
-    yandexMetrikaId: z
-      .string()
-      .regex(/^(\d{5,12})?$/)
-      .nullable()
-      .default(''),
-    organization: z.object({ name: z.string().min(1), url: z.url() }),
+    organization: z.object({
+      name: z.string().min(1),
+      url: z.url(),
+      email: z.string().default(''),
+      phone: z.string().default(''),
+    }),
+    seo: seoSettingsSchema.prefault({}),
+    tracking: trackingSettingsSchema.prefault({}),
     socialImage: media,
     globeFrames: z.number().int().min(1).max(999).default(80),
   });
@@ -272,6 +317,17 @@ export function newsSchema<M extends z.ZodType>(media: M) {
     excerpt: z.string().min(1).max(300),
     cover: media,
     draft: z.boolean().default(false),
+    updatedAt: z.coerce.date().nullish(),
+    author: z.string().default(''),
+    seo: z
+      .object({
+        metaTitle: z.string().max(70).default(''),
+        metaDescription: z.string().max(170).default(''),
+        ogImage: media.nullish(),
+        canonical: optionalUrl,
+        noindex: z.boolean().default(false),
+      })
+      .prefault({}),
   });
 }
 

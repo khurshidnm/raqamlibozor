@@ -41,7 +41,13 @@ const endpoint = (
   settings.demoEndpoint ||
   (import.meta.env.DEV ? 'http://localhost:3000/api/lead' : '')
 ).trim();
-const jsonLd = buildJsonLd({ settings, landing, pageUrl: new URL(path, site).href, ogImageUrl: ogImageAbs.url });
+const jsonLd = buildJsonLd({
+  settings,
+  landing,
+  pageUrl: new URL(path, site).href,
+  ogImageUrl: ogImageAbs.url,
+  logoUrl: new URL('/icons/icon-512.png', site).href,
+});
 ---
 
 <Base
@@ -51,6 +57,10 @@ const jsonLd = buildJsonLd({ settings, landing, pageUrl: new URL(path, site).hre
   xDefault="/"
   title={landing.data.seo.title}
   description={landing.data.seo.description}
+  ogTitle={landing.data.seo.ogTitle}
+  ogDescription={landing.data.seo.ogDescription}
+  canonical={landing.data.seo.canonical}
+  noindex={landing.data.seo.noindex}
   ogImage={ogImageAbs}
   jsonLd={jsonLd}
   preloads={heroPreloads(heroData)}
@@ -66,10 +76,10 @@ const jsonLd = buildJsonLd({ settings, landing, pageUrl: new URL(path, site).hre
         <Features landing={landing} />
         <Solutions landing={landing} />
         <Steps landing={landing} />
-        <Markets landing={landing} frames={settings.globeFrames} />
+        <Markets landing={landing} frames={settings.globeFrames} defaultLocale={settings.defaultLocale} />
         <NewsSection landing={landing} settings={settings} />
         <Faq landing={landing} />
-        <Contact landing={landing} endpoint={endpoint} />
+        <Contact landing={landing} endpoint={endpoint} ym={settings.tracking.yandexMetrica} />
       </main>
       <Footer landing={landing} defaultLocale={settings.defaultLocale} />
     </div>

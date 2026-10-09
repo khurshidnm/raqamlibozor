@@ -5,6 +5,7 @@ import Base from '../layouts/Base.astro';
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
 import { getLanding, getMedia, getSettings } from '../lib/content';
+import { applyTitleTemplate } from '../lib/seo';
 
 const settings = await getSettings();
 const landing = await getLanding(settings.defaultLocale);
@@ -18,7 +19,7 @@ const { notFound } = landing.data;
   settings={settings}
   landing={landing}
   noindex
-  title={`${notFound.title} — ${settings.siteName}`}
+  title={applyTitleTemplate(settings.seo.titleTemplate, notFound.title, settings.siteName)}
   description={notFound.text}
   ogImage={{ url: new URL(ogImage.src, site).href, width: 1200, height: 630, alt: og.alt || settings.siteName }}
   path="/404"

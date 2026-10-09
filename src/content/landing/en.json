@@ -4,7 +4,11 @@
   "seo": {
     "title": "Raqamli Bozor — digital market management system",
     "description": "Every stall, every payment and every rent record — all the information you need to run your market, in one place.",
-    "ogImage": "cta-market"
+    "ogImage": "cta-market",
+    "ogTitle": "",
+    "ogDescription": "",
+    "canonical": "",
+    "noindex": false
   },
   "nav": {
     "links": [
@@ -490,7 +494,8 @@
     "empty": "No news yet.",
     "prev": "Previous",
     "next": "Next",
-    "pageOf": "{current} / {total}"
+    "pageOf": "{current} / {total}",
+    "metaTitle": ""
   },
   "faq": {
     "pill": "FAQ",

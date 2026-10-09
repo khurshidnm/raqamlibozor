@@ -1,5 +1,6 @@
 import { extractNationalDigits, formatUzPhone, isCompleteUzPhone, toE164 } from '../lib/phone';
 import { $ } from './dom';
+import { trackDemoRequest } from './track';
 
 const MIN_FILL_TIME_MS = 1500;
 const REQUEST_TIMEOUT_MS = 10_000;
@@ -94,6 +95,7 @@ export function initDemoForm(): void {
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       input.value = '';
       succeed();
+      trackDemoRequest(msgs.ym);
     } catch {
       setMessage(msgs.msgNetwork || '', 'error');
     } finally {

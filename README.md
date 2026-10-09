@@ -1,187 +1,203 @@
-# Raqamli Bozor — marketing site
+# Raqamli Bozor
 
-Astro 7 + TypeScript static site managed by Payload CMS (`cms/`). Visitors get plain HTML, CSS and a few small ES modules — no framework runtime, except for the interactive markets map at `/bozorlar/`, which is a React island. Editors use the Payload admin at `/admin` in `cms/`; `npm run content:pull` exports content to `src/content/`.
+Multilingual marketing website with a Payload CMS for content, media and demo-request leads.
 
-## Stack and why
+- **Frontend:** Astro 7, TypeScript and React for the interactive markets map. Production output is static HTML in `dist/`.
+- **CMS:** Payload 3 on Next.js 16 in `cms/`, with SQLite locally and a PostgreSQL adapter available for deployment.
+- **Languages:** Uzbek at `/`, Russian at `/ru/`, English at `/en/`. Each language has landing, markets, news and legal pages.
 
-| Concern   | Choice                  | Reason                                                                                                                                                                                                        |
-| --------- | ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Framework | **Astro 7**             | Zero JS by default, build-time image optimisation, content collections with Zod validation, i18n routing, static output that uploads anywhere. Next.js would ship a React runtime for a page that needs none. |
-| Language  | **TypeScript (strict)** | All behaviour lives in `src/scripts/*.ts`; content is typed end-to-end from the CMS schema to the templates.                                                                                                  |
-| CMS       | **Payload 3** (`cms/`)  | Professional admin: roles, drafts, versions, media, rich text, leads inbox. Exports to files so the static build stays CMS-independent.                                                                       |
-| Images    | `astro:assets` (sharp)  | Source PNGs are converted to WebP/AVIF at the sizes the layout actually renders.                                                                                                                              |
-| Tests     | Vitest                  | Phone-mask logic and CMS content rules.                                                                                                                                                                       |
-
-Alternatives considered: **Sanity** (best hosted editing UX, external service and a project ID per environment), **Strapi/Directus/Payload** (self-hosted servers and a database for a single page), **Next.js + Contentful** (heavier runtime and two paid services). Any of them plugs into the same Astro content layer if the team outgrows git-based editing.
+The frontend reads exported files, not the CMS API. CMS edits appear on the website after exporting content and rebuilding. The contact form sends requests directly to the CMS.
 
 ## Requirements
 
-- Node 22.22.3+ (see `.nvmrc`)
-- npm 9+
+Node.js **22.22.3 or newer** and npm. `.nvmrc` selects Node 22; use a current patch release.
 
-## Commands
+## Local setup
 
-| Command                           | What it does                                   |
-| --------------------------------- | ---------------------------------------------- |
-| `npm install`                     | Install dependencies                           |
-| `npm run dev`                     | Dev server at http://127.0.0.1:4321            |
-| `npm run build`                   | Static production build into `dist/`           |
-| `npm run preview`                 | Serve `dist/` locally                          |
-| `npm run check`                   | Astro + TypeScript type-check                  |
-| `npm run lint` / `npm run format` | ESLint / Prettier                              |
-| `npm test`                        | Vitest (phone mask, content validation)        |
-| `npm run verify`                  | check + lint + test + build (what CI runs)     |
-| `npm run icons`                   | Regenerate PNG icons from `public/favicon.svg` |
+From the repository root:
 
-## Project structure
-
-```
-astro.config.ts           site URL, i18n locales (from content), integrations
-cms/                      Payload CMS app (admin, schema, lead API, import/pull scripts)
-src/
-  content.config.ts       Astro collections: media, landing, news, markets, settings
-  content/
-    schema.ts             Zod schemas shared by Astro and the tests
-    settings.json         site-wide settings (singleton)
-    landing/uz.json       all copy for one locale (one file per language)
-    news/*.md             news posts (front matter + Markdown body)
-    markets/*.json        markets shown on the /bozorlar/ map (one file each)
-    regions.ts            fixed region ids + editor labels for the map
-    map-strings.ts        keys of the map's visitor-facing text
-    media/*.json          media library entries → src/assets/media/<slug>/image.*
-  assets/media/           CMS-managed images (optimised at build time)
-  assets/ui/              code-managed SVGs (logo, hero pattern, dashboard card)
-  components/             one .astro per section + Icon
-  components/map/         UzbekistanMarketMap.tsx (React island) + shapes.ts / districts.ts outlines
-  layouts/Base.astro      <head>: SEO, Open Graph, hreflang, icons, preloads, JSON-LD
-  lib/                    typed content access, phone mask, JSON-LD, hero image variants
-  scripts/                client behaviour (TypeScript, bundled per component)
-  styles/                 global tokens + one stylesheet per section
-  integrations/           build step: CSP `_headers` + pruning of unreferenced images
-  pages/                  index, [locale]/index, bozorlar, [locale]/bozorlar, news/*, [locale]/news/*, 404, robots.txt
-public/                   fonts, globe frames (earth/), icons, manifest
-tests/                    Vitest
+```sh
+npm ci
+npm --prefix cms ci --legacy-peer-deps
+cp cms/.env.example cms/.env
 ```
 
-## Editing content (Payload CMS)
+Set these values in `cms/.env`:
 
-Content is managed in **Payload CMS 3** (`cms/`), a full admin with roles, drafts, version history, media library, rich text and a private leads inbox. The static site keeps reading the JSON/Markdown files in `src/content/`; `npm run content:pull` regenerates them from the CMS, so builds and CI never need the CMS running.
-
-### Setup
-
-```
-npm run cms:install          # installs cms/ dependencies
-cp cms/.env.example cms/.env # set PAYLOAD_SECRET (random 32+ chars); SQLite is used when DATABASE_URL is empty
-npm run cms:import           # one-time: loads the current src/content into the CMS, creates the first admin
-npm run cms                  # admin at http://localhost:3000/admin
+```dotenv
+PAYLOAD_SECRET=<random-secret-at-least-32-characters>
+DATABASE_URL=
+PAYLOAD_PUBLIC_SERVER_URL=http://localhost:3000
+LEADS_ALLOWED_ORIGINS=http://localhost:4321,http://127.0.0.1:4321
+ADMIN_EMAIL=<your-admin-email>
+ADMIN_PASSWORD=<your-admin-password>
 ```
 
-The import creates `ADMIN_EMAIL` / `ADMIN_PASSWORD` from `cms/.env` (defaults are for local use only — change them).
+Generate a secret with `openssl rand -hex 32`. With `DATABASE_URL` empty, the CMS uses `cms/data/cms.db`. Uploads are stored in `cms/media/`.
 
-### Workflow
+Import the bundled content once:
 
-1. Edit in the admin. Landing pages and news support drafts; only published documents are exported.
-2. Run `npm run content:pull` — rewrites `src/content/*`, `src/assets/media/*` and `settings.json`.
-3. Review the diff, commit, deploy. Optionally set `SITE_DEPLOY_HOOK_URL` in `cms/.env` so every publish pings your host's build hook.
+```sh
+npm run cms:import
+```
 
-Every exported file is still validated by `src/content/schema.ts` at build time and by `npm test`.
+The import creates an admin only when both admin credentials are set and no users exist. Otherwise, create the first user through `/admin`. Re-running the import updates existing content, so avoid doing it after editing in the CMS unless you intend to replace those edits.
 
-- **Landing**: every text, link, FAQ item, hero slide and SEO field, one document per language.
-- **Media**: upload once, pick anywhere; Astro optimises at build time. The media `slug` is its id.
-- **Settings** (global): site name/URL, theme colour, demo-request endpoint, organisation data, social image.
-- **Markets**, **News** (rich text, drafts), **Users** (`admin` / `editor` roles), **Leads** (staff only).
+### Development
 
-### Production
+Run these in separate terminals:
 
-- Use Postgres (`DATABASE_URL=postgres://…`) and set a strong `PAYLOAD_SECRET`.
-- Uploads go to `cms/media` on local disk; on ephemeral hosts add an object-storage adapter.
-- Deploy `cms/` as a Next.js app (`npm run build && npm run start` inside `cms/`).
+```sh
+npm run cms
+```
 
-### News
+```sh
+npm run dev
+```
 
-- Written in the **News** collection; exported to `src/content/news/<slug>.md` as Markdown. Unpublished drafts are skipped.
-- URLs: `/news/` (9 per page), `/news/<slug>/`, feed at `/news/rss.xml`. Other locales use `/<locale>/news/…`.
-- The three posts shipped are sample content to replace.
+- Frontend: <http://localhost:4321>
+- CMS admin: <http://localhost:3000/admin>
 
-### Leads (contact form)
+### Local production mode
 
-- The form posts to the CMS endpoint `POST /api/lead` (`cms/src/lib/leads-endpoint.ts`): validates the number, honeypot, 2 KB limit, 5 requests / 10 min per IP, duplicates ignored for 10 minutes, CORS limited to `siteUrl` plus `LEADS_ALLOWED_ORIGINS`.
-- Leads are stored in the private `leads` collection (status, note) and are visible to staff only. They never touch the public repo; `scripts/protect-leads.mjs` and `npm test` remain as a safeguard.
-- Set **Settings → Demo request endpoint** to `https://CMS-HOST/api/lead` (or `PUBLIC_DEMO_ENDPOINT`). In dev the form defaults to `http://localhost:3000/api/lead`.
+Build both applications:
 
-### Markets map (`/bozorlar/`)
+```sh
+PUBLIC_DEMO_ENDPOINT=http://localhost:3000/api/lead npm run build
+npm --prefix cms run build
+```
 
-The "Bozorlar" menu item and the globe section's button open an interactive map of Uzbekistan with one dot per market and a side panel per region. It is the only React island on the site; districts outlines load on demand when a region is opened.
+Start the CMS:
 
-- **Content → Markets (map)**: one entry per market with name, region, type (dehqon / buyum / avtomobil), a branch flag and the map position. Create, edit or delete entries here; every count on the map (per region and per type) is computed from these files at build time, so nothing else needs updating.
-- **Positioning**: open `/bozorlar/?pick` on the site (dev server or the live site), click where the market is and copy the X and Y values into the entry. A market saved without coordinates is drawn next to its region's label and marked with a dashed ring in picker mode until it gets a position.
-- **Text and names**: the page title, intro, every label of the map and the region names are in **Landing pages → Markets map page**, so they can be translated per language like the rest of the copy. Market names are shown as entered.
-- The outlines (`src/components/map/shapes.ts`, `districts.ts`) are 2020 UN OCHA / geoBoundaries data and are not editable in the CMS.
+```sh
+npm --prefix cms run start -- --hostname 127.0.0.1 --port 3000
+```
 
-### Analytics (Google Tag Manager, Yandex Metrika)
+Serve the built frontend:
 
-In the CMS open **Site settings** and fill **Google Tag Manager ID** (`GTM-XXXXXXX`) and/or **Yandex Metrika counter ID** (digits), then `npm run content:pull` and rebuild. Empty means disabled. The loader is `src/scripts/analytics.ts` (no inline scripts), and the build adds only the needed hosts to the Content-Security-Policy in `_headers`. If GTM tags load other domains or use Custom HTML tags, extend the policy in `src/integrations/build-extras.ts`. Yandex Webvisor is off by default.
+```sh
+npm run preview -- --host 127.0.0.1 --port 4321
+```
 
-### Languages
+These use production builds. The HTTP endpoint warning is expected for local testing; leave `STRICT_BUILD` unset or false locally. The frontend must be rebuilt after code or exported content changes.
 
-The site ships in **Oʻzbek (default, `/`)**, **Русский (`/ru/`)** and **English (`/en/`)**. Each language is one Landing document (files `src/content/landing/{uz,ru,en}.json`) covering the whole page: SEO, navigation, hero, sections, map, news, FAQ, contact, footer, 404 and the **Legal pages** tab (offer and privacy policy). News posts carry a `locale` and are written per language. The nav has a language switcher; news posts have different slugs per language, so switching from a post opens the news list of the other language. Market and district names are shown as entered (Uzbek). The 404 page is shared by all languages. The legal texts are drafts: have a lawyer review them.
+## Editing and exporting content
 
-### Adding a language
+The CMS manages landing pages, markets, news, media, site settings and leads. Landing pages and news support drafts; exports skip drafts.
 
-1. In the CMS create a new Landing document with a new locale code (duplicate an existing one and translate, including the Legal pages tab).
-2. `npm run content:pull`, rebuild. The page is served at `/ru/`, `hreflang` links and the sitemap update automatically. The default locale (from Site settings) stays at `/`.
+1. Edit and publish content in the CMS.
+2. Run `npm run content:pull` from the repository root.
+3. Review the generated changes, validate and rebuild the frontend.
 
-Locale routing is implemented in `src/pages/[locale]/index.astro` and `src/lib/content.ts` instead of Astro's `i18n` option.
+The export connects directly to the database configured for `cms/` and reads uploads from `cms/media/`; it does not fetch a remote CMS over HTTP. Run it where the intended database and media files are accessible. It replaces the generated content directories and media assets.
+
+Site settings include the default language, SEO, analytics, custom tags and the demo-request endpoint. Landing documents contain translated copy and legal text. Markets contain the map data; news articles have their own locale.
+
+Leads are stored privately in the CMS. Set the demo-request endpoint in Site settings or override it with `PUBLIC_DEMO_ENDPOINT`. Without an endpoint, the form runs in demo mode and does not store a lead.
 
 ## Deployment
 
-`npm run build` produces a fully static `dist/`. Upload it to any static host (Netlify, Cloudflare Pages, Vercel, nginx, S3).
+Deploy the frontend and CMS as two applications, for example at `https://example.com` and `https://cms.example.com`.
 
-- `dist/_headers` (generated) carries cache rules and a strict Content-Security-Policy, picked up automatically by Netlify and Cloudflare Pages. On other hosts copy the values into the server config. The CSP allows scripts only from the site itself plus a hash of the one inline script.
-- Set `SITE_URL` in the build environment (or `siteUrl` in Site settings) to the real domain — it drives canonical URLs, Open Graph and the sitemap.
-- Optional: `PUBLIC_DEMO_ENDPOINT` overrides the demo-request endpoint per environment.
+### 1. Configure the CMS
 
-CI (`.github/workflows/ci.yml`) runs `npm run verify` on every push and PR and uploads `dist/` as an artifact.
+Install dependencies in a checkout that includes `cms/`:
 
-## Demo request form
+```sh
+npm ci
+npm --prefix cms ci --legacy-peer-deps
+```
 
-The form posts `{"phone": "+998901234567"}` as JSON to the endpoint set in Site settings (or `PUBLIC_DEMO_ENDPOINT`). It validates the number, shows a message for invalid input / network failure / success, carries `aria-invalid` and a live status region, and has a honeypot plus a time-to-submit guard against bots. It also dispatches a `demo:request` DOM event on the form for custom integrations. With no endpoint it stays in demo mode and logs to the console.
+Set the CMS environment through the hosting service or `cms/.env`:
 
-The endpoint must answer CORS preflight requests from the site origin and return a 2xx status.
+```dotenv
+PAYLOAD_SECRET=<stable-random-secret-at-least-32-characters>
+DATABASE_URL=postgresql://<user>:<password>@<host>:5432/<database>
+PAYLOAD_PUBLIC_SERVER_URL=https://cms.example.com
+LEADS_ALLOWED_ORIGINS=https://example.com
+```
 
-## Launch checklist
+Use a persistent database and persistent storage for `cms/media/`. SQLite is also supported with a persistent `cms/data/` directory. The current configuration enables schema push; back up the database before deploying schema changes. An object-storage adapter must be added in code if the host cannot persist uploads.
 
-Every `npm run build` reports a missing form endpoint (and a non-https site URL) as warnings. Set `STRICT_BUILD=true` on the production deploy to turn them into a failed build.
+For a new database, set `ADMIN_EMAIL` and `ADMIN_PASSWORD` and run `npm run cms:import` once to seed the repository content and create the admin. Remove the bootstrap credentials from the runtime environment afterward.
 
-- [ ] Set the real domain in Site settings (currently `https://raqamli-bozor.uz`) or `SITE_URL`.
-- [ ] Set the demo-request endpoint.
-- [ ] Fill the links that had no destination in the Framer design: "Profilga kirish" (app login), "Barchasini koʻrish" (markets list), and the five footer documents. Items without a link render as plain text, so nothing is a dead link in the meantime.
-- [ ] Gilroy is self-hosted without a purchased licence for now. Buy one or swap `--font` in `src/styles/global.css` for a free font before a public launch (Inter, already bundled, is SIL OFL).
-- [ ] Add analytics if needed (the CSP `script-src` / `connect-src` must then list its host).
+Build and start:
 
-## What changed from the previous build
+```sh
+npm --prefix cms run build
+npm --prefix cms run start -- --hostname 0.0.0.0 --port 3000
+```
 
-| Area                                   | Before                                             | Now                                                                                                                                                                       |
-| -------------------------------------- | -------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Page weight (first paint / full visit) | 1.4 MB / 8.9 MB                                    | ~0.4 MB / ~4.5 MB (3.6 MB of that is the globe animation, loaded only near the section and skipped on data-saver connections)                                             |
-| Images                                 | 8 MB of PNGs at 2–4× the rendered size             | WebP/AVIF at rendered sizes with `srcset`; hero preloads per breakpoint; only the current breakpoint's hero images are warmed                                             |
-| Contrast                               | White on orange 2.1:1, green buttons 4.2:1         | Dark text on orange, a 5.5:1 green for white text, 5.9:1 green for form text (`--on-orange`, `--green-700`, `--green-ink` in `src/styles/global.css`)                     |
-| Rotating headline                      | No way to pause; ran forever                       | Pause/resume button, pauses off-screen and in hidden tabs, no autoplay under `prefers-reduced-motion`                                                                     |
-| Phone navigation                       | Links hidden, no menu                              | Accessible hamburger panel (focus management, Escape, outside click)                                                                                                      |
-| Form errors                            | Colour only                                        | Visible messages, `aria-invalid`, live region; distinct network error; spam guard                                                                                         |
-| SEO                                    | Title only                                         | Descriptive title, canonical, Open Graph + Twitter image, hreflang, sitemap, robots.txt, JSON-LD (Organization, WebSite, WebPage, FAQPage), PNG/Apple icons, web manifest |
-| Dead links                             | 8 placeholder `href="#"`                           | CMS links; empty ones render as text                                                                                                                                      |
-| Uzbek typography                       | Four different apostrophe characters               | ʻ (U+02BB) and ʼ (U+02BC) everywhere, enforced by a test                                                                                                                  |
-| Copy                                   | "nazorati qilish", "Uy hayvonlari"                 | "nazorati", "Chorva mollari" (editable in the CMS)                                                                                                                        |
-| Layout robustness                      | Fixed heights/widths clipped longer text           | min-heights, max-widths, wrapping list items, CSS grid for the steps section                                                                                              |
-| Nav blur                               | 100 px backdrop blur on every scroll frame         | 24 px (visually identical at this opacity)                                                                                                                                |
-| Globe                                  | Pointer cursor without an action; 80 frames always | Static first frame as fallback, frames on approach, skipped on `Save-Data`/2G                                                                                             |
-| Footer                                 | Inside `<main>`                                    | Top-level landmark; skip link added                                                                                                                                       |
-| Security                               | —                                                  | Strict CSP, no inline JS except one hashed script, external stylesheets, immutable cache headers                                                                          |
-| Tooling                                | None                                               | TypeScript strict, ESLint, Prettier, Vitest, CI                                                                                                                           |
+Keep the process running with the host's process manager and route the CMS domain to port 3000 through HTTPS. Verify `/admin` before deploying the frontend. Keep the same `PAYLOAD_SECRET` across restarts.
 
-### Intentional visual deviations
+### 2. Export and build the frontend
 
-- Orange buttons use dark text; green surfaces behind white text are one shade darker (`#107a18` instead of `#178f20`). Both are single tokens in `src/styles/global.css` if the brand team prefers the original values at the cost of WCAG AA.
-- The pause button in the banner's top-right corner is new.
-- On phones a menu button appears in the nav bar.
+Export the published CMS content from a checkout with access to the production database and uploaded files:
+
+```sh
+npm run content:pull
+```
+
+Commit the exported files for a separate frontend build pipeline, or build in the same checkout immediately after the export. Set these frontend build variables:
+
+```dotenv
+SITE_URL=https://example.com
+PUBLIC_DEMO_ENDPOINT=https://cms.example.com/api/lead
+STRICT_BUILD=true
+```
+
+Then validate and build:
+
+```sh
+npm run verify
+```
+
+Upload `dist/` to the static host. No Node.js frontend server is needed in production. Configure directory index serving and `404.html` as the error page.
+
+The build generates `dist/_headers` with security and cache headers. If the host does not support this file, apply its rules in the web server or hosting configuration. The strict build checks for HTTPS URLs, a form endpoint and enabled search indexing.
+
+### 3. Verify and publish updates
+
+Check the home page, `/ru/`, `/en/`, the markets map and news pages. Submit a demo request and confirm it appears in the CMS leads collection. Ensure the frontend origin is allowed by `LEADS_ALLOWED_ORIGINS` and that SEO settings permit indexing for the public site.
+
+For later content updates, publish in the CMS, export again and rebuild/redeploy the frontend. `SITE_DEPLOY_HOOK_URL` can trigger an external build via POST when CMS content changes, but that pipeline must also export the updated content; a rebuild of old exported files will not include CMS edits.
+
+Back up the database and uploaded media together. The CMS currently has no email adapter configured.
+
+## Commands
+
+| Command                          | Purpose                                |
+| -------------------------------- | -------------------------------------- |
+| `npm run dev`                    | Frontend development server            |
+| `npm run cms`                    | CMS development server                 |
+| `npm run cms:import`             | Import repository content into the CMS |
+| `npm run content:pull`           | Export published CMS content and media |
+| `npm run build`                  | Build the static frontend              |
+| `npm run preview`                | Serve the frontend build locally       |
+| `npm run check`                  | Astro and TypeScript checks            |
+| `npm run lint`                   | ESLint                                 |
+| `npm test`                       | Vitest tests                           |
+| `npm run verify`                 | Checks, lint, tests and frontend build |
+| `npm run format:check`           | Check formatting                       |
+| `npm --prefix cms run typecheck` | CMS TypeScript check                   |
+| `npm --prefix cms run build`     | Build the CMS                          |
+| `npm --prefix cms run start`     | Start the production CMS               |
+
+CI validates the frontend, checks formatting, uploads `dist/` as an artifact and type-checks the CMS. It does not deploy either application.
+
+## Project layout
+
+```text
+cms/                   Payload/Next.js app, import and export scripts
+src/content/           Exported settings, translations, news and markets
+src/assets/media/      Exported CMS images
+src/components/        Astro components and React markets map
+src/layouts/           Shared page layout and metadata
+src/pages/             Default and translated routes, feeds and sitemap
+src/lib/               Content, routing, SEO and tracking helpers
+src/scripts/           Browser interactions
+src/styles/            Site styles
+src/integrations/      Build checks, headers and asset cleanup
+public/                Fonts, icons and globe frames
+tests/                Vitest tests
+```

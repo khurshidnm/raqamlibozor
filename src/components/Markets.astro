@@ -1,13 +1,15 @@
 ---
 import '../styles/markets.css';
 import type { Landing } from '../lib/content';
+import { localizeHref } from '../lib/locale';
 
 interface Props {
   landing: Landing;
   frames: number;
+  defaultLocale: string;
 }
 
-const { landing, frames } = Astro.props;
+const { landing, frames, defaultLocale } = Astro.props;
 const { markets, a11y } = landing.data;
 const external = /^https?:\/\//.test(markets.cta.href);
 ---
@@ -18,7 +20,7 @@ const external = /^https?:\/\//.test(markets.cta.href);
     {markets.cta.href && (
       <a
         class="btn-sm"
-        href={markets.cta.href}
+        href={localizeHref(markets.cta.href, landing.id, defaultLocale)}
         target={external ? '_blank' : undefined}
         rel={external ? 'noopener' : undefined}
       >

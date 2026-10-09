@@ -9,8 +9,10 @@ import { describe, expect, it } from 'vitest';
 import { parse as parseYaml } from 'yaml';
 import {
   landingFileSchema,
+  marketFileSchema,
   mediaFileSchema,
   newsFileSchema,
+  regionIds,
   settingsFileSchema,
   type LandingFile,
 } from '../src/content/schema';
@@ -23,6 +25,7 @@ const mediaIds = readdirSync(join(root, 'src/content/media'))
   .map((f) => f.slice(0, -5));
 const landingFiles = readdirSync(join(root, 'src/content/landing')).filter((f) => f.endsWith('.json'));
 const newsFiles = readdirSync(join(root, 'src/content/news')).filter((f) => f.endsWith('.md'));
+const marketFiles = readdirSync(join(root, 'src/content/markets')).filter((f) => f.endsWith('.json'));
 
 describe('settings.json', () => {
   const settings = settingsFileSchema.parse(readJson('src/content/settings.json'));
@@ -81,6 +84,7 @@ describe.each(landingFiles)('landing/%s', (file) => {
       ...data.hero.buttons,
       data.solutions.cta,
       data.markets.cta,
+      data.map.invitation.cta,
       ...data.footer.columns.flatMap((c) => c.links),
       data.footer.madeBy,
     ];
@@ -112,6 +116,18 @@ describe.each(landingFiles)('landing/%s', (file) => {
       expect(text).toMatch(/[og]ʻ/);
     });
   }
+});
+
+describe('markets', () => {
+  it('has at least one market on the map', () => {
+    expect(marketFiles.length).toBeGreaterThan(0);
+  });
+  it.each(marketFiles)('%s is valid', (file) => {
+    expect(file, 'Keystatic slug').toMatch(/^[a-z0-9]+(-[a-z0-9]+)*\.json$/);
+    const market = marketFileSchema.parse(readJson(`src/content/markets/${file}`));
+    expect(regionIds).toContain(market.region);
+    expect(typeof market.x === 'number', 'set both coordinates or neither').toBe(typeof market.y === 'number');
+  });
 });
 
 /** Splits a Markdown file into YAML front matter and body. */

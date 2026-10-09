@@ -10,7 +10,7 @@
     "links": [
       {
         "label": "Bozorlar",
-        "href": "#bozorlar"
+        "href": "/bozorlar/"
       },
       {
         "label": "Imkoniyatlar",
@@ -34,21 +34,21 @@
       }
     ],
     "cta": {
-      "label": "Demo soʻrash",
-      "href": "#boglanish"
+      "label": "Tizimga kirish",
+      "href": "https://raqamli-bozor.uz/auth/login"
     }
   },
   "hero": {
     "intervalMs": 2000,
     "buttons": [
       {
-        "label": "Sinab koʻrish",
-        "href": "#boglanish",
+        "label": "Imkoniyatlar",
+        "href": "#imkoniyatlar",
         "variant": "orange"
       },
       {
-        "label": "Profilga kirish",
-        "href": "",
+        "label": "Bogʻlanish",
+        "href": "#boglanish",
         "variant": "green"
       }
     ],
@@ -343,7 +343,138 @@
     "title": "Bizga ishongan bozorlar",
     "cta": {
       "label": "Barchasini koʻrish",
-      "href": "https://involved-innovation-235021.framer.app/map"
+      "href": "/bozorlar/"
+    }
+  },
+  "map": {
+    "seo": {
+      "title": "Bozorlar xaritasi — Raqamli Bozor",
+      "description": "Oʻzbekiston boʻylab Raqamli Bozor tizimiga ulangan bozorlar xaritasi: hududni tanlang, bozorlar roʻyxatini, shahar va tumanlarni koʻring."
+    },
+    "pill": "Bozorlar",
+    "title": "Bizga ishongan bozorlar",
+    "description": "Raqamli Bozor tizimi joriy etilgan bozorlar xaritasi. Hududni tanlab bozorlar roʻyxatini, shahar va tumanlarni koʻring.",
+    "regions": {
+      "andijan": {
+        "name": "Andijon",
+        "kind": "viloyati"
+      },
+      "bukhara": {
+        "name": "Buxoro",
+        "kind": "viloyati"
+      },
+      "fergana": {
+        "name": "Fargʻona",
+        "kind": "viloyati"
+      },
+      "jizzakh": {
+        "name": "Jizzax",
+        "kind": "viloyati"
+      },
+      "namangan": {
+        "name": "Namangan",
+        "kind": "viloyati"
+      },
+      "navoi": {
+        "name": "Navoiy",
+        "kind": "viloyati"
+      },
+      "kashkadarya": {
+        "name": "Qashqadaryo",
+        "kind": "viloyati"
+      },
+      "karakalpakstan": {
+        "name": "Qoraqalpogʻiston",
+        "kind": "Respublikasi"
+      },
+      "samarkand": {
+        "name": "Samarqand",
+        "kind": "viloyati"
+      },
+      "syrdarya": {
+        "name": "Sirdaryo",
+        "kind": "viloyati"
+      },
+      "surkhandarya": {
+        "name": "Surxondaryo",
+        "kind": "viloyati"
+      },
+      "tashkent-city": {
+        "name": "Toshkent",
+        "kind": "shahri"
+      },
+      "tashkent": {
+        "name": "Toshkent",
+        "kind": "viloyati"
+      },
+      "khorezm": {
+        "name": "Xorazm",
+        "kind": "viloyati"
+      }
+    },
+    "kinds": {
+      "dehqon": "Dehqon bozori",
+      "buyum": "Buyum bozori",
+      "avtomobil": "Avtomobil bozori",
+      "branch": "Filial"
+    },
+    "invitation": {
+      "text": "Raqamli bozor bu hududda hali kiritilmagan. Siz birinchi boʻling!",
+      "cta": {
+        "label": "Siz birinchi boʻling",
+        "href": "#boglanish"
+      },
+      "note": "Ushbu roʻyxatda hudud boʻyicha bozor maʼlumotlari mavjud emas."
+    },
+    "strings": {
+      "country": "Oʻzbekiston",
+      "eyebrow": "RAQAMLI BOZOR",
+      "eyebrowRegions": "HUDUDLAR",
+      "eyebrowMarkets": "HUDUD BOZORLARI",
+      "metricRegions": "Hudud",
+      "metricPlaces": "Shahar / tuman",
+      "metricMarkets": "Bozorlar",
+      "tabMarkets": "Bozorlar",
+      "tabPlaces": "Shahar va tumanlar",
+      "allMarkets": "Barcha bozorlar",
+      "cities": "Shaharlar",
+      "districts": "Tumanlar",
+      "city": "Shahar",
+      "district": "Tuman",
+      "citySuffix": "shahri",
+      "districtSuffix": "tumani",
+      "noData": "Bu hudud boʻyicha roʻyxatda maʼlumot yoʻq.",
+      "notListed": "hali kiritilmagan",
+      "marketsCount": "{n} ta bozor",
+      "boundariesNote": "Chegaralar 2020-yilgi maʼlumotlarga asoslangan. Keyin tashkil etilgan tumanlar alohida koʻrsatilmagan.",
+      "allRegions": "Barcha hududlar",
+      "legendTitle": "1 nuqta = 1 bozor",
+      "legendNote": "Joylashuvlar taxminiy",
+      "zoomIn": "Yaqinlashtirish",
+      "zoomOut": "Uzoqlashtirish",
+      "resetView": "Koʻrinishni tiklash",
+      "reset": "Tiklash",
+      "mapControls": "Xarita boshqaruvi",
+      "mapLabel": "Oʻzbekistonning interaktiv bozor xaritasi",
+      "mapTitle": "Oʻzbekiston: hududlar, shaharlar va bozorlar",
+      "mapSummary": "{n} ta bozor. Nuqtalar taxminiy joylashtirilgan. Viloyatni tanlasangiz uning shahar va tumanlari ochiladi. Xaritani suring yoki masshtabni oʻzgartiring.",
+      "panelLabel": "Hudud bozorlarining yon paneli",
+      "regionsNav": "Viloyatlar va hududlar",
+      "regionInfo": "Hudud maʼlumotlari",
+      "tipClose": "Maʼlumot oynasini yopish",
+      "tipInfo": "bozor maʼlumotlari",
+      "approximate": "taxminiy joylashuv",
+      "tipTotal": "Bozorlar (filiallar bilan)",
+      "tipRegionTotal": "Hudud boʻyicha jami",
+      "tipFarmers": "Dehqon bozorlari",
+      "tipGoods": "Buyum bozorlari",
+      "tipVehicle": "Avtomobil bozorlari",
+      "tipMarketNote": "Nuqta taxminiy: aniq manzil berilmagan.",
+      "tipDistrictNote": "Bozorlar soni hudud boʻyicha berilgan. Tuman yoki shahar boʻyicha taqsimot mavjud emas.",
+      "tipBranches": "{n} ta filial umumiy songa kiritilgan.",
+      "hintMarket": "Nuqtani bosib maʼlumotni oching.",
+      "hintDistrict": "Tanlash uchun bosing.",
+      "hintRegion": "Hududni bosib shaharlar va bozorlarni koʻring."
     }
   },
   "news": {
@@ -389,11 +520,17 @@
     "form": {
       "label": "Telefon raqamingiz",
       "placeholder": "+998 __ ___ __ __",
-      "submit": "Demo soʻrash",
+      "submit": "Qayta aloqa",
       "sending": "Yuborilmoqda…",
-      "success": "Rahmat! Tez orada siz bilan bogʻlanamiz.",
+      "success": "Rahmat! Soʻrovingiz qabul qilindi.",
       "invalid": "Telefon raqamini toʻliq kiriting: +998 XX XXX XX XX",
       "networkError": "Yuborib boʻlmadi. Birozdan soʻng qayta urinib koʻring."
+    },
+    "sent": {
+      "title": "Soʻrovingiz qabul qilindi",
+      "text": "Rahmat! Mutaxassislarimiz 10 ish kuni ichida siz bilan bogʻlanadi.",
+      "note": "Shu vaqt ichida bozoringizga mos yechimni tayyorlaymiz va joriy etish bosqichlarini batafsil tushuntirib beramiz.",
+      "close": "Yaxshi"
     }
   },
   "footer": {

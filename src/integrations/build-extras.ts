@@ -3,9 +3,13 @@ import { readdirSync, readFileSync, statSync, unlinkSync, writeFileSync } from '
 import { join, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import type { AstroIntegration } from 'astro';
-import { PAGE_ZOOM_INLINE } from '../lib/inline-scripts';
+import { HEAD_INLINE } from '../lib/inline-scripts';
 
 const sha256 = (text: string): string => createHash('sha256').update(text, 'utf8').digest('base64');
+
+/** The two small scripts Astro inlines on pages with a client island (`Astro.load` + the `astro-island` element). */
+const isAstroIslandRuntime = (script: string): boolean =>
+  script.includes('customElements.define("astro-island"') || script.includes('dispatchEvent(new Event("astro:load"))');
 
 /** Netlify / Cloudflare Pages `_headers`; other hosts can copy the values into their config. */
 function headersFile(scriptHashes: string[]): string {
@@ -69,18 +73,26 @@ export function buildExtras(): AstroIntegration {
         const files = walk(out);
         const textFiles = files.filter((f) => /\.(html|css|js|xml|txt|webmanifest)$/.test(f));
         const text = textFiles.map((f) => readFileSync(f, 'utf8')).join('\n');
+        /* Only HTML can carry inline scripts; JS bundles (React DOM) contain "<script>" as code. */
+        const html = textFiles
+          .filter((f) => f.endsWith('.html'))
+          .map((f) => readFileSync(f, 'utf8'))
+          .join('\n');
 
-        /* CSP: verify the inline script survived the compiler byte-for-byte, then hash it. */
-        const inline = new Set<string>();
-        for (const match of text.matchAll(/<script>([\s\S]*?)<\/script>/g)) inline.add(match[1] ?? '');
+        /*
+         * CSP: every inline script must be one we know — our page-zoom snippet (verified
+         * byte-for-byte) or Astro's island runtime — and each one is hashed into the policy.
+         */
+        const inline = new Set<string>([HEAD_INLINE]);
+        for (const match of html.matchAll(/<script>([\s\S]*?)<\/script>/g)) inline.add(match[1] ?? '');
         for (const script of inline) {
-          if (script !== PAGE_ZOOM_INLINE) {
+          if (script !== HEAD_INLINE && !isAstroIslandRuntime(script)) {
             throw new Error(
               `Unexpected inline <script> in the build output; add it to src/lib/inline-scripts.ts:\n${script}`,
             );
           }
         }
-        writeFileSync(join(out, '_headers'), headersFile([sha256(PAGE_ZOOM_INLINE)]));
+        writeFileSync(join(out, '_headers'), headersFile([...inline].map(sha256)));
         logger.info(`_headers written with ${inline.size} inline script hash(es)`);
 
         /* Prune unreferenced images. */

@@ -21,6 +21,11 @@ export function initGlobe(): void {
   if (conn?.saveData || /^(slow-)?2g$/.test(conn?.effectiveType ?? '')) return;
 
   const COUNT = Math.max(1, Number(box.dataset.frames) || 80);
+  /*
+   * Phones (smaller globe) and 3G connections get every second frame: half the
+   * download (~1.8 MB instead of ~3.6 MB) with the scroll smoothing hiding the gaps.
+   */
+  const STEP = innerWidth < 810 || conn?.effectiveType === '3g' ? 2 : 1;
   const pattern = box.dataset.src || '/earth/earth-{i}.webp';
   const SMOOTHING = 110;
   const frames: Array<HTMLImageElement & { ready?: boolean }> = new Array(COUNT);
@@ -51,9 +56,10 @@ export function initGlobe(): void {
     started = true;
     const order: number[] = [];
     const c = Math.round(target);
+    const wanted = (i: number) => i % STEP === 0 || i === COUNT - 1;
     for (let d = 0; d < COUNT; d++) {
-      if (c + d < COUNT) order.push(c + d);
-      if (d && c - d >= 0) order.push(c - d);
+      if (c + d < COUNT && wanted(c + d)) order.push(c + d);
+      if (d && c - d >= 0 && wanted(c - d)) order.push(c - d);
     }
     let k = 0;
     const next = () => {

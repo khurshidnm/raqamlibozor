@@ -7,6 +7,9 @@
  * The Astro side validates the same files with Zod in src/content/schema.ts.
  */
 import { collection, config, fields, singleton } from '@keystatic/core';
+import { mapStrings } from './src/content/map-strings';
+import { mapBounds, marketKindLabels, marketKinds, regionIds, regionLabels } from './src/content/regions';
+import { LEAD_STATUSES } from './src/lib/leads';
 
 /* ---------- reusable field groups ---------- */
 
@@ -41,6 +44,12 @@ const placement = (label: string, description: string) =>
       }),
     },
     { label, description, layout: [4, 4, 4] },
+  );
+
+/** One required text field per key; the spec's values are the editor labels. */
+const textFields = (spec: Record<string, string>) =>
+  Object.fromEntries(
+    Object.entries(spec).map(([key, label]) => [key, fields.text({ label, validation: { isRequired: true } })]),
   );
 
 /* ---------- landing page (one entry per language) ---------- */
@@ -286,6 +295,64 @@ const landing = collection({
       { label: 'Markets (globe)' },
     ),
 
+    map: fields.object(
+      {
+        seo: fields.object(
+          {
+            title: fields.text({ label: 'Page title', validation: { isRequired: true, length: { max: 70 } } }),
+            description: fields.text({
+              label: 'Meta description',
+              multiline: true,
+              validation: { isRequired: true, length: { max: 170 } },
+            }),
+          },
+          { label: 'SEO' },
+        ),
+        pill: fields.text({ label: 'Pill', validation: { isRequired: true } }),
+        title: fields.text({ label: 'Heading', validation: { isRequired: true } }),
+        description: fields.text({ label: 'Intro text', multiline: true, validation: { isRequired: true } }),
+        regions: fields.object(
+          Object.fromEntries(
+            regionIds.map((id) => [
+              id,
+              fields.object(
+                {
+                  name: fields.text({ label: 'Name', validation: { isRequired: true } }),
+                  kind: fields.text({
+                    label: 'Kind',
+                    description: 'Shown after the name: viloyati, shahri, Respublikasi …',
+                    validation: { isRequired: true },
+                  }),
+                },
+                { label: regionLabels[id], layout: [6, 6] },
+              ),
+            ]),
+          ),
+          { label: 'Region names', description: 'The outlines are fixed; only the wording is editable.' },
+        ),
+        kinds: fields.object(
+          {
+            ...textFields(marketKindLabels),
+            branch: fields.text({ label: 'Branch (filial) label', validation: { isRequired: true } }),
+          },
+          { label: 'Market type labels' },
+        ),
+        invitation: fields.object(
+          {
+            text: fields.text({ label: 'Text', multiline: true, validation: { isRequired: true } }),
+            cta: link('Button', 'Anchors (#boglanish) point to the home page.'),
+            note: fields.text({ label: 'Small print', multiline: true, validation: { isRequired: true } }),
+          },
+          { label: 'Invitation shown for regions without markets' },
+        ),
+        strings: fields.object(textFields(mapStrings), {
+          label: 'Map interface text',
+          description: '{n} is replaced with a number where the label says so.',
+        }),
+      },
+      { label: 'Markets map page (/bozorlar/)' },
+    ),
+
     news: fields.object(
       {
         label: fields.text({ label: 'Section name', validation: { isRequired: true } }),
@@ -343,6 +410,15 @@ const landing = collection({
             networkError: fields.text({ label: 'Sending failed message', validation: { isRequired: true } }),
           },
           { label: 'Demo request form' },
+        ),
+        sent: fields.object(
+          {
+            title: fields.text({ label: 'Title', validation: { isRequired: true } }),
+            text: fields.text({ label: 'Text', multiline: true, validation: { isRequired: true } }),
+            note: fields.text({ label: 'Additional text', multiline: true, validation: { isRequired: true } }),
+            close: fields.text({ label: 'Close button', validation: { isRequired: true } }),
+          },
+          { label: 'Window shown after a successful request' },
         ),
       },
       { label: 'Contact' },
@@ -448,6 +524,88 @@ const news = collection({
   },
 });
 
+/* ---------- markets on the map ---------- */
+
+const markets = collection({
+  label: 'Markets (map)',
+  path: 'src/content/markets/*',
+  slugField: 'name',
+  format: { data: 'json' },
+  columns: ['name', 'region', 'kind', 'branch'],
+  entryLayout: 'form',
+  schema: {
+    name: fields.slug({
+      name: {
+        label: 'Name',
+        description: 'As it appears in the list and in the info window.',
+        validation: { isRequired: true, length: { max: 160 } },
+      },
+      slug: { label: 'ID (file name)', description: 'Generated from the name: lowercase letters, digits and hyphens.' },
+    }),
+    region: fields.select({
+      label: 'Region',
+      options: regionIds.map((id) => ({ label: regionLabels[id], value: id })),
+      defaultValue: 'tashkent',
+    }),
+    kind: fields.select({
+      label: 'Type',
+      options: marketKinds.map((kind) => ({ label: marketKindLabels[kind], value: kind })),
+      defaultValue: 'dehqon',
+    }),
+    branch: fields.checkbox({
+      label: 'Branch (filial)',
+      description: 'Listed with the branch label and counted in the region total.',
+      defaultValue: false,
+    }),
+    x: fields.number({
+      label: 'Map X',
+      description:
+        'Position in map units. Open /bozorlar/?pick on the site, click the spot and copy both values here. Leave X and Y empty to draw the dot near the region label for now.',
+      validation: { min: mapBounds.x[0], max: mapBounds.x[1] },
+    }),
+    y: fields.number({ label: 'Map Y', validation: { min: mapBounds.y[0], max: mapBounds.y[1] } }),
+  },
+});
+
+/* ---------- leads from the contact form ---------- */
+
+const leadStatusLabels: Record<(typeof LEAD_STATUSES)[number], string> = {
+  new: 'New',
+  contacted: 'Contacted',
+  converted: 'Became a customer',
+  rejected: 'Not interested',
+};
+
+/** Written by /api/leads (src/api/leads.ts). Kept out of git by scripts/protect-leads.mjs: the repository is public. */
+const leads = collection({
+  label: 'Leads',
+  path: 'src/content/leads/*',
+  slugField: 'phone',
+  format: { data: 'json' },
+  columns: ['phone', 'submittedAt', 'status'],
+  entryLayout: 'form',
+  schema: {
+    phone: fields.slug({
+      name: { label: 'Phone number', validation: { isRequired: true } },
+      slug: {
+        label: 'Lead ID',
+        description: 'Arrival date, time and the last four digits. Set automatically for website leads.',
+      },
+    }),
+    submittedAt: fields.datetime({
+      label: 'Sent at (Tashkent time)',
+      validation: { isRequired: true },
+    }),
+    page: fields.text({ label: 'Sent from page' }),
+    status: fields.select({
+      label: 'Status',
+      options: LEAD_STATUSES.map((value) => ({ label: leadStatusLabels[value], value })),
+      defaultValue: 'new',
+    }),
+    note: fields.text({ label: 'Note', multiline: true }),
+  },
+});
+
 /* ---------- media library ---------- */
 
 const media = collection({
@@ -521,11 +679,12 @@ export default config({
   ui: {
     brand: { name: 'Raqamli Bozor' },
     navigation: {
-      Content: ['landing', 'news'],
+      Leads: ['leads'],
+      Content: ['landing', 'news', 'markets'],
       Assets: ['media'],
       Site: ['settings'],
     },
   },
-  collections: { landing, news, media },
+  collections: { leads, landing, news, markets, media },
   singletons: { settings },
 });

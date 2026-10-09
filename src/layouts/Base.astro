@@ -1,8 +1,10 @@
 ---
 import '../styles/global.css';
+import '../styles/loader.css';
+import Loader from '../components/Loader.astro';
 import type { Landing, Settings } from '../lib/content';
 import { localePath } from '../lib/content';
-import { PAGE_ZOOM_INLINE } from '../lib/inline-scripts';
+import { HEAD_INLINE } from '../lib/inline-scripts';
 
 export interface Preload {
   imagesrcset: string;
@@ -54,7 +56,7 @@ const a11y = landing.data.a11y;
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <script is:inline set:html={PAGE_ZOOM_INLINE} />
+    <script is:inline set:html={HEAD_INLINE} />
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
@@ -103,6 +105,7 @@ const a11y = landing.data.a11y;
     ))}
   </head>
   <body>
+    <Loader label={settings.siteName} />
     <a class="skip-link" href="#main">
       {a11y.skipToContent}
     </a>
@@ -110,8 +113,10 @@ const a11y = landing.data.a11y;
     <script>
       import { initPageZoom } from '../scripts/page-zoom';
       import { initAppear } from '../scripts/appear';
+      import { initLoader } from '../scripts/loader';
       initPageZoom();
-      initAppear();
+      /* Reveal animations start once the loader is gone, so they are not wasted behind it. */
+      void initLoader().then(initAppear);
     </script>
   </body>
 </html>

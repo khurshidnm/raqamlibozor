@@ -1,0 +1,30 @@
+---
+/**
+ * Full-screen brand loader shown on the first page view of a browser session.
+ * Hidden by src/scripts/loader.ts once the page has loaded; skipped before first
+ * paint on later views (see HEAD_INLINE), and never blocks no-JS visitors.
+ */
+import logo from '../assets/ui/logo.svg?raw';
+
+interface Props {
+  label: string;
+}
+const { label } = Astro.props;
+---
+
+<div class="loader" id="pageLoader" role="presentation" aria-hidden="true">
+  <div class="loader__inner">
+    <div class="loader__logo" set:html={logo} />
+    <div class="loader__bar">
+      <span></span>
+    </div>
+    <span class="sr-only">{label}</span>
+  </div>
+</div>
+<noscript>
+  <style is:inline>
+    .loader {
+      display: none;
+    }
+  </style>
+</noscript>

@@ -32,7 +32,12 @@ const ogImage = await getImage({ src: og.image, width: 1200, height: 630, fit: '
 const ogImageAbs = { url: new URL(ogImage.src, site).href, width: 1200, height: 630, alt: og.alt || settings.siteName };
 
 const heroData = await buildHeroData(landing);
-const endpoint = (import.meta.env.PUBLIC_DEMO_ENDPOINT || settings.demoEndpoint || '').trim();
+/* In `astro dev` the form posts to the CMS's own /api/leads unless an endpoint is configured. */
+const endpoint = (
+  import.meta.env.PUBLIC_DEMO_ENDPOINT ||
+  settings.demoEndpoint ||
+  (import.meta.env.DEV ? '/api/leads' : '')
+).trim();
 const jsonLd = buildJsonLd({ settings, landing, pageUrl: new URL(path, site).href, ogImageUrl: ogImageAbs.url });
 ---
 

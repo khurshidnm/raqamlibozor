@@ -4,6 +4,9 @@
  * so edit them here only.
  */
 
-/** Sets --page-zoom synchronously so wide screens never paint un-zoomed and then shift. */
-export const PAGE_ZOOM_INLINE =
-  "(function(){var w=document.documentElement.clientWidth;document.documentElement.style.setProperty('--page-zoom',(w>=1440?1+(w/1440-1)*.5:1).toFixed(4));})();";
+/**
+ * Runs before first paint: sets --page-zoom so wide screens never paint un-zoomed and then
+ * shift, and skips the page loader when it was already shown in this session (scripts/loader.ts).
+ */
+export const HEAD_INLINE =
+  "(function(){var d=document.documentElement,w=d.clientWidth;d.style.setProperty('--page-zoom',(w>=1440?1+(w/1440-1)*.5:1).toFixed(4));try{if(sessionStorage.getItem('rb-loaded'))d.classList.add('loader-skip')}catch(e){}})();";

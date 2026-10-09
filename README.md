@@ -1,6 +1,6 @@
 # Raqamli Bozor — marketing site
 
-Astro 7 + TypeScript static site with a git-based headless CMS (Keystatic). Visitors get plain HTML, CSS and a few small ES modules — no framework runtime. Editors get an admin UI at `/keystatic` that writes to the JSON files in `src/content/`.
+Astro 7 + TypeScript static site with a git-based headless CMS (Keystatic). Visitors get plain HTML, CSS and a few small ES modules — no framework runtime, except for the interactive markets map at `/bozorlar/`, which is a React island. Editors get an admin UI at `/keystatic` that writes to the JSON files in `src/content/`.
 
 The previous hand-written build is kept in [`legacy/`](legacy/) for reference and can be deleted once this version is live.
 
@@ -41,22 +41,26 @@ Alternatives considered: **Sanity** (best hosted editing UX, external service an
 astro.config.ts           site URL, i18n locales (from content), integrations
 keystatic.config.ts       CMS schema (what editors see)
 src/
-  content.config.ts       Astro collections: media, landing, settings
+  content.config.ts       Astro collections: media, landing, news, markets, settings
   content/
     schema.ts             Zod schemas shared by Astro and the tests
     settings.json         site-wide settings (singleton)
     landing/uz.json       all copy for one locale (one file per language)
     news/*.md             news posts (front matter + Markdown body)
+    markets/*.json        markets shown on the /bozorlar/ map (one file each)
+    regions.ts            fixed region ids + editor labels for the map
+    map-strings.ts        keys of the map's visitor-facing text
     media/*.json          media library entries → src/assets/media/<slug>/image.*
   assets/media/           CMS-managed images (optimised at build time)
   assets/ui/              code-managed SVGs (logo, hero pattern, dashboard card)
   components/             one .astro per section + Icon
+  components/map/         UzbekistanMarketMap.tsx (React island) + shapes.ts / districts.ts outlines
   layouts/Base.astro      <head>: SEO, Open Graph, hreflang, icons, preloads, JSON-LD
   lib/                    typed content access, phone mask, JSON-LD, hero image variants
   scripts/                client behaviour (TypeScript, bundled per component)
   styles/                 global tokens + one stylesheet per section
   integrations/           build step: CSP `_headers` + pruning of unreferenced images
-  pages/                  index, [locale]/index, news/*, [locale]/news/*, 404, robots.txt
+  pages/                  index, [locale]/index, bozorlar, [locale]/bozorlar, news/*, [locale]/news/*, 404, robots.txt
 public/                   fonts, globe frames (earth/), icons, manifest
 tests/                    Vitest
 legacy/                   previous static build (reference only)
@@ -93,6 +97,22 @@ Editors with write access to the repository log in with GitHub; every save becom
 - Drafts show in `npm run dev` and are excluded from builds.
 - URLs: `/news/` (9 per page, then `/news/page/2/`), `/news/<slug>/`, feed at `/news/rss.xml`. Other locales use `/<locale>/news/…`. The home page shows the three latest posts when any exist.
 - The three posts shipped in `src/content/news/` are sample content to replace.
+
+### Leads (contact form)
+
+- **Leads** in the CMS lists every phone number sent from the “Qayta aloqa” form, with the Tashkent time it arrived, the page, a status (New / Contacted / Became a customer / Not interested) and a note. Editors can also add or delete leads by hand.
+- The form posts to `/api/leads` (`src/api/leads.ts`), which validates the number, rate-limits per visitor, ignores repeats within 10 minutes and writes `src/content/leads/<date-time-last4>.json`. In `npm run dev` this works out of the box.
+- **Privacy:** the repository is public, so lead files must never be committed. `npm install` runs `scripts/protect-leads.mjs`, which adds them to `.git/info/exclude` (not `.gitignore`, because Keystatic hides git-ignored files), and `npm test` fails if one is ever tracked.
+- **Production:** the endpoint runs only where the CMS runs (`astro dev`, or a `KEYSTATIC=true` server build). Point **Site settings → Demo request endpoint** at that server's `https://…/api/leads` and set `LEADS_ALLOWED_ORIGINS` there if the site is served from more than `siteUrl`. Leads are stored on that server's disk, so it needs persistent storage. Keystatic's GitHub mode reads from the repository and therefore cannot show them; keep the CMS server in local mode or move leads to a private store.
+
+### Markets map (`/bozorlar/`)
+
+The "Bozorlar" menu item and the globe section's button open an interactive map of Uzbekistan with one dot per market and a side panel per region. It is the only React island on the site; districts outlines load on demand when a region is opened.
+
+- **Content → Markets (map)**: one entry per market with name, region, type (dehqon / buyum / avtomobil), a branch flag and the map position. Create, edit or delete entries here; every count on the map (per region and per type) is computed from these files at build time, so nothing else needs updating.
+- **Positioning**: open `/bozorlar/?pick` on the site (dev server or the live site), click where the market is and copy the X and Y values into the entry. A market saved without coordinates is drawn next to its region's label and marked with a dashed ring in picker mode until it gets a position.
+- **Text and names**: the page title, intro, every label of the map and the region names are in **Landing pages → Markets map page**, so they can be translated per language like the rest of the copy. Market names are shown as entered.
+- The outlines (`src/components/map/shapes.ts`, `districts.ts`) are 2020 UN OCHA / geoBoundaries data and are not editable in the CMS.
 
 ### Adding a language
 

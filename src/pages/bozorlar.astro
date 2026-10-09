@@ -1,0 +1,9 @@
+---
+import MarketsPage from '../components/MarketsPage.astro';
+import { getLanding, getSettings } from '../lib/content';
+
+const settings = await getSettings();
+const landing = await getLanding(settings.defaultLocale);
+---
+
+<MarketsPage landing={landing} settings={settings} />

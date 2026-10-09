@@ -28,6 +28,14 @@ export function initDemoForm(): void {
     message.classList.toggle('cta__msg--error', kind === 'error');
     message.classList.toggle('cta__msg--success', kind === 'success');
   };
+  const dialog = $<HTMLDialogElement>('#demoSent');
+  dialog?.addEventListener('click', (e) => {
+    if (e.target === dialog) dialog.close(); // backdrop click
+  });
+  const succeed = (): void => {
+    setMessage(msgs.msgSuccess || '', 'success');
+    if (dialog && typeof dialog.showModal === 'function' && !dialog.open) dialog.showModal();
+  };
   const setInvalid = (invalid: boolean): void => {
     form.classList.toggle('is-invalid', invalid);
     input.setAttribute('aria-invalid', String(invalid));
@@ -56,7 +64,7 @@ export function initDemoForm(): void {
     }
     /* Bots fill hidden fields and submit instantly; pretend it worked. */
     if (honeypot?.value || Date.now() - openedAt < MIN_FILL_TIME_MS) {
-      setMessage(msgs.msgSuccess || '', 'success');
+      succeed();
       return;
     }
 
@@ -67,7 +75,7 @@ export function initDemoForm(): void {
       console.info(
         `[Raqamli Bozor] Demo request for ${phone} — set “Demo request endpoint” in Site settings to send it.`,
       );
-      setMessage(msgs.msgSuccess || '', 'success');
+      succeed();
       input.value = '';
       return;
     }
@@ -80,12 +88,12 @@ export function initDemoForm(): void {
       const res = await fetch(endpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ phone }),
+        body: JSON.stringify({ phone, page: location.pathname }),
         signal: controller.signal,
       });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       input.value = '';
-      setMessage(msgs.msgSuccess || '', 'success');
+      succeed();
     } catch {
       setMessage(msgs.msgNetwork || '', 'error');
     } finally {

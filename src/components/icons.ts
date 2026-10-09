@@ -1,6 +1,7 @@
 /** Inline 24×24 stroke icons (inner SVG markup). Rendered by Icon.astro. */
 export const icons = {
   arrow: '<path d="M7 17 17 7M7 7h10v10"/>',
+  login: '<path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M15 12H3"/>',
   send: '<path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5zM16 8 2 22M17.5 15H9"/>',
   video: '<path d="m23 7-7 5 7 5zM3 5h11a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2z"/>',
   scan: '<path d="M9.25 4.75h-.5a4 4 0 0 0-4 4v.5M9.25 19.25h-.5a4 4 0 0 1-4-4v-.5M14.75 4.75h.5a4 4 0 0 1 4 4v.5M14.75 19.25h.5a4 4 0 0 0 4-4v-.5M8.75 12.75s.25 2.5 3.25 2.5 3.25-2.5 3.25-2.5"/><circle cx="10" cy="10" r=".5" fill="currentColor" stroke-width="1"/><circle cx="14" cy="10" r=".5" fill="currentColor" stroke-width="1"/>',

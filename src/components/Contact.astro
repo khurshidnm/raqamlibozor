@@ -13,7 +13,7 @@ interface Props {
 const { landing, endpoint } = Astro.props;
 const { contact } = landing.data;
 const bg = await getMedia(contact.image);
-const { form } = contact;
+const { form, sent } = contact;
 ---
 
 <section class="contact" id="boglanish">
@@ -68,6 +68,33 @@ const { form } = contact;
     </div>
   </div>
 </section>
+
+<dialog class="sent" id="demoSent" aria-labelledby="demoSentTitle" aria-describedby="demoSentText">
+  <form method="dialog" class="sent__x-form">
+    <button class="sent__x" type="submit" aria-label={sent.close}>
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M6 6l12 12M18 6 6 18"></path>
+      </svg>
+    </button>
+  </form>
+  <div class="sent__icon" aria-hidden="true">
+    <svg viewBox="0 0 24 24">
+      <path d="m5 12.5 4.5 4.5L19 7.5"></path>
+    </svg>
+  </div>
+  <h3 class="sent__title" id="demoSentTitle">
+    {sent.title}
+  </h3>
+  <p class="sent__text" id="demoSentText">
+    {sent.text}
+  </p>
+  <p class="sent__note">{sent.note}</p>
+  <form method="dialog">
+    <button class="btn btn--green sent__close" type="submit">
+      {sent.close}
+    </button>
+  </form>
+</dialog>
 
 <script>
   import { initDemoForm } from '../scripts/demo-form';

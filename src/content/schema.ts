@@ -5,6 +5,10 @@
  * media-typed fields).
  */
 import { z } from 'astro/zod';
+import { mapStringKeys, type MapStringKey } from './map-strings';
+import { mapBounds, marketKinds, regionIds, type MarketKind, type RegionId } from './regions';
+
+export { marketKinds, regionIds, type MarketKind, type RegionId };
 
 export const linkSchema = z.object({
   label: z.string().min(1),
@@ -43,6 +47,52 @@ export const newsStringsSchema = z.object({
   next: z.string().min(1),
   pageOf: z.string().min(1),
 });
+
+/* ---------- markets map ---------- */
+
+/**
+ * One market on the /bozorlar/ map (src/content/markets/<id>.json).
+ * Coordinates are map units; leave both empty for a market that is not positioned yet
+ * (it is then drawn near its region's label until an editor picks a spot).
+ */
+export const marketSchema = z.object({
+  name: z.string().min(1).max(160),
+  region: z.enum(regionIds),
+  kind: z.enum(marketKinds),
+  branch: z.boolean().default(false),
+  x: z.number().min(mapBounds.x[0]).max(mapBounds.x[1]).nullable().optional(),
+  y: z.number().min(mapBounds.y[0]).max(mapBounds.y[1]).nullable().optional(),
+});
+export type Market = z.infer<typeof marketSchema>;
+
+const text = () => z.string().min(1);
+
+function perRegion<T extends z.ZodType>(schema: T) {
+  return z.object(Object.fromEntries(regionIds.map((id) => [id, schema])) as Record<RegionId, T>);
+}
+
+export const mapStringsSchema = z.object(
+  Object.fromEntries(mapStringKeys.map((key) => [key, text()])) as Record<MapStringKey, z.ZodString>,
+);
+export type MapStrings = z.infer<typeof mapStringsSchema>;
+
+/** Everything the map page shows apart from the markets themselves (per locale). */
+export const mapSchema = z.object({
+  seo: z.object({ title: z.string().min(1).max(70), description: z.string().min(1).max(170) }),
+  pill: text(),
+  title: text(),
+  description: text(),
+  regions: perRegion(z.object({ name: text(), kind: text() })),
+  kinds: z.object(
+    Object.fromEntries([...marketKinds, 'branch'].map((kind) => [kind, text()])) as Record<
+      MarketKind | 'branch',
+      z.ZodString
+    >,
+  ),
+  invitation: z.object({ text: text(), cta: linkSchema, note: text() }),
+  strings: mapStringsSchema,
+});
+export type MapContent = z.infer<typeof mapSchema>;
 
 export function landingSchema<M extends z.ZodType>(media: M) {
   return z.object({
@@ -126,6 +176,8 @@ export function landingSchema<M extends z.ZodType>(media: M) {
 
     markets: z.object({ title: z.string().min(1), cta: linkSchema }),
 
+    map: mapSchema,
+
     news: newsStringsSchema,
 
     faq: z.object({
@@ -145,6 +197,12 @@ export function landingSchema<M extends z.ZodType>(media: M) {
         success: z.string().min(1),
         invalid: z.string().min(1),
         networkError: z.string().min(1),
+      }),
+      sent: z.object({
+        title: z.string().min(1),
+        text: z.string().min(1),
+        note: z.string().min(1),
+        close: z.string().min(1),
       }),
     }),
 
@@ -207,4 +265,5 @@ export const landingFileSchema = landingSchema(z.string().min(1));
 export const settingsFileSchema = settingsSchema(z.string().min(1));
 export const mediaFileSchema = mediaSchema(z.string().min(1));
 export const newsFileSchema = newsSchema(z.string().min(1));
+export const marketFileSchema = marketSchema;
 export type LandingFile = z.infer<typeof landingFileSchema>;

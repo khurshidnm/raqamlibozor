@@ -60,7 +60,7 @@
   --orange: #ff9900;
   --orange-2: #fe9e00;
   --orange-ink: #c25400; /* orange text on light chips — 3.8:1 at display sizes */
-  --on-orange: #1b1b1b; /* text on orange buttons; white would be 2.1:1 */
+  --on-orange: #ffffff; /* text on orange buttons (brand decision: always white) */
   --gray: #f5f5f5;
   --ink: #111111;
   --ink-2: #1b1b1b;
@@ -372,6 +372,7 @@ section[id],
   color: #fff;
   white-space: nowrap;
   transition:
+    color 0.2s ease,
     filter 0.2s ease,
     transform 0.2s ease;
 }

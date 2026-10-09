@@ -27,16 +27,19 @@ const site = process.env.SITE_URL || settings.siteUrl;
  * `astro dev` (local editing, writes straight to the content files) and
  * for builds that set KEYSTATIC=true together with a server adapter
  * (hosted editing in GitHub mode). A plain `astro build` stays 100% static.
+ * React itself is always on: the markets map (/bozorlar/) is a React island.
  */
 function cms(): AstroIntegration {
   return {
     name: 'raqamli-bozor:cms',
     hooks: {
-      'astro:config:setup': ({ command, updateConfig, logger }) => {
+      'astro:config:setup': ({ command, updateConfig, injectRoute, logger }) => {
         const enabled = command === 'dev' || process.env.KEYSTATIC === 'true';
         if (!enabled) return;
-        logger.info('Keystatic admin enabled at /keystatic');
-        updateConfig({ integrations: [react(), keystatic()] });
+        logger.info('Keystatic admin enabled at /keystatic, leads endpoint at /api/leads');
+        updateConfig({ integrations: [keystatic()] });
+        /* Contact-form leads land in the CMS (Leads). Never part of the static public build. */
+        injectRoute({ pattern: '/api/leads', entrypoint: './src/api/leads.ts', prerender: false });
       },
     },
   };
@@ -56,6 +59,7 @@ export default defineConfig({
     inlineStylesheets: 'never',
   },
   integrations: [
+    react(),
     sitemap({ i18n: { defaultLocale: settings.defaultLocale, locales: localeLangs } }),
     cms(),
     buildExtras(),

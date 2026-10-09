@@ -1,0 +1,48 @@
+/* ==========================================================================
+   Markets map page — /bozorlar/
+   ========================================================================== */
+.map-page {
+  gap: 30px;
+}
+.map-page__head {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  padding: 40px 0 10px;
+  text-align: center;
+}
+.map-page__title {
+  font-weight: 700;
+  font-size: 62px;
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+.map-page__desc {
+  max-width: 640px;
+  font-size: 20px;
+  line-height: 1.4;
+  color: rgba(0, 0, 0, 0.55);
+}
+.map-page__frame {
+  width: 100%;
+  height: clamp(640px, calc(100vh - 150px), 946px);
+}
+
+@media (max-width: 809.98px) {
+  .map-page {
+    gap: 16px;
+  }
+  .map-page__head {
+    padding: 16px 0 4px;
+  }
+  .map-page__title {
+    font-size: 42px;
+  }
+  .map-page__desc {
+    font-size: 17px;
+  }
+  .map-page__frame {
+    height: clamp(640px, calc(100vh - 100px), 960px);
+  }
+}

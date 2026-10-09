@@ -129,3 +129,140 @@
     font-size: 42px;
   }
 }
+
+/* ---------- success window ---------- */
+.sent {
+  width: min(440px, calc(100vw - 32px));
+  max-width: none;
+  margin: auto;
+  padding: 44px 36px 32px;
+  border: 0;
+  border-radius: 32px;
+  background: #fff;
+  color: var(--ink);
+  text-align: center;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.18);
+}
+.sent::backdrop {
+  background: rgba(17, 17, 17, 0.45);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+}
+.sent[open] {
+  animation: sent-in 0.45s var(--sp-appear) both;
+}
+.sent[open]::backdrop {
+  animation: sent-fade 0.3s ease both;
+}
+.sent__x-form {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+}
+.sent__x {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: var(--gray);
+  color: var(--ink);
+  transition: background 0.2s ease;
+}
+.sent__x:hover {
+  background: #ebebeb;
+}
+.sent__x svg,
+.sent__icon svg {
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.sent__x svg {
+  width: 18px;
+  height: 18px;
+  stroke-width: 2;
+}
+.sent__icon {
+  display: grid;
+  place-items: center;
+  width: 76px;
+  height: 76px;
+  margin: 0 auto 22px;
+  border-radius: 50%;
+  background: var(--green-700);
+  color: #fff;
+  box-shadow: 0 0 0 10px rgba(23, 143, 32, 0.12);
+}
+.sent__icon svg {
+  width: 36px;
+  height: 36px;
+  stroke-width: 2.6;
+  stroke-dasharray: 24;
+  stroke-dashoffset: 24;
+}
+.sent[open] .sent__icon svg {
+  animation: sent-check 0.5s 0.25s ease-out forwards;
+}
+.sent__title {
+  font-weight: 700;
+  font-size: 30px;
+  line-height: 1.05;
+  letter-spacing: -0.04em;
+  color: var(--green-ink);
+}
+.sent__text {
+  margin-top: 14px;
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 1.35;
+  letter-spacing: -0.02em;
+}
+.sent__note {
+  margin-top: 10px;
+  font-weight: 500;
+  font-size: 15px;
+  line-height: 1.45;
+  color: rgba(0, 0, 0, 0.55);
+}
+.sent__close {
+  width: 100%;
+  margin-top: 26px;
+}
+@keyframes sent-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.96);
+  }
+}
+@keyframes sent-fade {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes sent-check {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sent[open],
+  .sent[open]::backdrop {
+    animation: none;
+  }
+  .sent__icon svg {
+    stroke-dashoffset: 0;
+  }
+  .sent[open] .sent__icon svg {
+    animation: none;
+  }
+}
+@media (max-width: 809.98px) {
+  .sent {
+    padding: 40px 22px 24px;
+  }
+  .sent__title {
+    font-size: 26px;
+  }
+}

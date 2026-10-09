@@ -3,7 +3,7 @@ import eslintPluginAstro from 'eslint-plugin-astro';
 import tseslint from 'typescript-eslint';
 
 export default defineConfig([
-  { ignores: ['dist/**', '.astro/**', 'node_modules/**', 'public/**'] },
+  { ignores: ['dist/**', '.astro/**', 'node_modules/**', 'public/**', 'cms/**'] },
   ...tseslint.configs.recommended,
   ...eslintPluginAstro.configs['flat/recommended'],
   {

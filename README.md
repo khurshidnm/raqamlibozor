@@ -1,16 +1,16 @@
 # Raqamli Bozor — marketing site
 
-Astro 7 + TypeScript static site with a git-based headless CMS (Keystatic). Visitors get plain HTML, CSS and a few small ES modules — no framework runtime, except for the interactive markets map at `/bozorlar/`, which is a React island. Editors get an admin UI at `/keystatic` that writes to the JSON files in `src/content/`.
+Astro 7 + TypeScript static site managed by Payload CMS (`cms/`). Visitors get plain HTML, CSS and a few small ES modules — no framework runtime, except for the interactive markets map at `/bozorlar/`, which is a React island. Editors use the Payload admin at `/admin` in `cms/`; `npm run content:pull` exports content to `src/content/`.
 
 ## Stack and why
 
-| Concern   | Choice                    | Reason                                                                                                                                                                                                                                               |
-| --------- | ------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Framework | **Astro 7**               | Zero JS by default, build-time image optimisation, content collections with Zod validation, i18n routing, static output that uploads anywhere. Next.js would ship a React runtime for a page that needs none.                                        |
-| Language  | **TypeScript (strict)**   | All behaviour lives in `src/scripts/*.ts`; content is typed end-to-end from the CMS schema to the templates.                                                                                                                                         |
-| CMS       | **Keystatic** (git-based) | Content stays in the repo (reviewable, versioned, no vendor lock-in, no hosting bill). Local mode needs nothing; GitHub mode gives editors a hosted UI. Swapping to Sanity/Strapi later only means replacing the loaders in `src/content.config.ts`. |
-| Images    | `astro:assets` (sharp)    | Source PNGs are converted to WebP/AVIF at the sizes the layout actually renders.                                                                                                                                                                     |
-| Tests     | Vitest                    | Phone-mask logic and CMS content rules.                                                                                                                                                                                                              |
+| Concern   | Choice                  | Reason                                                                                                                                                                                                        |
+| --------- | ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Framework | **Astro 7**             | Zero JS by default, build-time image optimisation, content collections with Zod validation, i18n routing, static output that uploads anywhere. Next.js would ship a React runtime for a page that needs none. |
+| Language  | **TypeScript (strict)** | All behaviour lives in `src/scripts/*.ts`; content is typed end-to-end from the CMS schema to the templates.                                                                                                  |
+| CMS       | **Payload 3** (`cms/`)  | Professional admin: roles, drafts, versions, media, rich text, leads inbox. Exports to files so the static build stays CMS-independent.                                                                       |
+| Images    | `astro:assets` (sharp)  | Source PNGs are converted to WebP/AVIF at the sizes the layout actually renders.                                                                                                                              |
+| Tests     | Vitest                  | Phone-mask logic and CMS content rules.                                                                                                                                                                       |
 
 Alternatives considered: **Sanity** (best hosted editing UX, external service and a project ID per environment), **Strapi/Directus/Payload** (self-hosted servers and a database for a single page), **Next.js + Contentful** (heavier runtime and two paid services). Any of them plugs into the same Astro content layer if the team outgrows git-based editing.
 
@@ -21,23 +21,23 @@ Alternatives considered: **Sanity** (best hosted editing UX, external service an
 
 ## Commands
 
-| Command                           | What it does                                                                        |
-| --------------------------------- | ----------------------------------------------------------------------------------- |
-| `npm install`                     | Install dependencies                                                                |
-| `npm run dev`                     | Dev server at http://127.0.0.1:4321 with the CMS at http://127.0.0.1:4321/keystatic |
-| `npm run build`                   | Static production build into `dist/`                                                |
-| `npm run preview`                 | Serve `dist/` locally                                                               |
-| `npm run check`                   | Astro + TypeScript type-check                                                       |
-| `npm run lint` / `npm run format` | ESLint / Prettier                                                                   |
-| `npm test`                        | Vitest (phone mask, content validation)                                             |
-| `npm run verify`                  | check + lint + test + build (what CI runs)                                          |
-| `npm run icons`                   | Regenerate PNG icons from `public/favicon.svg`                                      |
+| Command                           | What it does                                   |
+| --------------------------------- | ---------------------------------------------- |
+| `npm install`                     | Install dependencies                           |
+| `npm run dev`                     | Dev server at http://127.0.0.1:4321            |
+| `npm run build`                   | Static production build into `dist/`           |
+| `npm run preview`                 | Serve `dist/` locally                          |
+| `npm run check`                   | Astro + TypeScript type-check                  |
+| `npm run lint` / `npm run format` | ESLint / Prettier                              |
+| `npm test`                        | Vitest (phone mask, content validation)        |
+| `npm run verify`                  | check + lint + test + build (what CI runs)     |
+| `npm run icons`                   | Regenerate PNG icons from `public/favicon.svg` |
 
 ## Project structure
 
 ```
 astro.config.ts           site URL, i18n locales (from content), integrations
-keystatic.config.ts       CMS schema (what editors see)
+cms/                      Payload CMS app (admin, schema, lead API, import/pull scripts)
 src/
   content.config.ts       Astro collections: media, landing, news, markets, settings
   content/
@@ -63,44 +63,51 @@ public/                   fonts, globe frames (earth/), icons, manifest
 tests/                    Vitest
 ```
 
-## Editing content
+## Editing content (Payload CMS)
 
-### Local (default)
+Content is managed in **Payload CMS 3** (`cms/`), a full admin with roles, drafts, version history, media library, rich text and a private leads inbox. The static site keeps reading the JSON/Markdown files in `src/content/`; `npm run content:pull` regenerates them from the CMS, so builds and CI never need the CMS running.
+
+### Setup
 
 ```
-npm run dev
+npm run cms:install          # installs cms/ dependencies
+cp cms/.env.example cms/.env # set PAYLOAD_SECRET (random 32+ chars); SQLite is used when DATABASE_URL is empty
+npm run cms:import           # one-time: loads the current src/content into the CMS, creates the first admin
+npm run cms                  # admin at http://localhost:3000/admin
 ```
 
-Open http://127.0.0.1:4321/keystatic. Changes are written straight to `src/content/` and `src/assets/media/`; the site hot-reloads. Commit the changes like code.
+The import creates `ADMIN_EMAIL` / `ADMIN_PASSWORD` from `cms/.env` (defaults are for local use only — change them).
 
-- **Content → Landing pages**: every text, link, FAQ item, hero slide and SEO field. One entry per language.
-- **Assets → Media library**: upload an image once, give it a name, then pick it anywhere (hero slides, solution cards, step icons, CTA background, social image). Astro resizes and converts it at build time.
-- **Site → Site settings**: site name and public URL, default locale, theme colour, demo-request endpoint, organisation data for structured data, social share image.
+### Workflow
 
-Every file is validated by `src/content/schema.ts` at build time and by `npm test`, so a broken edit fails the build with a readable message instead of shipping.
+1. Edit in the admin. Landing pages and news support drafts; only published documents are exported.
+2. Run `npm run content:pull` — rewrites `src/content/*`, `src/assets/media/*` and `settings.json`.
+3. Review the diff, commit, deploy. Optionally set `SITE_DEPLOY_HOOK_URL` in `cms/.env` so every publish pings your host's build hook.
 
-### Hosted editing (GitHub mode)
+Every exported file is still validated by `src/content/schema.ts` at build time and by `npm test`.
 
-1. In `keystatic.config.ts` set `storage: { kind: 'github', repo: 'owner/name' }`.
-2. Run `npm run dev`, open `/keystatic` and follow the one-time GitHub App setup. It writes `KEYSTATIC_GITHUB_CLIENT_ID`, `KEYSTATIC_GITHUB_CLIENT_SECRET`, `KEYSTATIC_SECRET` and `PUBLIC_KEYSTATIC_GITHUB_APP_SLUG` to `.env`.
-3. Deploy a second, server-rendered instance for editors: `npm i @astrojs/node`, add `adapter: node({ mode: 'standalone' })` to `astro.config.ts`, and build with `KEYSTATIC=true npm run build`. The public site keeps using the plain static build.
+- **Landing**: every text, link, FAQ item, hero slide and SEO field, one document per language.
+- **Media**: upload once, pick anywhere; Astro optimises at build time. The media `slug` is its id.
+- **Settings** (global): site name/URL, theme colour, demo-request endpoint, organisation data, social image.
+- **Markets**, **News** (rich text, drafts), **Users** (`admin` / `editor` roles), **Leads** (staff only).
 
-Editors with write access to the repository log in with GitHub; every save becomes a commit (optionally on a branch), and CI rebuilds the site.
+### Production
+
+- Use Postgres (`DATABASE_URL=postgres://…`) and set a strong `PAYLOAD_SECRET`.
+- Uploads go to `cms/media` on local disk; on ephemeral hosts add an object-storage adapter.
+- Deploy `cms/` as a Next.js app (`npm run build && npm run start` inside `cms/`).
 
 ### News
 
-- **Content → News**: one entry per article with title, language, date, excerpt, cover (from the Media library), a draft flag and a rich-text body. The body is stored as plain Markdown in `src/content/news/<slug>.md` and rendered by Astro; the editor is limited to headings, lists, quotes, links, images and code so the output stays portable.
-- Images inserted into the body are uploaded to `public/news/` and served as-is. Cover images go through the Media library and are optimised.
-- Drafts show in `npm run dev` and are excluded from builds.
-- URLs: `/news/` (9 per page, then `/news/page/2/`), `/news/<slug>/`, feed at `/news/rss.xml`. Other locales use `/<locale>/news/…`. The home page shows the three latest posts when any exist.
-- The three posts shipped in `src/content/news/` are sample content to replace.
+- Written in the **News** collection; exported to `src/content/news/<slug>.md` as Markdown. Unpublished drafts are skipped.
+- URLs: `/news/` (9 per page), `/news/<slug>/`, feed at `/news/rss.xml`. Other locales use `/<locale>/news/…`.
+- The three posts shipped are sample content to replace.
 
 ### Leads (contact form)
 
-- **Leads** in the CMS lists every phone number sent from the “Qayta aloqa” form, with the Tashkent time it arrived, the page, a status (New / Contacted / Became a customer / Not interested) and a note. Editors can also add or delete leads by hand.
-- The form posts to `/api/leads` (`src/api/leads.ts`), which validates the number, rate-limits per visitor, ignores repeats within 10 minutes and writes `src/content/leads/<date-time-last4>.json`. In `npm run dev` this works out of the box.
-- **Privacy:** the repository is public, so lead files must never be committed. `npm install` runs `scripts/protect-leads.mjs`, which adds them to `.git/info/exclude` (not `.gitignore`, because Keystatic hides git-ignored files), and `npm test` fails if one is ever tracked.
-- **Production:** the endpoint runs only where the CMS runs (`astro dev`, or a `KEYSTATIC=true` server build). Point **Site settings → Demo request endpoint** at that server's `https://…/api/leads` and set `LEADS_ALLOWED_ORIGINS` there if the site is served from more than `siteUrl`. Leads are stored on that server's disk, so it needs persistent storage. Keystatic's GitHub mode reads from the repository and therefore cannot show them; keep the CMS server in local mode or move leads to a private store.
+- The form posts to the CMS endpoint `POST /api/lead` (`cms/src/lib/leads-endpoint.ts`): validates the number, honeypot, 2 KB limit, 5 requests / 10 min per IP, duplicates ignored for 10 minutes, CORS limited to `siteUrl` plus `LEADS_ALLOWED_ORIGINS`.
+- Leads are stored in the private `leads` collection (status, note) and are visible to staff only. They never touch the public repo; `scripts/protect-leads.mjs` and `npm test` remain as a safeguard.
+- Set **Settings → Demo request endpoint** to `https://CMS-HOST/api/lead` (or `PUBLIC_DEMO_ENDPOINT`). In dev the form defaults to `http://localhost:3000/api/lead`.
 
 ### Markets map (`/bozorlar/`)
 
@@ -113,10 +120,10 @@ The "Bozorlar" menu item and the globe section's button open an interactive map 
 
 ### Adding a language
 
-1. Copy `src/content/landing/uz.json` to `ru.json`, translate, set `"lang": "ru"`.
-2. Rebuild. The page is served at `/ru/`, `hreflang` links and the sitemap update automatically. The default locale (from Site settings) stays at `/`.
+1. In the CMS create a new Landing document with locale `ru` (duplicate the `uz` one and translate).
+2. `npm run content:pull`, rebuild. The page is served at `/ru/`, `hreflang` links and the sitemap update automatically. The default locale (from Site settings) stays at `/`.
 
-Locale routing is implemented in `src/pages/[locale]/index.astro` and `src/lib/content.ts` instead of Astro's `i18n` option, whose dev-time middleware would 404 the Keystatic URL for an entry named like a locale.
+Locale routing is implemented in `src/pages/[locale]/index.astro` and `src/lib/content.ts` instead of Astro's `i18n` option.
 
 ## Deployment
 

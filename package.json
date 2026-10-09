@@ -3,12 +3,16 @@
   "version": "2.0.0",
   "private": true,
   "type": "module",
-  "description": "Raqamli Bozor marketing site: Astro + TypeScript + Keystatic (git-based headless CMS)",
+  "description": "Raqamli Bozor marketing site: Astro + TypeScript static site with a Payload CMS (cms/)",
   "engines": {
     "node": ">=22.22.3"
   },
   "scripts": {
     "dev": "astro dev",
+    "cms": "npm --prefix cms run dev",
+    "cms:install": "npm --prefix cms install --legacy-peer-deps",
+    "cms:import": "npm --prefix cms run import",
+    "content:pull": "npm --prefix cms run pull",
     "build": "astro build",
     "preview": "astro preview",
     "check": "astro check",
@@ -25,8 +29,6 @@
     "@astrojs/react": "^7.0.1",
     "@astrojs/rss": "^4.0.19",
     "@astrojs/sitemap": "^3.7.4",
-    "@keystatic/astro": "^6.0.0",
-    "@keystatic/core": "^0.6.9",
     "astro": "^7.3.8",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",

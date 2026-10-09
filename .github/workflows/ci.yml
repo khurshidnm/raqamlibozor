@@ -33,3 +33,15 @@ jobs:
           name: site
           path: dist
           if-no-files-found: error
+
+  cms:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+      - run: npm ci
+      - run: npm --prefix cms ci --legacy-peer-deps
+      - run: npm --prefix cms run typecheck

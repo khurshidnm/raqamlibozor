@@ -2,7 +2,7 @@ import { defineCollection, reference } from 'astro:content';
 import { glob } from 'astro/loaders';
 import { landingSchema, marketSchema, mediaSchema, newsSchema, settingsSchema } from './content/schema';
 
-/** Asset library managed in Keystatic. `image()` turns the stored path into an optimisable import. */
+/** Asset library synced from the CMS. `image()` turns the stored path into an optimisable import. */
 const media = defineCollection({
   loader: glob({ pattern: '*.json', base: './src/content/media' }),
   schema: ({ image }) => mediaSchema(image()),
@@ -14,13 +14,13 @@ const landing = defineCollection({
   schema: landingSchema(reference('media')),
 });
 
-/** News posts: Markdown files with front matter, written by Keystatic. Drafts are hidden in production builds. */
+/** News posts: Markdown files with front matter, synced from the CMS. Drafts are hidden in production builds. */
 const news = defineCollection({
   loader: glob({ pattern: '*.md', base: './src/content/news' }),
   schema: newsSchema(reference('media')),
 });
 
-/** Markets on the /bozorlar/ map: one JSON file per market, written by Keystatic. */
+/** Markets on the /bozorlar/ map: one JSON file per market, synced from the CMS. */
 const markets = defineCollection({
   loader: glob({ pattern: '*.json', base: './src/content/markets' }),
   schema: marketSchema,

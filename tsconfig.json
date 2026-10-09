@@ -14,7 +14,6 @@
     "tests/**/*",
     "scripts/**/*",
     "astro.config.ts",
-    "keystatic.config.ts",
     "vitest.config.ts",
     "eslint.config.js"
   ],

@@ -3,3 +3,8 @@ dist
 node_modules
 public
 package-lock.json
+cms/.next
+cms/data
+cms/media
+cms/src/payload-types.ts
+cms/src/app/(payload)/admin/importMap.js

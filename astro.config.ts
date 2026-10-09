@@ -1,13 +1,11 @@
 import { readFileSync, readdirSync } from 'node:fs';
 import { defineConfig } from 'astro/config';
-import type { AstroIntegration } from 'astro';
 import sitemap from '@astrojs/sitemap';
 import react from '@astrojs/react';
-import keystatic from '@keystatic/astro';
 import { buildExtras } from './src/integrations/build-extras';
 
 /* ------------------------------------------------------------------ *
- * Site-wide values come from the CMS files so there is one source of
+ * Site-wide values come from the content files (synced from the Payload CMS) so there is one source of
  * truth. `SITE_URL` can override the deployed origin per environment.
  * ------------------------------------------------------------------ */
 const read = <T>(path: string): T => JSON.parse(readFileSync(new URL(path, import.meta.url), 'utf8')) as T;
@@ -22,37 +20,12 @@ const localeLangs = Object.fromEntries(
 
 const site = process.env.SITE_URL || settings.siteUrl;
 
-/**
- * Keystatic's admin UI and API are server routes. They are enabled for
- * `astro dev` (local editing, writes straight to the content files) and
- * for builds that set KEYSTATIC=true together with a server adapter
- * (hosted editing in GitHub mode). A plain `astro build` stays 100% static.
- * React itself is always on: the markets map (/bozorlar/) is a React island.
- */
-function cms(): AstroIntegration {
-  return {
-    name: 'raqamli-bozor:cms',
-    hooks: {
-      'astro:config:setup': ({ command, updateConfig, injectRoute, logger }) => {
-        const enabled = command === 'dev' || process.env.KEYSTATIC === 'true';
-        if (!enabled) return;
-        logger.info('Keystatic admin enabled at /keystatic, leads endpoint at /api/leads');
-        updateConfig({ integrations: [keystatic()] });
-        /* Contact-form leads land in the CMS (Leads). Never part of the static public build. */
-        injectRoute({ pattern: '/api/leads', entrypoint: './src/api/leads.ts', prerender: false });
-      },
-    },
-  };
-}
-
 export default defineConfig({
   site,
   trailingSlash: 'ignore',
   /*
    * Locales are handled by src/pages/[locale]/index.astro and lib/content.ts rather than
-   * Astro's `i18n` option: the site is fully static, hreflang links are generated in Base.astro,
-   * and Astro's i18n middleware 404s any dev URL containing a locale segment, which breaks
-   * Keystatic's /keystatic/collection/landing/item/uz page.
+   * Astro's `i18n` option: the site is fully static and hreflang links are generated in Base.astro.
    */
   build: {
     // External stylesheets keep the generated Content-Security-Policy strict (see src/integrations/build-extras.ts).
@@ -61,7 +34,6 @@ export default defineConfig({
   integrations: [
     react(),
     sitemap({ i18n: { defaultLocale: settings.defaultLocale, locales: localeLangs } }),
-    cms(),
     buildExtras(),
   ],
 });

@@ -1,7 +1,7 @@
 /**
  * Keeps contact-form leads (customers' phone numbers) out of git.
  *
- * The rule lives in .git/info/exclude instead of .gitignore because Keystatic's
+ * The rule lives in .git/info/exclude instead of .gitignore because the old CMS's
  * local mode hides every file matched by a .gitignore, which would hide the
  * Leads collection itself. Runs on `npm install` / `npm ci` via the `prepare` script;
  * tests/leads.test.ts fails if a lead file is ever tracked anyway.

@@ -1,6 +1,6 @@
 /**
  * Pure helpers for website leads (phone numbers sent from the contact form).
- * Used by the /api/leads endpoint and covered by tests/leads.test.ts.
+ * Used by the CMS lead endpoint (cms/src/lib/leads-endpoint.ts) and covered by tests/leads.test.ts.
  */
 
 export const LEAD_STATUSES = ['new', 'contacted', 'converted', 'rejected'] as const;
@@ -8,7 +8,7 @@ export type LeadStatus = (typeof LEAD_STATUSES)[number];
 
 export interface Lead {
   phone: string;
-  /** Tashkent local time, `YYYY-MM-DDTHH:mm` (the format Keystatic's datetime field stores). */
+  /** Tashkent local time, `YYYY-MM-DDTHH:mm` . */
   submittedAt: string;
   page: string;
   status: LeadStatus;
@@ -45,7 +45,7 @@ export function tashkentDateTime(date: Date): string {
   return `${p.year}-${p.month}-${p.day}T${p.hour}:${p.minute}`;
 }
 
-/** File name / Keystatic slug: `20261008-215012-4567` (Tashkent time + last four digits), so the list sorts by arrival. */
+/** File name / lead id: `20261008-215012-4567` (Tashkent time + last four digits), so the list sorts by arrival. */
 export function leadId(date: Date, phone: string): string {
   const p = tashkentParts(date);
   return `${p.year}${p.month}${p.day}-${p.hour}${p.minute}${p.second}-${phone.slice(-4)}`;

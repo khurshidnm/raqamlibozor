@@ -1,6 +1,6 @@
 /**
  * Visitor-facing text of the markets map, keyed by what the component needs.
- * The values are the editor labels shown in Keystatic; the translated strings
+ * The values are the editor labels shown in the CMS; the translated strings
  * live in src/content/landing/<locale>.json under `map.strings`.
  * `{n}` in a value is replaced with a number at render time.
  */

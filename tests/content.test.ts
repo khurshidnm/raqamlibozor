@@ -124,7 +124,7 @@ describe('markets', () => {
     expect(marketFiles.length).toBeGreaterThan(0);
   });
   it.each(marketFiles)('%s is valid', (file) => {
-    expect(file, 'Keystatic slug').toMatch(/^[a-z0-9]+(-[a-z0-9]+)*\.json$/);
+    expect(file, 'file slug').toMatch(/^[a-z0-9]+(-[a-z0-9]+)*\.json$/);
     const market = marketFileSchema.parse(readJson(`src/content/markets/${file}`));
     expect(regionIds).toContain(market.region);
     expect(typeof market.x === 'number', 'set both coordinates or neither').toBe(typeof market.y === 'number');

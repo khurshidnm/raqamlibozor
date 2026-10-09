@@ -1,6 +1,6 @@
 /**
  * Fixed ids of the map regions (they match the outlines in src/components/map/shapes.ts)
- * and the market types. Dependency-free so both the Zod schema and the Keystatic
+ * and the market types. Dependency-free so both the Zod schema and the CMS
  * config can import it. Visitor-facing names live in the CMS (landing → map).
  */
 export const regionIds = [

@@ -35,11 +35,11 @@ const ogImage = await getImage({ src: og.image, width: 1200, height: 630, fit: '
 const ogImageAbs = { url: new URL(ogImage.src, site).href, width: 1200, height: 630, alt: og.alt || settings.siteName };
 
 const heroData = await buildHeroData(landing);
-/* In `astro dev` the form posts to the CMS's own /api/leads unless an endpoint is configured. */
+/* In `astro dev` the form posts to the local Payload CMS (cms/, port 3000) unless an endpoint is configured. */
 const endpoint = (
   import.meta.env.PUBLIC_DEMO_ENDPOINT ||
   settings.demoEndpoint ||
-  (import.meta.env.DEV ? '/api/leads' : '')
+  (import.meta.env.DEV ? 'http://localhost:3000/api/lead' : '')
 ).trim();
 const jsonLd = buildJsonLd({ settings, landing, pageUrl: new URL(path, site).href, ogImageUrl: ogImageAbs.url });
 ---

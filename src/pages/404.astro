@@ -4,11 +4,10 @@ import { getImage } from 'astro:assets';
 import Base from '../layouts/Base.astro';
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
-import { getLanding, getLandingEntries, getMedia, getSettings } from '../lib/content';
+import { getLanding, getMedia, getSettings } from '../lib/content';
 
 const settings = await getSettings();
 const landing = await getLanding(settings.defaultLocale);
-const alternates = await getLandingEntries();
 const site = Astro.site ?? new URL(settings.siteUrl);
 const og = await getMedia(settings.socialImage);
 const ogImage = await getImage({ src: og.image, width: 1200, height: 630, fit: 'cover', format: 'jpeg', quality: 82 });
@@ -18,14 +17,14 @@ const { notFound } = landing.data;
 <Base
   settings={settings}
   landing={landing}
-  alternates={alternates}
+  noindex
   title={`${notFound.title} — ${settings.siteName}`}
   description={notFound.text}
   ogImage={{ url: new URL(ogImage.src, site).href, width: 1200, height: 630, alt: og.alt || settings.siteName }}
   path="/404"
 >
   <div class="page">
-    <Nav landing={landing} siteName={settings.siteName} home="/" />
+    <Nav landing={landing} siteName={settings.siteName} home="/" defaultLocale={settings.defaultLocale} />
     <div class="shell">
       <main class="main nf" id="main">
         <p class="nf__code" aria-hidden="true">
@@ -37,7 +36,7 @@ const { notFound } = landing.data;
           {notFound.back}
         </a>
       </main>
-      <Footer landing={landing} />
+      <Footer landing={landing} defaultLocale={settings.defaultLocale} />
     </div>
   </div>
 </Base>

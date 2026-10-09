@@ -1,13 +1,17 @@
 ---
 import '../styles/footer.css';
 import type { Landing } from '../lib/content';
+import { localizeHref } from '../lib/locale';
 import { withYear } from '../lib/text';
 
 interface Props {
   landing: Landing;
+  defaultLocale: string;
 }
 
-const { footer } = Astro.props.landing.data;
+const { landing, defaultLocale } = Astro.props;
+const { footer } = landing.data;
+const href = (value: string) => localizeHref(value, landing.id, defaultLocale);
 ---
 
 <footer class="footer">
@@ -17,7 +21,7 @@ const { footer } = Astro.props.landing.data;
       {footer.columns.map((col) => (
         <ul class="footer__col">
           {col.links.map((link) => (
-            <li>{link.href ? <a href={link.href}>{link.label}</a> : <span>{link.label}</span>}</li>
+            <li>{link.href ? <a href={href(link.href)}>{link.label}</a> : <span>{link.label}</span>}</li>
           ))}
         </ul>
       ))}

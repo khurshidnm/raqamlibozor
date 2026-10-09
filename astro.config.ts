@@ -1,7 +1,6 @@
-import { readFileSync, readdirSync } from 'node:fs';
+import { readFileSync } from 'node:fs';
 import { defineConfig } from 'astro/config';
 import type { AstroIntegration } from 'astro';
-import sitemap from '@astrojs/sitemap';
 import react from '@astrojs/react';
 import keystatic from '@keystatic/astro';
 import { buildExtras } from './src/integrations/build-extras';
@@ -12,14 +11,7 @@ import { buildExtras } from './src/integrations/build-extras';
  * ------------------------------------------------------------------ */
 const read = <T>(path: string): T => JSON.parse(readFileSync(new URL(path, import.meta.url), 'utf8')) as T;
 
-const settings = read<{ siteUrl: string; defaultLocale: string }>('./src/content/settings.json');
-const locales = readdirSync(new URL('./src/content/landing/', import.meta.url))
-  .filter((file) => file.endsWith('.json'))
-  .map((file) => file.slice(0, -'.json'.length));
-const localeLangs = Object.fromEntries(
-  locales.map((locale) => [locale, read<{ lang: string }>(`./src/content/landing/${locale}.json`).lang]),
-);
-
+const settings = read<{ siteUrl: string }>('./src/content/settings.json');
 const site = process.env.SITE_URL || settings.siteUrl;
 
 /**
@@ -55,9 +47,5 @@ export default defineConfig({
     // External stylesheets keep the generated Content-Security-Policy strict (see src/integrations/build-extras.ts).
     inlineStylesheets: 'never',
   },
-  integrations: [
-    sitemap({ i18n: { defaultLocale: settings.defaultLocale, locales: localeLangs } }),
-    cms(),
-    buildExtras(),
-  ],
+  integrations: [cms(), buildExtras()],
 });

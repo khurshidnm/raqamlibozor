@@ -98,11 +98,36 @@ Editors with write access to the repository log in with GitHub; every save becom
 
 Locale routing is implemented in `src/pages/[locale]/index.astro` and `src/lib/content.ts` instead of Astro's `i18n` option, whose dev-time middleware would 404 the Keystatic URL for an entry named like a locale.
 
+## SEO and tags (all editable in the CMS)
+
+| Where in the CMS                     | What you control                                                                                                                                                                                         |
+| ------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Landing pages → SEO**              | Title, meta description, share image, share title/description, canonical override, `noindex`                                                                                                             |
+| **News → each article → SEO**        | SEO title, meta description (falls back to a trimmed excerpt), share image (falls back to the cover), canonical, `noindex`; plus _Last updated_ and _Author_ for structured data                         |
+| **Landing pages → News section**     | SEO title of the news list                                                                                                                                                                               |
+| **Site settings → SEO**              | Index on/off switch (staging), title template, X/Twitter handle, social profiles, search-engine verification codes (Google, Yandex, Bing, Meta, Pinterest), any other `<meta>`, extra `robots.txt` rules |
+| **Site settings → Analytics & tags** | Google Tag Manager, GA4, Yandex Metrica, Meta Pixel, custom `<head>` / after-`<body>` code, allowed domains for that code                                                                                |
+
+What the site generates from it: `<title>` with template, meta description, canonical, `robots` meta (rich-snippet directives; `noindex` per page or site-wide), Open Graph and Twitter cards, hreflang, JSON-LD (Organization with logo/profiles/contact, WebSite, WebPage, FAQPage, NewsArticle with real `dateModified`, BreadcrumbList), `/sitemap.xml` (indexable pages only, real `lastmod`, hreflang), `/robots.txt`, and an RSS feed per language (`/news/rss.xml`, `/<locale>/news/rss.xml`).
+
+### Analytics and other tags
+
+1. Open `/keystatic` → **Site settings → Analytics & tags** and paste the ID. Snippets are generated for you, so nothing needs a developer.
+2. Tags load **only on the deployed site**, never in `npm run dev`.
+3. Recommended: install **Google Tag Manager** only and add GA4, Yandex Metrica, Meta Pixel, Telegram Pixel etc. inside GTM. Do not enter an ID both here and in GTM or visits are counted twice.
+4. Any other provider: paste its code into _Custom code for `<head>`_ and add every domain it loads from or reports to under _Allowed domains_. The Content-Security-Policy hashes the inline code you paste and blocks unlisted domains. Inline event attributes (`onclick="…"`) are not supported.
+5. A successful demo request pushes `demo_request` to `dataLayer` and fires GA4 `generate_lead`, Yandex goal `demo_request` and Meta `Lead`, so create those goals/triggers in each tool.
+6. Verification **files** (for example `yandex_xxx.html`, `googleXXXX.html`) go in `public/`; verification **meta codes** go in _Site settings → SEO_.
+7. No cookie-consent banner is included. If you target EU visitors, load tags from GTM behind a consent tool.
+8. Keep **Allow search engines to index the site** switched on for production. While off, every page is `noindex`, `robots.txt` blocks all crawlers and the sitemap is empty (the build warns, and fails with `STRICT_BUILD=true`).
+
+After changing the content schema locally, delete `.astro/` if the dev server or build reports missing fields (CI always starts clean).
+
 ## Deployment
 
 `npm run build` produces a fully static `dist/`. Upload it to any static host (Netlify, Cloudflare Pages, Vercel, nginx, S3).
 
-- `dist/_headers` (generated) carries cache rules and a strict Content-Security-Policy, picked up automatically by Netlify and Cloudflare Pages. On other hosts copy the values into the server config. The CSP allows scripts only from the site itself plus a hash of the one inline script.
+- `dist/_headers` (generated) carries cache rules and a strict Content-Security-Policy, picked up automatically by Netlify and Cloudflare Pages. On other hosts copy the values into the server config. The CSP allows scripts only from the site itself, hashes of the inline scripts actually emitted (page zoom, enabled analytics snippets, CMS custom code) and the domains of enabled tags.
 - Set `SITE_URL` in the build environment (or `siteUrl` in Site settings) to the real domain — it drives canonical URLs, Open Graph and the sitemap.
 - Optional: `PUBLIC_DEMO_ENDPOINT` overrides the demo-request endpoint per environment.
 
@@ -126,24 +151,24 @@ Every `npm run build` reports a missing form endpoint (and a non-https site URL)
 
 ## What changed from the previous build
 
-| Area                                   | Before                                             | Now                                                                                                                                                                       |
-| -------------------------------------- | -------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Page weight (first paint / full visit) | 1.4 MB / 8.9 MB                                    | ~0.4 MB / ~4.5 MB (3.6 MB of that is the globe animation, loaded only near the section and skipped on data-saver connections)                                             |
-| Images                                 | 8 MB of PNGs at 2–4× the rendered size             | WebP/AVIF at rendered sizes with `srcset`; hero preloads per breakpoint; only the current breakpoint's hero images are warmed                                             |
-| Contrast                               | White on orange 2.1:1, green buttons 4.2:1         | Dark text on orange, a 5.5:1 green for white text, 5.9:1 green for form text (`--on-orange`, `--green-700`, `--green-ink` in `src/styles/global.css`)                     |
-| Rotating headline                      | No way to pause; ran forever                       | Pause/resume button, pauses off-screen and in hidden tabs, no autoplay under `prefers-reduced-motion`                                                                     |
-| Phone navigation                       | Links hidden, no menu                              | Accessible hamburger panel (focus management, Escape, outside click)                                                                                                      |
-| Form errors                            | Colour only                                        | Visible messages, `aria-invalid`, live region; distinct network error; spam guard                                                                                         |
-| SEO                                    | Title only                                         | Descriptive title, canonical, Open Graph + Twitter image, hreflang, sitemap, robots.txt, JSON-LD (Organization, WebSite, WebPage, FAQPage), PNG/Apple icons, web manifest |
-| Dead links                             | 8 placeholder `href="#"`                           | CMS links; empty ones render as text                                                                                                                                      |
-| Uzbek typography                       | Four different apostrophe characters               | ʻ (U+02BB) and ʼ (U+02BC) everywhere, enforced by a test                                                                                                                  |
-| Copy                                   | "nazorati qilish", "Uy hayvonlari"                 | "nazorati", "Chorva mollari" (editable in the CMS)                                                                                                                        |
-| Layout robustness                      | Fixed heights/widths clipped longer text           | min-heights, max-widths, wrapping list items, CSS grid for the steps section                                                                                              |
-| Nav blur                               | 100 px backdrop blur on every scroll frame         | 24 px (visually identical at this opacity)                                                                                                                                |
-| Globe                                  | Pointer cursor without an action; 80 frames always | Static first frame as fallback, frames on approach, skipped on `Save-Data`/2G                                                                                             |
-| Footer                                 | Inside `<main>`                                    | Top-level landmark; skip link added                                                                                                                                       |
-| Security                               | —                                                  | Strict CSP, no inline JS except one hashed script, external stylesheets, immutable cache headers                                                                          |
-| Tooling                                | None                                               | TypeScript strict, ESLint, Prettier, Vitest, CI                                                                                                                           |
+| Area                                   | Before                                             | Now                                                                                                                                                                                |
+| -------------------------------------- | -------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Page weight (first paint / full visit) | 1.4 MB / 8.9 MB                                    | ~0.4 MB / ~4.5 MB (3.6 MB of that is the globe animation, loaded only near the section and skipped on data-saver connections)                                                      |
+| Images                                 | 8 MB of PNGs at 2–4× the rendered size             | WebP/AVIF at rendered sizes with `srcset`; hero preloads per breakpoint; only the current breakpoint's hero images are warmed                                                      |
+| Contrast                               | White on orange 2.1:1, green buttons 4.2:1         | Dark text on orange, a 5.5:1 green for white text, 5.9:1 green for form text (`--on-orange`, `--green-700`, `--green-ink` in `src/styles/global.css`)                              |
+| Rotating headline                      | No way to pause; ran forever                       | Pause/resume button, pauses off-screen and in hidden tabs, no autoplay under `prefers-reduced-motion`                                                                              |
+| Phone navigation                       | Links hidden, no menu                              | Accessible hamburger panel (focus management, Escape, outside click)                                                                                                               |
+| Form errors                            | Colour only                                        | Visible messages, `aria-invalid`, live region; distinct network error; spam guard                                                                                                  |
+| SEO                                    | Title only                                         | CMS-managed titles, descriptions, robots, canonical, Open Graph + Twitter, hreflang, sitemap with lastmod, robots.txt, JSON-LD, tags & verification, PNG/Apple icons, web manifest |
+| Dead links                             | 8 placeholder `href="#"`                           | CMS links; empty ones render as text                                                                                                                                               |
+| Uzbek typography                       | Four different apostrophe characters               | ʻ (U+02BB) and ʼ (U+02BC) everywhere, enforced by a test                                                                                                                           |
+| Copy                                   | "nazorati qilish", "Uy hayvonlari"                 | "nazorati", "Chorva mollari" (editable in the CMS)                                                                                                                                 |
+| Layout robustness                      | Fixed heights/widths clipped longer text           | min-heights, max-widths, wrapping list items, CSS grid for the steps section                                                                                                       |
+| Nav blur                               | 100 px backdrop blur on every scroll frame         | 24 px (visually identical at this opacity)                                                                                                                                         |
+| Globe                                  | Pointer cursor without an action; 80 frames always | Static first frame as fallback, frames on approach, skipped on `Save-Data`/2G                                                                                                      |
+| Footer                                 | Inside `<main>`                                    | Top-level landmark; skip link added                                                                                                                                                |
+| Security                               | —                                                  | Strict CSP, no inline JS except one hashed script, external stylesheets, immutable cache headers                                                                                   |
+| Tooling                                | None                                               | TypeScript strict, ESLint, Prettier, Vitest, CI                                                                                                                                    |
 
 ### Intentional visual deviations
 

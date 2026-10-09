@@ -25,6 +25,9 @@ const link = (label: string, description?: string) =>
 const mediaRef = (label: string, description?: string) =>
   fields.relationship({ label, description, collection: 'media', validation: { isRequired: true } });
 
+const optionalMediaRef = (label: string, description?: string) =>
+  fields.relationship({ label, description, collection: 'media' });
+
 const placement = (label: string, description: string) =>
   fields.object(
     {
@@ -75,6 +78,27 @@ const landing = collection({
           validation: { isRequired: true, length: { max: 170 } },
         }),
         ogImage: mediaRef('Social share image', 'Cropped to 1200×630 automatically.'),
+        ogTitle: fields.text({
+          label: 'Social share title (optional)',
+          description: 'Shown when the page is shared on Telegram, Facebook, LinkedIn … Falls back to the page title.',
+          validation: { length: { max: 95 } },
+        }),
+        ogDescription: fields.text({
+          label: 'Social share description (optional)',
+          description: 'Falls back to the meta description.',
+          multiline: true,
+          validation: { length: { max: 200 } },
+        }),
+        canonical: fields.url({
+          label: 'Canonical URL (optional)',
+          description:
+            'Only set this when the page is a copy of another address. Leave empty to use the page’s own URL.',
+        }),
+        noindex: fields.checkbox({
+          label: 'Hide this page from search engines (noindex)',
+          description: 'Also removes it from the sitemap.',
+          defaultValue: false,
+        }),
       },
       { label: 'SEO' },
     ),
@@ -292,6 +316,11 @@ const landing = collection({
         pill: fields.text({ label: 'Pill', validation: { isRequired: true } }),
         title: fields.text({ label: 'Home page section title', validation: { isRequired: true } }),
         listTitle: fields.text({ label: 'News page title', validation: { isRequired: true } }),
+        metaTitle: fields.text({
+          label: 'News page SEO title (optional)',
+          description: 'Search-result title of the news list. Falls back to the news page title.',
+          validation: { length: { max: 70 } },
+        }),
         listDescription: fields.text({
           label: 'News page description (also the meta description)',
           multiline: true,
@@ -431,6 +460,41 @@ const news = collection({
       validation: { isRequired: true, length: { max: 300 } },
     }),
     cover: mediaRef('Cover image', 'Cropped to 16:10 on cards and 2:1 on the article.'),
+    updatedAt: fields.date({
+      label: 'Last updated on (optional)',
+      description:
+        'Set when you materially edit a published article. Used for “modified” in search results and the sitemap.',
+    }),
+    author: fields.text({
+      label: 'Author (optional)',
+      description: 'Shown to search engines as the article author. Leave empty to credit the organisation.',
+    }),
+    seo: fields.object(
+      {
+        metaTitle: fields.text({
+          label: 'SEO title (optional)',
+          description: 'Search-result title. Falls back to the article title. Aim for under 60 characters.',
+          validation: { length: { max: 70 } },
+        }),
+        metaDescription: fields.text({
+          label: 'Meta description (optional)',
+          description: 'Search-result snippet, 120–160 characters. Falls back to the excerpt.',
+          multiline: true,
+          validation: { length: { max: 170 } },
+        }),
+        ogImage: optionalMediaRef('Social share image (optional)', 'Falls back to the cover image.'),
+        canonical: fields.url({
+          label: 'Canonical URL (optional)',
+          description: 'Only for articles republished from another address.',
+        }),
+        noindex: fields.checkbox({
+          label: 'Hide this article from search engines (noindex)',
+          description: 'Also removes it from the sitemap and RSS feed.',
+          defaultValue: false,
+        }),
+      },
+      { label: 'SEO' },
+    ),
     draft: fields.checkbox({
       label: 'Draft',
       description: 'Drafts are visible in the dev server only and never published.',
@@ -503,8 +567,132 @@ const settings = singleton({
       {
         name: fields.text({ label: 'Name', validation: { isRequired: true } }),
         url: fields.url({ label: 'Website', validation: { isRequired: true } }),
+        email: fields.text({ label: 'Contact email (optional)' }),
+        phone: fields.text({
+          label: 'Contact phone (optional)',
+          description: 'International format, e.g. +998 71 000 00 00.',
+        }),
       },
-      { label: 'Organisation (structured data)', layout: [6, 6] },
+      { label: 'Organisation (structured data)', layout: [6, 6, 6, 6] },
+    ),
+    seo: fields.object(
+      {
+        indexable: fields.checkbox({
+          label: 'Allow search engines to index the site',
+          description:
+            'Turn off on staging or before launch: adds noindex to every page, blocks robots.txt and empties the sitemap.',
+          defaultValue: true,
+        }),
+        titleTemplate: fields.text({
+          label: 'Page title template',
+          description: 'Used for news and utility pages. %s is the page title, {siteName} the site name.',
+          defaultValue: '%s — {siteName}',
+          validation: { isRequired: true },
+        }),
+        twitterSite: fields.text({ label: 'X / Twitter handle (optional)', description: 'For example @raqamlibozor.' }),
+        socials: fields.array(
+          fields.object({ url: fields.url({ label: 'Profile URL', validation: { isRequired: true } }) }),
+          {
+            label: 'Social profiles',
+            description:
+              'Telegram, Instagram, Facebook, YouTube, LinkedIn … Reported to search engines as the organisation’s official profiles.',
+            itemLabel: (props) => props.fields.url.value ?? '',
+          },
+        ),
+        verification: fields.object(
+          {
+            google: fields.text({
+              label: 'Google Search Console',
+              description: 'Only the content value of the google-site-verification tag.',
+            }),
+            yandex: fields.text({
+              label: 'Yandex Webmaster',
+              description: 'Only the content value of the yandex-verification tag.',
+            }),
+            bing: fields.text({ label: 'Bing Webmaster (msvalidate.01)' }),
+            facebook: fields.text({ label: 'Meta domain verification' }),
+            pinterest: fields.text({ label: 'Pinterest (p:domain_verify)' }),
+          },
+          { label: 'Search-engine verification codes' },
+        ),
+        customMeta: fields.array(
+          fields.object(
+            {
+              name: fields.text({ label: 'Name', validation: { isRequired: true } }),
+              content: fields.text({ label: 'Content' }),
+            },
+            { layout: [4, 8] },
+          ),
+          {
+            label: 'Other meta tags',
+            description: 'Any other <meta name="…" content="…"> tag, for example from Mail.ru, Naver or Baidu.',
+            itemLabel: (props) => props.fields.name.value,
+          },
+        ),
+        robotsExtra: fields.text({
+          label: 'Extra robots.txt rules',
+          description: 'Appended under “User-agent: *”, for example Disallow: /private/',
+          multiline: true,
+        }),
+      },
+      { label: 'SEO' },
+    ),
+    tracking: fields.object(
+      {
+        gtm: fields.text({
+          label: 'Google Tag Manager',
+          description: 'Container ID, e.g. GTM-ABC1234. Recommended: manage every other tag inside GTM.',
+          validation: { pattern: { regex: /^(GTM-[A-Z0-9]{4,10})?$/, message: 'Use an ID like GTM-ABC1234' } },
+        }),
+        ga4: fields.text({
+          label: 'Google Analytics 4',
+          description: 'Measurement ID, e.g. G-ABCDE12345. Skip it when GA4 is already loaded through GTM.',
+          validation: { pattern: { regex: /^(G-[A-Z0-9]{6,12})?$/, message: 'Use an ID like G-ABCDE12345' } },
+        }),
+        yandexMetrica: fields.text({
+          label: 'Yandex Metrica',
+          description: 'Counter number, digits only.',
+          validation: { pattern: { regex: /^(\d{5,20})?$/, message: 'Digits only' } },
+        }),
+        metaPixel: fields.text({
+          label: 'Meta (Facebook) Pixel',
+          description: 'Pixel ID, digits only.',
+          validation: { pattern: { regex: /^(\d{5,20})?$/, message: 'Digits only' } },
+        }),
+        customHead: fields.text({
+          label: 'Custom code for <head>',
+          description:
+            'Any other tag (TikTok, LinkedIn, Hotjar, Mail.ru …). Pasted code runs on every page. Add its domains below.',
+          multiline: true,
+        }),
+        customBodyStart: fields.text({
+          label: 'Custom code after <body>',
+          description: 'For <noscript> fallbacks required by some providers.',
+          multiline: true,
+        }),
+        cspHosts: fields.array(
+          fields.object({
+            host: fields.text({
+              label: 'Host',
+              description: 'https://example.com or https://*.example.com',
+              validation: {
+                isRequired: true,
+                pattern: {
+                  regex: /^https:\/\/(\*\.)?[a-z0-9.-]+\.[a-z]{2,}(:\d+)?$/i,
+                  message: 'Use https://host.example',
+                },
+              },
+            }),
+          }),
+          {
+            label: 'Allowed domains for custom code',
+            description:
+              'The Content-Security-Policy blocks scripts from unknown domains; list every domain the custom code loads from or sends data to.',
+            itemLabel: (props) => props.fields.host.value,
+          },
+        ),
+      },
+      { label: 'Analytics & tags (production only)' },
     ),
     socialImage: mediaRef('Default social share image'),
     globeFrames: fields.integer({

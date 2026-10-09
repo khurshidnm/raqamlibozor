@@ -4,19 +4,24 @@ import { join, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import type { AstroIntegration } from 'astro';
 import { PAGE_ZOOM_INLINE } from '../lib/inline-scripts';
-import { launchIssues, type LaunchSettings } from './launch-checks';
+import { settingsFileSchema, type TrackingSettings } from '../content/schema';
+import { trackingCspSources } from '../lib/tracking';
+import { launchIssues } from './launch-checks';
 
 const sha256 = (text: string): string => createHash('sha256').update(text, 'utf8').digest('base64');
 
 /** Netlify / Cloudflare Pages `_headers`; other hosts can copy the values into their config. */
-function headersFile(scriptHashes: string[]): string {
+function headersFile(scriptHashes: string[], tracking: TrackingSettings): string {
+  const extra = trackingCspSources(tracking);
+  const list = (base: string, more: string[]): string => [base, ...more].join(' ');
   const csp = [
     "default-src 'self'",
-    `script-src 'self' ${scriptHashes.map((h) => `'sha256-${h}'`).join(' ')}`,
+    list(`script-src 'self' ${scriptHashes.map((h) => `'sha256-${h}'`).join(' ')}`, extra.script),
     "style-src 'self' 'unsafe-inline'",
-    "img-src 'self' data:",
+    list("img-src 'self' data:", extra.img),
     "font-src 'self'",
-    "connect-src 'self' https:",
+    list("connect-src 'self' https:", extra.connect),
+    ...(extra.frame.length ? [list("frame-src 'self'", extra.frame)] : []),
     "form-action 'self'",
     "frame-ancestors 'none'",
     "base-uri 'self'",
@@ -47,6 +52,22 @@ function headersFile(scriptHashes: string[]): string {
   ].join('\n');
 }
 
+/**
+ * Bodies of executable inline `<script>` elements (no `src`, not JSON data). Browsers need their
+ * hashes in the Content-Security-Policy.
+ */
+export function inlineScripts(html: string): string[] {
+  const found: string[] = [];
+  for (const m of html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/gi)) {
+    const attrs = m[1] ?? '';
+    const body = m[2] ?? '';
+    if (/\bsrc\s*=/i.test(attrs) || !body.trim()) continue;
+    if (/\btype\s*=\s*["']?(application\/(ld\+)?json|importmap|speculationrules)/i.test(attrs)) continue;
+    found.push(body);
+  }
+  return found;
+}
+
 function walk(dir: string, out: string[] = []): string[] {
   for (const name of readdirSync(dir)) {
     const full = join(dir, name);
@@ -72,23 +93,24 @@ export function buildExtras(): AstroIntegration {
         const textFiles = files.filter((f) => /\.(html|css|js|xml|txt|webmanifest)$/.test(f));
         const text = textFiles.map((f) => readFileSync(f, 'utf8')).join('\n');
 
-        /* CSP: verify the inline script survived the compiler byte-for-byte, then hash it. */
-        const inline = new Set<string>();
-        for (const match of text.matchAll(/<script>([\s\S]*?)<\/script>/g)) inline.add(match[1] ?? '');
-        for (const script of inline) {
-          if (script !== PAGE_ZOOM_INLINE) {
-            throw new Error(
-              `Unexpected inline <script> in the build output; add it to src/lib/inline-scripts.ts:\n${script}`,
-            );
-          }
+        /* Settings are parsed with the CMS schema so tracking ids and allow-lists get their defaults. */
+        const rawSettings: unknown = JSON.parse(
+          readFileSync(fileURLToPath(new URL('../content/settings.json', import.meta.url)), 'utf8'),
+        );
+        const settings = settingsFileSchema.parse(rawSettings);
+
+        /* CSP: hash every inline script in the HTML (page-zoom, enabled analytics snippets, CMS custom code). */
+        const html = textFiles.filter((f) => f.endsWith('.html')).map((f) => readFileSync(f, 'utf8'));
+        const inline = new Set(html.flatMap(inlineScripts));
+        if (!inline.has(PAGE_ZOOM_INLINE)) {
+          throw new Error(
+            'The page-zoom inline script is missing or was rewritten by the compiler (see src/lib/inline-scripts.ts).',
+          );
         }
-        writeFileSync(join(out, '_headers'), headersFile([sha256(PAGE_ZOOM_INLINE)]));
+        writeFileSync(join(out, '_headers'), headersFile([...inline].map(sha256), settings.tracking));
         logger.info(`_headers written with ${inline.size} inline script hash(es)`);
 
         /* Release checks: warn locally, fail the build for production deploys that set STRICT_BUILD=true. */
-        const settings = JSON.parse(
-          readFileSync(fileURLToPath(new URL('../content/settings.json', import.meta.url)), 'utf8'),
-        ) as LaunchSettings;
         const issues = launchIssues(process.env, settings);
         for (const issue of issues) logger.warn(issue);
         if (issues.length && process.env.STRICT_BUILD === 'true') {

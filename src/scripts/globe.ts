@@ -71,7 +71,10 @@ export function initGlobe(): void {
     return -1;
   };
 
+  let nearby = !('IntersectionObserver' in window);
+
   const measure = (): void => {
+    if (!nearby && !active) return;
     const r = box.getBoundingClientRect();
     const vh = innerHeight;
     active = r.top < vh && r.bottom > 0;
@@ -109,9 +112,12 @@ export function initGlobe(): void {
   if ('IntersectionObserver' in window) {
     new IntersectionObserver(
       (entries) => {
-        if (entries.some((e) => e.isIntersecting)) {
+        nearby = entries.some((e) => e.isIntersecting);
+        if (nearby) {
           measure();
           loadAll();
+        } else {
+          measure(); // settle `active` to false so the frame loop stops
         }
       },
       { rootMargin: '600px 0px' },

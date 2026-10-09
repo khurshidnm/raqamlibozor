@@ -4,6 +4,7 @@ import { join, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import type { AstroIntegration } from 'astro';
 import { PAGE_ZOOM_INLINE } from '../lib/inline-scripts';
+import { launchIssues, type LaunchSettings } from './launch-checks';
 
 const sha256 = (text: string): string => createHash('sha256').update(text, 'utf8').digest('base64');
 
@@ -57,7 +58,8 @@ function walk(dir: string, out: string[] = []): string[] {
 
 /**
  * 1. Writes `_headers` with a strict CSP whose script hashes match the inline scripts actually emitted.
- * 2. Removes optimised/original images under `_astro/` that no HTML, CSS or JS references
+ * 2. Reports release-readiness problems (missing form endpoint / site URL); `STRICT_BUILD=true` turns them into a failed build.
+ * 3. Removes optimised/original images under `_astro/` that no HTML, CSS or JS references
  *    (the content layer emits every source image even when only derived sizes are used).
  */
 export function buildExtras(): AstroIntegration {
@@ -82,6 +84,16 @@ export function buildExtras(): AstroIntegration {
         }
         writeFileSync(join(out, '_headers'), headersFile([sha256(PAGE_ZOOM_INLINE)]));
         logger.info(`_headers written with ${inline.size} inline script hash(es)`);
+
+        /* Release checks: warn locally, fail the build for production deploys that set STRICT_BUILD=true. */
+        const settings = JSON.parse(
+          readFileSync(fileURLToPath(new URL('../content/settings.json', import.meta.url)), 'utf8'),
+        ) as LaunchSettings;
+        const issues = launchIssues(process.env, settings);
+        for (const issue of issues) logger.warn(issue);
+        if (issues.length && process.env.STRICT_BUILD === 'true') {
+          throw new Error(`STRICT_BUILD: ${issues.length} release check(s) failed:\n- ${issues.join('\n- ')}`);
+        }
 
         /* Prune unreferenced images. */
         let pruned = 0;

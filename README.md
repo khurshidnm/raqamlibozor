@@ -18,7 +18,7 @@ Alternatives considered: **Sanity** (best hosted editing UX, external service an
 
 ## Requirements
 
-- Node 22.12+ (see `.nvmrc`)
+- Node 22.22.3+ (see `.nvmrc`)
 - npm 9+
 
 ## Commands
@@ -118,6 +118,8 @@ The form posts `{"phone": "+998901234567"}` as JSON to the endpoint set in Site 
 The endpoint must answer CORS preflight requests from the site origin and return a 2xx status.
 
 ## Launch checklist
+
+Every `npm run build` reports the first two items below as warnings. Set `STRICT_BUILD=true` on the production deploy to turn them into a failed build.
 
 - [ ] Set the real domain in Site settings (currently `https://raqamlibozor.uz` as a placeholder) or `SITE_URL`.
 - [ ] Set the demo-request endpoint.

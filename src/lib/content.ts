@@ -29,7 +29,4 @@ export async function getMedia(ref: MediaRef): Promise<Media> {
   return entry.data;
 }
 
-/** URL path of a locale's home page: "/" for the default locale, "/ru/" otherwise. */
-export function localePath(locale: string, defaultLocale: string): string {
-  return locale === defaultLocale ? '/' : `/${locale}/`;
-}
+export { localePath } from './locale';

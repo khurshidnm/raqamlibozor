@@ -6,7 +6,7 @@ import Nav from './Nav.astro';
 import Footer from './Footer.astro';
 import NewsCard from './NewsCard.astro';
 import type { Landing, Settings } from '../lib/content';
-import { getMedia, localePath } from '../lib/content';
+import { getLandingEntries, getMedia, localePath } from '../lib/content';
 import { getNews, newsPath, paginateNews } from '../lib/news';
 
 interface Props {
@@ -29,13 +29,22 @@ const title =
   current > 1
     ? `${news.listTitle} (${current}/${totalPages}) — ${settings.siteName}`
     : `${news.listTitle} — ${settings.siteName}`;
+/* Only the first page has a counterpart in every language; deeper pages reference themselves. */
+const alternates =
+  current === 1
+    ? (await getLandingEntries()).map((entry) => ({
+        hreflang: entry.data.lang,
+        path: newsPath(entry.id, settings.defaultLocale),
+      }))
+    : [{ hreflang: landing.data.lang, path }];
 const rss = landing.id === settings.defaultLocale ? '/news/rss.xml' : undefined;
 ---
 
 <Base
   settings={settings}
   landing={landing}
-  alternates={[]}
+  alternates={alternates}
+  xDefault={current === 1 ? newsPath(settings.defaultLocale, settings.defaultLocale) : undefined}
   title={title}
   description={news.listDescription}
   ogImage={{ url: new URL(ogImage.src, site).href, width: 1200, height: 630, alt: og.alt || settings.siteName }}
@@ -43,7 +52,7 @@ const rss = landing.id === settings.defaultLocale ? '/news/rss.xml' : undefined;
   rss={rss}
 >
   <div class="page">
-    <Nav landing={landing} siteName={settings.siteName} home={home} />
+    <Nav landing={landing} siteName={settings.siteName} home={home} defaultLocale={settings.defaultLocale} />
     <div class="shell">
       <main class="main news-page" id="main">
         <header class="news-page__head">
@@ -92,7 +101,7 @@ const rss = landing.id === settings.defaultLocale ? '/news/rss.xml' : undefined;
           )}
         </section>
       </main>
-      <Footer landing={landing} />
+      <Footer landing={landing} defaultLocale={settings.defaultLocale} />
     </div>
   </div>
 </Base>

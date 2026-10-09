@@ -13,7 +13,11 @@ export function initSolutionsStack(): void {
   let raf = 0;
   let lastT = 0;
 
-  const measure = (): void => {
+  /* Scroll/resize handlers only do layout work while the stack is within a viewport of the screen. */
+  let near = !('IntersectionObserver' in window);
+
+  const measure = (force = false): void => {
+    if (!near && !force) return;
     const rect = list.getBoundingClientRect();
     const zoom = rect.width / (list.offsetWidth || rect.width) || 1; // page zoom on large screens
     const cs = getComputedStyle(list);
@@ -49,7 +53,16 @@ export function initSolutionsStack(): void {
     else lastT = 0;
   };
 
-  addEventListener('scroll', measure, { passive: true });
-  addEventListener('resize', measure, { passive: true });
-  measure();
+  addEventListener('scroll', () => measure(), { passive: true });
+  addEventListener('resize', () => measure(), { passive: true });
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(
+      (entries) => {
+        near = entries.some((e) => e.isIntersecting);
+        measure(true); // one last pass on exit so cards settle at their final scale
+      },
+      { rootMargin: '100% 0px' },
+    ).observe(list);
+  }
+  measure(true);
 }

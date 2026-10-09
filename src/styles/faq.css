@@ -100,10 +100,16 @@
 .faq__a {
   display: grid;
   grid-template-rows: 0fr;
-  transition: grid-template-rows var(--sp-btn-d) var(--sp-btn);
+  /* Closed answers leave the accessibility tree once the collapse animation ends. */
+  visibility: hidden;
+  transition:
+    grid-template-rows var(--sp-btn-d) var(--sp-btn),
+    visibility 0s linear var(--sp-btn-d);
 }
 .faq__item.is-open .faq__a {
   grid-template-rows: 1fr;
+  visibility: visible;
+  transition-delay: 0s;
 }
 .faq__a-in {
   overflow: hidden;

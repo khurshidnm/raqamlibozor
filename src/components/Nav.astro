@@ -3,19 +3,22 @@ import '../styles/nav.css';
 import logo from '../assets/ui/logo.svg';
 import Icon from './Icon.astro';
 import type { Landing } from '../lib/content';
+import { localizeHref } from '../lib/locale';
 
 interface Props {
   landing: Landing;
   siteName: string;
   home: string;
+  defaultLocale: string;
 }
 
-const { landing, siteName, home } = Astro.props;
+const { landing, siteName, home, defaultLocale } = Astro.props;
 const { nav, a11y } = landing.data;
 /* In-page anchors (#bozorlar) only exist on the landing page; prefix them elsewhere. */
 const current = Astro.url.pathname.endsWith('/') ? Astro.url.pathname : `${Astro.url.pathname}/`;
 const isHome = current === home;
-const resolve = (href: string) => (href.startsWith('#') && !isHome ? `${home}${href}` : href);
+const resolve = (href: string) =>
+  href.startsWith('#') && !isHome ? `${home}${href}` : localizeHref(href, landing.id, defaultLocale);
 ---
 
 <header class="nav" id="nav">

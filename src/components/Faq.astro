@@ -28,7 +28,7 @@ const { faq } = Astro.props.landing.data;
           <span class="faq__q-text">{item.question}</span>
           <span class="faq__toggle" aria-hidden="true"></span>
         </button>
-        <div class="faq__a" id={`faq-a${i + 1}`} role="region" aria-labelledby={`faq-q${i + 1}`}>
+        <div class="faq__a" id={`faq-a${i + 1}`}>
           <div class="faq__a-in">
             <p>{item.answer}</p>
           </div>

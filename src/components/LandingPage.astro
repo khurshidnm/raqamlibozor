@@ -25,7 +25,10 @@ interface Props {
 const { landing, settings } = Astro.props;
 const path = localePath(landing.id, settings.defaultLocale);
 const site = Astro.site ?? new URL(settings.siteUrl);
-const alternates = await getLandingEntries();
+const alternates = (await getLandingEntries()).map((entry) => ({
+  hreflang: entry.data.lang,
+  path: localePath(entry.id, settings.defaultLocale),
+}));
 
 const og = await getMedia(landing.data.seo.ogImage);
 const ogImage = await getImage({ src: og.image, width: 1200, height: 630, fit: 'cover', format: 'jpeg', quality: 82 });
@@ -40,6 +43,7 @@ const jsonLd = buildJsonLd({ settings, landing, pageUrl: new URL(path, site).hre
   settings={settings}
   landing={landing}
   alternates={alternates}
+  xDefault="/"
   title={landing.data.seo.title}
   description={landing.data.seo.description}
   ogImage={ogImageAbs}
@@ -49,7 +53,7 @@ const jsonLd = buildJsonLd({ settings, landing, pageUrl: new URL(path, site).hre
   rss={landing.id === settings.defaultLocale ? '/news/rss.xml' : undefined}
 >
   <div class="page" id="page">
-    <Nav landing={landing} siteName={settings.siteName} home={path} />
+    <Nav landing={landing} siteName={settings.siteName} home={path} defaultLocale={settings.defaultLocale} />
     <div class="shell">
       <main class="main" id="main">
         <Hero landing={landing} data={heroData} />
@@ -62,7 +66,7 @@ const jsonLd = buildJsonLd({ settings, landing, pageUrl: new URL(path, site).hre
         <Faq landing={landing} />
         <Contact landing={landing} endpoint={endpoint} />
       </main>
-      <Footer landing={landing} />
+      <Footer landing={landing} defaultLocale={settings.defaultLocale} />
     </div>
   </div>
 </Base>

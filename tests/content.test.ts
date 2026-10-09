@@ -98,6 +98,7 @@ describe.each(landingFiles)('landing/%s', (file) => {
       'yechimlar',
       'joriy-etish',
       'bozorlar',
+      'yangiliklar',
       'savollar',
       'boglanish',
     ];

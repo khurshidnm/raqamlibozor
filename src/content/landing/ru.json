@@ -552,18 +552,6 @@
             "href": "/maxfiylik/"
           }
         ]
-      },
-      {
-        "links": [
-          {
-            "label": "Свидетельство Raqamli Bozor",
-            "href": ""
-          },
-          {
-            "label": "Лицензия",
-            "href": ""
-          }
-        ]
       }
     ],
     "copyright": "© Raqamli Bozor {year}. Все права защищены.",
@@ -673,5 +661,26 @@
     "title": "Страница не найдена",
     "text": "Страница, которую вы ищете, не существует или была перемещена.",
     "back": "Вернуться на главную"
+  },
+  "mobileApp": {
+    "enabled": true,
+    "pill": "Мобильное приложение",
+    "title": "Raqamli Bozor — теперь в вашем телефоне",
+    "description": "Решайте повседневные задачи рынка в мобильном приложении. Оплачивайте аренду магазинов и торговых мест, просматривайте историю платежей в одном месте.",
+    "features": [
+      {
+        "text": "Оплата аренды магазина"
+      },
+      {
+        "text": "Оплата торговых мест"
+      },
+      {
+        "text": "История платежей"
+      }
+    ],
+    "downloadLabel": "Скачать в",
+    "previewAlt": "Главный экран приложения Raqamli Bozor: платежи и история оплат",
+    "appStoreUrl": "https://apps.apple.com/uz/app/raqamli-bozor/id6741834716",
+    "googlePlayUrl": "https://play.google.com/store/apps/details?id=uz.realsoft.raqamli.bozor&pcampaignid=web_share"
   }
 }

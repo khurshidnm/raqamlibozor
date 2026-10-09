@@ -207,6 +207,17 @@ const tabs: Tab[] = [
     text('next', 'Next page'),
     text('pageOf', 'Page counter', { admin: { description: '{current} and {total} are replaced.' } }),
   ]),
+  tab('mobileApp', 'Mobile application', [
+    checkbox('enabled', 'Show mobile application section'),
+    optionalText('pill', 'Section label'),
+    optionalText('title', 'Heading'),
+    optionalTextarea('description', 'Description'),
+    array('features', 'Features', [text('text', 'Feature')], { maxRows: 3 }),
+    optionalText('downloadLabel', 'Download button text'),
+    optionalText('previewAlt', 'App screenshot description'),
+    optionalText('appStoreUrl', 'App Store URL'),
+    optionalText('googlePlayUrl', 'Google Play URL'),
+  ]),
   tab('faq', 'FAQ', [
     text('pill', 'Pill'),
     text('title', 'Title'),

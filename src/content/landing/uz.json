@@ -552,18 +552,6 @@
             "href": "/maxfiylik/"
           }
         ]
-      },
-      {
-        "links": [
-          {
-            "label": "Raqamli Bozor tasdiqnoma",
-            "href": ""
-          },
-          {
-            "label": "Guvohnoma",
-            "href": ""
-          }
-        ]
       }
     ],
     "copyright": "© Raqamli Bozor {year}. Barcha huquqlar himoyalangan.",
@@ -675,5 +663,26 @@
     "title": "Sahifa topilmadi",
     "text": "Siz izlagan sahifa mavjud emas yoki koʻchirilgan.",
     "back": "Bosh sahifaga qaytish"
+  },
+  "mobileApp": {
+    "enabled": true,
+    "pill": "Mobil ilova",
+    "title": "Raqamli Bozor — endi telefoningizda",
+    "description": "Bozordagi kundalik ishlarni mobil ilova orqali bajaring. Ijara va rasta toʻlovlarini amalga oshiring, toʻlovlar tarixini bir joyda kuzating.",
+    "features": [
+      {
+        "text": "Doʻkon ijarasi uchun toʻlov"
+      },
+      {
+        "text": "Rastalar uchun toʻlov"
+      },
+      {
+        "text": "Toʻlovlar tarixi"
+      }
+    ],
+    "downloadLabel": "Yuklab olish",
+    "previewAlt": "Raqamli Bozor ilovasining bosh sahifasi: toʻlovlar va toʻlovlar tarixi",
+    "appStoreUrl": "https://apps.apple.com/uz/app/raqamli-bozor/id6741834716",
+    "googlePlayUrl": "https://play.google.com/store/apps/details?id=uz.realsoft.raqamli.bozor&pcampaignid=web_share"
   }
 }

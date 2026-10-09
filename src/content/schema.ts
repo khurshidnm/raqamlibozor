@@ -235,6 +235,20 @@ export function landingSchema<M extends z.ZodType>(media: M) {
 
     news: newsStringsSchema,
 
+    mobileApp: z
+      .object({
+        enabled: z.boolean().default(false),
+        pill: z.string().default(''),
+        title: z.string().default(''),
+        description: z.string().default(''),
+        features: z.array(z.object({ text: z.string().min(1) })).default([]),
+        downloadLabel: z.string().default(''),
+        previewAlt: z.string().default(''),
+        appStoreUrl: z.union([z.literal(''), z.url()]).default(''),
+        googlePlayUrl: z.union([z.literal(''), z.url()]).default(''),
+      })
+      .optional(),
+
     faq: z.object({
       pill: z.string().min(1),
       title: z.string().min(1),

@@ -43,52 +43,43 @@ const active = languages.find((l) => l.active);
 
     <nav class="nav__links" aria-label={a11y.mainMenu}>
       {nav.links.map((link) => (
-        <a class="roll" href={resolve(link.href)}>
-          <span class="roll__in">
-            <span>{link.label}</span>
-            <span aria-hidden="true">{link.label}</span>
-          </span>
+        <a class="nav__link" href={resolve(link.href)}>
+          {link.label}
         </a>
       ))}
     </nav>
 
-    {languages.length > 1 && active && (
-      <div class="lang">
-        <button
-          class="lang__btn"
-          type="button"
-          aria-haspopup="true"
-          aria-expanded="false"
-          aria-label={`${active.name}`}
-        >
-          <Icon name="globe" />
-          <span>{active.short}</span>
-        </button>
-        <ul class="lang__list">
-          {languages.map((l) => (
-            <li>
-              <a href={l.href} hreflang={l.lang} lang={l.lang} aria-current={l.active ? 'true' : undefined}>
-                <span class="lang__code">{l.short}</span>
-                <span>{l.name}</span>
-              </a>
-            </li>
-          ))}
-        </ul>
-      </div>
-    )}
+    <div class="nav__actions">
+      {languages.length > 1 && active && (
+        <div class="lang">
+          <button
+            class="lang__btn"
+            type="button"
+            aria-haspopup="true"
+            aria-expanded="false"
+            aria-label={`${active.name}`}
+          >
+            <Icon name="globe" />
+            <span>{active.short}</span>
+          </button>
+          <ul class="lang__list">
+            {languages.map((l) => (
+              <li>
+                <a href={l.href} hreflang={l.lang} lang={l.lang} aria-current={l.active ? 'true' : undefined}>
+                  <span class="lang__code">{l.short}</span>
+                  <span>{l.name}</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
 
-    <a class="nav__cta" href={resolve(nav.cta.href || '#boglanish')}>
-      <span class="nav__cta-in">
-        <span class="nav__cta-row">
-          <Icon name="arrow" />
-          <span>{nav.cta.label}</span>
-        </span>
-        <span class="nav__cta-row" aria-hidden="true">
-          <Icon name="login" />
-          <span>{nav.cta.label}</span>
-        </span>
-      </span>
-    </a>
+      <a class="nav__cta" href={resolve(nav.cta.href || '#boglanish')}>
+        <Icon name="arrow" />
+        <span>{nav.cta.label}</span>
+      </a>
+    </div>
 
     <button
       class="nav__menu-btn"

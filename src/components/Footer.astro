@@ -1,7 +1,8 @@
 ---
 import '../styles/footer.css';
 import type { Landing } from '../lib/content';
-import { localizeHref } from '../lib/locale';
+import { localizeHref, localePath } from '../lib/locale';
+import logo from '../assets/ui/logo.svg';
 import { withYear } from '../lib/text';
 
 interface Props {
@@ -16,7 +17,9 @@ const href = (value: string) => localizeHref(value, landing.id, defaultLocale);
 
 <footer class="footer">
   <div class="footer__top">
-    <p class="footer__brand">{footer.brand}</p>
+    <a class="footer__brand" href={localePath(landing.id, defaultLocale)} aria-label={footer.brand}>
+      <img src={logo.src} width="118" height="41" alt={footer.brand} loading="lazy" decoding="async" />
+    </a>
     <div class="footer__cols">
       {footer.columns.map((col) => (
         <ul class="footer__col">

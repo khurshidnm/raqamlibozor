@@ -552,18 +552,6 @@
             "href": "/maxfiylik/"
           }
         ]
-      },
-      {
-        "links": [
-          {
-            "label": "Raqamli Bozor certificate",
-            "href": ""
-          },
-          {
-            "label": "Licence",
-            "href": ""
-          }
-        ]
       }
     ],
     "copyright": "© Raqamli Bozor {year}. All rights reserved.",
@@ -673,5 +661,26 @@
     "title": "Page not found",
     "text": "The page you are looking for does not exist or has been moved.",
     "back": "Back to the home page"
+  },
+  "mobileApp": {
+    "enabled": true,
+    "pill": "Mobile application",
+    "title": "Raqamli Bozor — now on your phone",
+    "description": "Manage everyday market tasks from the mobile app. Pay for shop rent and market stalls, and keep your payment history in one place.",
+    "features": [
+      {
+        "text": "Shop rental payments"
+      },
+      {
+        "text": "Market stall payments"
+      },
+      {
+        "text": "Payment history"
+      }
+    ],
+    "downloadLabel": "Download on",
+    "previewAlt": "Raqamli Bozor app home screen showing payments and payment history",
+    "appStoreUrl": "https://apps.apple.com/uz/app/raqamli-bozor/id6741834716",
+    "googlePlayUrl": "https://play.google.com/store/apps/details?id=uz.realsoft.raqamli.bozor&pcampaignid=web_share"
   }
 }

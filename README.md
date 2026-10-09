@@ -93,6 +93,8 @@ The export connects directly to the database configured for `cms/` and reads upl
 
 Site settings include the default language, SEO, analytics, custom tags and the demo-request endpoint. Landing documents contain translated copy and legal text. Markets contain the map data; news articles have their own locale.
 
+The **Mobile application** tab on each landing document controls the app section above the contact form: visibility, translated copy, feature list and App Store / Google Play links. Its screenshot is a product asset in `src/assets/ui/mobile-app-home.jpg`.
+
 Leads are stored privately in the CMS. Set the demo-request endpoint in Site settings or override it with `PUBLIC_DEMO_ENDPOINT`. Without an endpoint, the form runs in demo mode and does not store a lead.
 
 ## Deployment

@@ -1,0 +1,672 @@
+{
+  "language": "English",
+  "lang": "en",
+  "seo": {
+    "title": "Raqamli Bozor — digital market management system",
+    "description": "Every stall, every payment and every rent record — all the information you need to run your market, in one place.",
+    "ogImage": "cta-market"
+  },
+  "nav": {
+    "links": [
+      {
+        "label": "Markets",
+        "href": "/bozorlar/"
+      },
+      {
+        "label": "Features",
+        "href": "#imkoniyatlar"
+      },
+      {
+        "label": "Solutions",
+        "href": "#yechimlar"
+      },
+      {
+        "label": "Rollout",
+        "href": "#joriy-etish"
+      },
+      {
+        "label": "FAQ",
+        "href": "#savollar"
+      },
+      {
+        "label": "News",
+        "href": "/news/"
+      }
+    ],
+    "cta": {
+      "label": "Sign in",
+      "href": "https://raqamli-bozor.uz/auth/login"
+    }
+  },
+  "hero": {
+    "intervalMs": 2000,
+    "buttons": [
+      {
+        "label": "Features",
+        "href": "#imkoniyatlar",
+        "variant": "orange"
+      },
+      {
+        "label": "Contact us",
+        "href": "#boglanish",
+        "variant": "green"
+      }
+    ],
+    "slides": [
+      {
+        "title": "High-precision\nartificial intelligence",
+        "image": "hero-basket",
+        "imageMobile": "hero-basket",
+        "tags": [
+          {
+            "label": "Security",
+            "x": -30,
+            "y": -3
+          },
+          {
+            "label": "Verification",
+            "x": 13,
+            "y": 27
+          },
+          {
+            "label": "Accurate reports",
+            "x": 24,
+            "y": -5
+          }
+        ],
+        "desktop": {
+          "width": 675,
+          "x": 2,
+          "y": 23
+        },
+        "mobile": {
+          "width": 578,
+          "x": 13,
+          "y": 7
+        }
+      },
+      {
+        "title": "Livestock\ntrading and sales",
+        "image": "hero-cow",
+        "imageMobile": "hero-cow-sm",
+        "tags": [
+          {
+            "label": "Counting",
+            "x": -20,
+            "y": -15
+          },
+          {
+            "label": "Control",
+            "x": -6,
+            "y": 26
+          },
+          {
+            "label": "Exact records",
+            "x": 18,
+            "y": -3
+          }
+        ],
+        "desktop": {
+          "width": 468,
+          "x": 0,
+          "y": 0
+        },
+        "mobile": {
+          "width": 486,
+          "x": 11,
+          "y": -6
+        }
+      },
+      {
+        "title": "Stall and payment\ncontrol",
+        "image": "hero-phone",
+        "imageMobile": "hero-phone-sm",
+        "tags": [
+          {
+            "label": "Verification",
+            "x": -25,
+            "y": -12
+          },
+          {
+            "label": "Assurance",
+            "x": 24,
+            "y": -14
+          },
+          {
+            "label": "Digital archive",
+            "x": -15,
+            "y": 22
+          }
+        ],
+        "desktop": {
+          "width": 576,
+          "x": 4,
+          "y": 20
+        },
+        "mobile": {
+          "width": 581,
+          "x": 16,
+          "y": 14
+        }
+      },
+      {
+        "title": "Digital parking\nsolution",
+        "image": "hero-cars",
+        "imageMobile": "hero-cars-sm",
+        "tags": [
+          {
+            "label": "Entry-exit",
+            "x": -37,
+            "y": -15
+          },
+          {
+            "label": "Order",
+            "x": 32,
+            "y": -12
+          },
+          {
+            "label": "Payment control",
+            "x": -11,
+            "y": -20
+          }
+        ],
+        "desktop": {
+          "width": 1101,
+          "x": 0,
+          "y": 10
+        },
+        "mobile": {
+          "width": 956,
+          "x": 50,
+          "y": 16
+        }
+      }
+    ]
+  },
+  "intro": {
+    "rows": [
+      {
+        "segments": [
+          {
+            "text": "Every",
+            "style": "plain"
+          },
+          {
+            "text": "stall,",
+            "style": "chip-green"
+          },
+          {
+            "text": "every",
+            "style": "plain"
+          },
+          {
+            "text": "payment",
+            "style": "chip-orange"
+          },
+          {
+            "text": "and every",
+            "style": "plain"
+          }
+        ]
+      },
+      {
+        "segments": [
+          {
+            "text": "rent record",
+            "style": "chip-green"
+          },
+          {
+            "text": "—",
+            "style": "plain"
+          },
+          {
+            "text": "the information you need to run your market",
+            "style": "muted"
+          }
+        ]
+      },
+      {
+        "segments": [
+          {
+            "text": "is available",
+            "style": "muted"
+          },
+          {
+            "text": "in one place.",
+            "style": "plain"
+          }
+        ]
+      }
+    ]
+  },
+  "features": {
+    "pill": "Features",
+    "title": "Stall and payment\ncontrol",
+    "cards": [
+      {
+        "label": "Payment and debt control",
+        "visual": "dashboard",
+        "wideLabel": false
+      },
+      {
+        "label": "Parking revenue control",
+        "visual": "notifications",
+        "wideLabel": true
+      },
+      {
+        "label": "Stall occupancy control",
+        "visual": "orbit",
+        "wideLabel": false
+      },
+      {
+        "label": "Rental document automation",
+        "visual": "tiles",
+        "wideLabel": false
+      }
+    ],
+    "notifications": [
+      {
+        "title": "Payment received",
+        "meta": "Parking · Today, 10:24",
+        "amount": "10 000"
+      },
+      {
+        "title": "Payment received",
+        "meta": "Supermarket · Today, 14:15",
+        "amount": "45 000"
+      },
+      {
+        "title": "Payment received",
+        "meta": "Restaurant · Yesterday, 20:30",
+        "amount": "125 000"
+      }
+    ]
+  },
+  "solutions": {
+    "cta": {
+      "label": "Request a demo",
+      "href": "#boglanish"
+    },
+    "cards": [
+      {
+        "title": "Every stall — under control",
+        "description": "See which stalls are occupied, the status of licence fee payments and rent arrears in one place.",
+        "image": "solution-stalls",
+        "side": "left",
+        "items": ["Occupied and vacant stalls", "Licence fee payment status", "Rent and arrears records"]
+      },
+      {
+        "title": "Parking — precisely tracked",
+        "description": "Record vehicle entries and exits. Monitor payment status and get reports on parking revenue.",
+        "image": "solution-parking",
+        "side": "right",
+        "items": ["Entry and exit log", "Payment monitoring", "Revenue report"]
+      },
+      {
+        "title": "Rental documents — in one place",
+        "description": "Generate rental contracts automatically and keep a personal account for every tenant. Track payments and arrears.",
+        "image": "solution-rent",
+        "side": "left",
+        "items": ["Contract generation", "Personal accounts", "Rent and arrears records"]
+      },
+      {
+        "title": "Livestock market — precisely tracked",
+        "description": "Record animals entering and leaving the market. Monitor payment status and get reports on livestock market revenue.",
+        "image": "solution-livestock",
+        "side": "right",
+        "items": ["Animal entry-exit log", "Payment monitoring", "Revenue report"]
+      }
+    ]
+  },
+  "steps": {
+    "pill": "Integration",
+    "title": "Three steps to a digital market",
+    "items": [
+      {
+        "title": "1. We identify\nyour needs",
+        "description": "We discuss the processes at your market and define the features you need.",
+        "icon": "step-1"
+      },
+      {
+        "title": "2. We demonstrate\nthe system",
+        "description": "We show how stalls, payments and rent records are managed in the system.",
+        "icon": "step-2"
+      },
+      {
+        "title": "3. We plan\nthe rollout",
+        "description": "We agree on the equipment, scope of work, timeline and price.",
+        "icon": "step-3"
+      }
+    ]
+  },
+  "markets": {
+    "title": "Markets that trust us",
+    "cta": {
+      "label": "View all",
+      "href": "/bozorlar/"
+    }
+  },
+  "map": {
+    "seo": {
+      "title": "Market map — Raqamli Bozor",
+      "description": "A map of markets across Uzbekistan connected to Raqamli Bozor: choose a region to see its markets, cities and districts."
+    },
+    "pill": "Markets",
+    "title": "Markets that trust us",
+    "description": "A map of markets where Raqamli Bozor is in use. Choose a region to see its markets, cities and districts.",
+    "regions": {
+      "andijan": {
+        "name": "Andijan",
+        "kind": "Region"
+      },
+      "bukhara": {
+        "name": "Bukhara",
+        "kind": "Region"
+      },
+      "fergana": {
+        "name": "Fergana",
+        "kind": "Region"
+      },
+      "jizzakh": {
+        "name": "Jizzakh",
+        "kind": "Region"
+      },
+      "namangan": {
+        "name": "Namangan",
+        "kind": "Region"
+      },
+      "navoi": {
+        "name": "Navoi",
+        "kind": "Region"
+      },
+      "kashkadarya": {
+        "name": "Kashkadarya",
+        "kind": "Region"
+      },
+      "karakalpakstan": {
+        "name": "Karakalpakstan",
+        "kind": "Republic"
+      },
+      "samarkand": {
+        "name": "Samarkand",
+        "kind": "Region"
+      },
+      "syrdarya": {
+        "name": "Syrdarya",
+        "kind": "Region"
+      },
+      "surkhandarya": {
+        "name": "Surkhandarya",
+        "kind": "Region"
+      },
+      "tashkent-city": {
+        "name": "Tashkent",
+        "kind": "City"
+      },
+      "tashkent": {
+        "name": "Tashkent",
+        "kind": "Region"
+      },
+      "khorezm": {
+        "name": "Khorezm",
+        "kind": "Region"
+      }
+    },
+    "kinds": {
+      "dehqon": "Farmers market",
+      "buyum": "Goods market",
+      "avtomobil": "Car market",
+      "branch": "Branch"
+    },
+    "invitation": {
+      "text": "Raqamli Bozor has not been introduced in this region yet. Be the first!",
+      "cta": {
+        "label": "Be the first",
+        "href": "#boglanish"
+      },
+      "note": "This list has no market data for the region."
+    },
+    "strings": {
+      "country": "Uzbekistan",
+      "eyebrow": "RAQAMLI BOZOR",
+      "eyebrowRegions": "REGIONS",
+      "eyebrowMarkets": "REGION MARKETS",
+      "metricRegions": "Regions",
+      "metricPlaces": "Cities / districts",
+      "metricMarkets": "Markets",
+      "tabMarkets": "Markets",
+      "tabPlaces": "Cities and districts",
+      "allMarkets": "All markets",
+      "cities": "Cities",
+      "districts": "Districts",
+      "city": "City",
+      "district": "District",
+      "citySuffix": "City",
+      "districtSuffix": "District",
+      "noData": "No data in the list for this region.",
+      "notListed": "not added yet",
+      "marketsCount": "{n} markets",
+      "boundariesNote": "Boundaries are based on 2020 data. Districts created later are not shown separately.",
+      "allRegions": "All regions",
+      "legendTitle": "1 dot = 1 market",
+      "legendNote": "Locations are approximate",
+      "zoomIn": "Zoom in",
+      "zoomOut": "Zoom out",
+      "resetView": "Reset view",
+      "reset": "Reset",
+      "mapControls": "Map controls",
+      "mapLabel": "Interactive market map of Uzbekistan",
+      "mapTitle": "Uzbekistan: regions, cities and markets",
+      "mapSummary": "{n} markets. Dots are placed approximately. Select a region to open its cities and districts. Drag the map or change the zoom.",
+      "panelLabel": "Side panel of region markets",
+      "regionsNav": "Regions",
+      "regionInfo": "Region information",
+      "tipClose": "Close the information window",
+      "tipInfo": "market information",
+      "approximate": "approximate location",
+      "tipTotal": "Markets (with branches)",
+      "tipRegionTotal": "Region total",
+      "tipFarmers": "Farmers markets",
+      "tipGoods": "Goods markets",
+      "tipVehicle": "Car markets",
+      "tipMarketNote": "The dot is approximate: no exact address given.",
+      "tipDistrictNote": "The number of markets is given per region. There is no breakdown by district or city.",
+      "tipBranches": "{n} branches are included in the total.",
+      "hintMarket": "Click a dot to open its details.",
+      "hintDistrict": "Click to select.",
+      "hintRegion": "Click a region to see its cities and markets."
+    }
+  },
+  "news": {
+    "label": "News",
+    "pill": "News",
+    "title": "Latest news",
+    "listTitle": "News",
+    "listDescription": "Raqamli Bozor news: system updates, new features and rollout experience.",
+    "viewAll": "All news",
+    "readMore": "Read more",
+    "back": "All news",
+    "more": "More news",
+    "empty": "No news yet.",
+    "prev": "Previous",
+    "next": "Next",
+    "pageOf": "{current} / {total}"
+  },
+  "faq": {
+    "pill": "FAQ",
+    "title": "Questions and Answers",
+    "items": [
+      {
+        "question": "Who is the system designed for?",
+        "answer": "Raqamli Bozor is designed for market management, inspectors and staff who keep rental records."
+      },
+      {
+        "question": "Can it work with existing cameras?",
+        "answer": "Compatibility with existing cameras is checked during the demo. Required connections and equipment are agreed with you."
+      },
+      {
+        "question": "How much does implementation cost?",
+        "answer": "The price depends on the features, equipment and amount of work required. During the demo we define your needs and agree on the price."
+      },
+      {
+        "question": "How long does it take to launch the system?",
+        "answer": "The timeline depends on the required connections and scope of work. During the demo we draw up a rollout plan and agree on the timeline with you."
+      }
+    ]
+  },
+  "contact": {
+    "title": "Let’s choose the right solution for your market together",
+    "image": "cta-market",
+    "form": {
+      "label": "Your phone number",
+      "placeholder": "+998 __ ___ __ __",
+      "submit": "Request a call",
+      "sending": "Sending…",
+      "success": "Thank you! Your request has been received.",
+      "invalid": "Enter the full phone number: +998 XX XXX XX XX",
+      "networkError": "Could not send. Please try again a little later."
+    },
+    "sent": {
+      "title": "Your request has been received",
+      "text": "Thank you! Our specialists will contact you within 10 business days.",
+      "note": "During that time we will prepare a solution for your market and explain the rollout stages in detail.",
+      "close": "Great"
+    }
+  },
+  "footer": {
+    "brand": "Raqamli bozor",
+    "columns": [
+      {
+        "links": [
+          {
+            "label": "Public offer",
+            "href": "/oferta/"
+          },
+          {
+            "label": "Privacy policy",
+            "href": "/maxfiylik/"
+          }
+        ]
+      },
+      {
+        "links": [
+          {
+            "label": "Raqamli Bozor certificate",
+            "href": ""
+          },
+          {
+            "label": "Licence",
+            "href": ""
+          }
+        ]
+      }
+    ],
+    "copyright": "© Raqamli Bozor {year}. All rights reserved.",
+    "madeBy": {
+      "label": "Made by RealSoft",
+      "href": "https://realsoft.uz"
+    }
+  },
+  "a11y": {
+    "skipToContent": "Skip to main content",
+    "mainMenu": "Main menu",
+    "menuOpen": "Open menu",
+    "menuClose": "Close menu",
+    "sliderPause": "Pause headline rotation",
+    "sliderPlay": "Resume headline rotation",
+    "globeLabel": "Globe — markets that run on Raqamli Bozor"
+  },
+  "legal": {
+    "updatedLabel": "Last updated",
+    "oferta": {
+      "title": "Public offer",
+      "description": "Terms of use of Raqamli Bozor services.",
+      "updated": "2026-10-09",
+      "sections": [
+        {
+          "heading": "1. General provisions",
+          "paragraphs": [
+            "This document sets out the terms on which RealSoft (hereinafter the “Contractor”) provides the Raqamli Bozor system services.",
+            "The Customer is deemed to have accepted these terms when submitting a demo request or starting to use the service."
+          ]
+        },
+        {
+          "heading": "2. Subject of the service",
+          "paragraphs": [
+            "Raqamli Bozor is a digital market management system: stall occupancy, payment control, rent records, parking and camera analytics, and reports.",
+            "The exact scope, term and price of the service are set out in a separate contract or appendix between the parties."
+          ]
+        },
+        {
+          "heading": "3. Demo and rollout",
+          "paragraphs": [
+            "The demo is free of charge and creates no obligation. During rollout, the compatibility of existing equipment (including cameras) with the system is checked."
+          ]
+        },
+        {
+          "heading": "4. Obligations of the parties",
+          "paragraphs": [
+            "The Contractor provides the service in the agreed scope and quality and ensures the confidentiality of data.",
+            "The Customer provides accurate information, does not pass access rights to third parties and makes the agreed payments on time."
+          ]
+        },
+        {
+          "heading": "5. Liability",
+          "paragraphs": [
+            "The parties are liable for failure to perform their obligations in accordance with the legislation of the Republic of Uzbekistan. The Contractor is not liable for interruptions in third-party services."
+          ]
+        },
+        {
+          "heading": "6. Final provisions",
+          "paragraphs": [
+            "The Contractor reserves the right to change these terms; a new version takes effect once published on the website. Disputes are resolved by negotiation and, failing agreement, in the manner prescribed by law.",
+            "For questions: realsoft.uz."
+          ]
+        }
+      ]
+    },
+    "maxfiylik": {
+      "title": "Privacy policy",
+      "description": "How personal data is collected and protected on the Raqamli Bozor website.",
+      "updated": "2026-10-09",
+      "sections": [
+        {
+          "heading": "1. What data is collected",
+          "paragraphs": [
+            "The phone number you enter in the contact form is stored, along with the page the request was sent from and the time. No other personal data is requested."
+          ]
+        },
+        {
+          "heading": "2. What it is used for",
+          "paragraphs": ["The data is used only to contact you, provide a demo and advise you about the service."]
+        },
+        {
+          "heading": "3. Storage and protection",
+          "paragraphs": [
+            "Phone numbers are stored in a closed system and can be seen only by authorised staff. The data is not placed in public repositories and is not sold or passed to third parties, except as provided by law.",
+            "To protect against spam, the IP address may be used temporarily for rate limiting."
+          ]
+        },
+        {
+          "heading": "4. Cookies and analytics",
+          "paragraphs": ["The site does not use advertising cookies that are not necessary for its basic operation."]
+        },
+        {
+          "heading": "5. Your rights",
+          "paragraphs": [
+            "You have the right to obtain information about your data and to ask for it to be corrected or deleted. To do so, contact us via realsoft.uz."
+          ]
+        },
+        {
+          "heading": "6. Changes",
+          "paragraphs": ["If the policy is updated, the new version is published on this page and the date is updated."]
+        }
+      ]
+    }
+  },
+  "notFound": {
+    "title": "Page not found",
+    "text": "The page you are looking for does not exist or has been moved.",
+    "back": "Back to the home page"
+  }
+}

@@ -237,6 +237,27 @@ const tabs: Tab[] = [
     text('sliderPlay', 'Resume headline rotation'),
     text('globeLabel', 'Globe image description'),
   ]),
+  tab('legal', 'Legal pages', [
+    text('updatedLabel', '“Last updated” label'),
+    ...(['oferta', 'maxfiylik'] as const).map((key) =>
+      group(key, key === 'oferta' ? 'Public offer (/oferta/)' : 'Privacy policy (/maxfiylik/)', [
+        text('title', 'Title'),
+        textarea('description', 'Short description'),
+        text('updated', 'Last updated date', {
+          admin: { description: 'Shown at the end of the page, e.g. 2026-10-09.' },
+        }),
+        array(
+          'sections',
+          'Sections',
+          [
+            text('heading', 'Heading'),
+            array('paragraphs', 'Paragraphs', [textarea('value', 'Paragraph')], { minRows: 1 }),
+          ],
+          { minRows: 1 },
+        ),
+      ]),
+    ),
+  ]),
   tab('notFound', '404 page', [text('title', 'Title'), text('text', 'Text'), text('back', 'Back-home link')]),
 ];
 

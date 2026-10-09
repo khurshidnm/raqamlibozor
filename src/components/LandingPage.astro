@@ -55,7 +55,7 @@ const jsonLd = buildJsonLd({ settings, landing, pageUrl: new URL(path, site).hre
   jsonLd={jsonLd}
   preloads={heroPreloads(heroData)}
   path={path}
-  rss={landing.id === settings.defaultLocale ? '/news/rss.xml' : undefined}
+  rss={localePath(landing.id, settings.defaultLocale) + 'news/rss.xml'}
 >
   <div class="page" id="page">
     <Nav landing={landing} siteName={settings.siteName} home={path} defaultLocale={settings.defaultLocale} />

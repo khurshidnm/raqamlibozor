@@ -3,7 +3,8 @@ import '../styles/nav.css';
 import logo from '../assets/ui/logo.svg';
 import Icon from './Icon.astro';
 import type { Landing } from '../lib/content';
-import { localizeHref } from '../lib/locale';
+import { getLandingEntries } from '../lib/content';
+import { localizeHref, switchLocalePath } from '../lib/locale';
 
 interface Props {
   landing: Landing;
@@ -19,6 +20,19 @@ const current = Astro.url.pathname.endsWith('/') ? Astro.url.pathname : `${Astro
 const isHome = current === home;
 const resolve = (href: string) =>
   href.startsWith('#') && !isHome ? `${home}${href}` : localizeHref(href, landing.id, defaultLocale);
+const entries = await getLandingEntries();
+const codes = entries.map((entry) => entry.id);
+const languages = entries
+  .map((entry) => ({
+    code: entry.id,
+    short: entry.id.charAt(0).toUpperCase() + entry.id.slice(1),
+    name: entry.data.language,
+    lang: entry.data.lang,
+    href: switchLocalePath(current, entry.id, codes, defaultLocale),
+    active: entry.id === landing.id,
+  }))
+  .sort((a, b) => Number(b.code === defaultLocale) - Number(a.code === defaultLocale) || a.code.localeCompare(b.code));
+const active = languages.find((l) => l.active);
 ---
 
 <header class="nav" id="nav">
@@ -37,6 +51,31 @@ const resolve = (href: string) =>
         </a>
       ))}
     </nav>
+
+    {languages.length > 1 && active && (
+      <div class="lang">
+        <button
+          class="lang__btn"
+          type="button"
+          aria-haspopup="true"
+          aria-expanded="false"
+          aria-label={`${active.name}`}
+        >
+          <Icon name="globe" />
+          <span>{active.short}</span>
+        </button>
+        <ul class="lang__list">
+          {languages.map((l) => (
+            <li>
+              <a href={l.href} hreflang={l.lang} lang={l.lang} aria-current={l.active ? 'true' : undefined}>
+                <span class="lang__code">{l.short}</span>
+                <span>{l.name}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    )}
 
     <a class="nav__cta" href={resolve(nav.cta.href || '#boglanish')}>
       <span class="nav__cta-in">
@@ -68,6 +107,15 @@ const resolve = (href: string) =>
       {nav.links.map((link) => (
         <a href={resolve(link.href)}>{link.label}</a>
       ))}
+      {languages.length > 1 && (
+        <div class="nav__panel-lang">
+          {languages.map((l) => (
+            <a href={l.href} hreflang={l.lang} lang={l.lang} aria-current={l.active ? 'true' : undefined}>
+              {l.name}
+            </a>
+          ))}
+        </div>
+      )}
     </nav>
   </div>
 </header>

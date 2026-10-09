@@ -94,6 +94,13 @@ export const mapSchema = z.object({
 });
 export type MapContent = z.infer<typeof mapSchema>;
 
+const legalDocSchema = z.object({
+  title: z.string().min(1),
+  description: z.string().min(1),
+  updated: z.string().min(1),
+  sections: z.array(z.object({ heading: z.string().min(1), paragraphs: z.array(z.string().min(1)).min(1) })).min(1),
+});
+
 export function landingSchema<M extends z.ZodType>(media: M) {
   return z.object({
     language: z.string().min(1),
@@ -224,6 +231,12 @@ export function landingSchema<M extends z.ZodType>(media: M) {
     }),
 
     notFound: z.object({ title: z.string().min(1), text: z.string().min(1), back: z.string().min(1) }),
+
+    legal: z.object({
+      updatedLabel: z.string().min(1),
+      oferta: legalDocSchema,
+      maxfiylik: legalDocSchema,
+    }),
   });
 }
 

@@ -118,9 +118,13 @@ The "Bozorlar" menu item and the globe section's button open an interactive map 
 - **Text and names**: the page title, intro, every label of the map and the region names are in **Landing pages → Markets map page**, so they can be translated per language like the rest of the copy. Market names are shown as entered.
 - The outlines (`src/components/map/shapes.ts`, `districts.ts`) are 2020 UN OCHA / geoBoundaries data and are not editable in the CMS.
 
+### Languages
+
+The site ships in **Oʻzbek (default, `/`)**, **Русский (`/ru/`)** and **English (`/en/`)**. Each language is one Landing document (files `src/content/landing/{uz,ru,en}.json`) covering the whole page: SEO, navigation, hero, sections, map, news, FAQ, contact, footer, 404 and the **Legal pages** tab (offer and privacy policy). News posts carry a `locale` and are written per language. The nav has a language switcher; news posts have different slugs per language, so switching from a post opens the news list of the other language. Market and district names are shown as entered (Uzbek). The 404 page is shared by all languages. The legal texts are drafts: have a lawyer review them.
+
 ### Adding a language
 
-1. In the CMS create a new Landing document with locale `ru` (duplicate the `uz` one and translate).
+1. In the CMS create a new Landing document with a new locale code (duplicate an existing one and translate, including the Legal pages tab).
 2. `npm run content:pull`, rebuild. The page is served at `/ru/`, `hreflang` links and the sitemap update automatically. The default locale (from Site settings) stays at `/`.
 
 Locale routing is implemented in `src/pages/[locale]/index.astro` and `src/lib/content.ts` instead of Astro's `i18n` option.

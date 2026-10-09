@@ -60,7 +60,7 @@ const jsonLd = buildNewsArticleJsonLd({
   publishedTime={post.data.publishedAt.toISOString()}
   jsonLd={jsonLd}
   path={path}
-  rss={landing.id === settings.defaultLocale ? '/news/rss.xml' : undefined}
+  rss={localePath(landing.id, settings.defaultLocale) + 'news/rss.xml'}
 >
   <div class="page">
     <Nav landing={landing} siteName={settings.siteName} home={home} defaultLocale={settings.defaultLocale} />

@@ -18,11 +18,7 @@ const emptyStrings = new Set(['href', 'alt', 'demoEndpoint', 'note']);
 /** Drops CMS bookkeeping, resolves media relations to ids and unwraps string lists. */
 function toSite(value: unknown, key = ''): unknown {
   if (Array.isArray(value)) {
-    if (
-      key === 'items' &&
-      value.length &&
-      value.every((v) => v && typeof v === 'object' && Object.keys(v).join() === 'value,id')
-    ) {
+    if (value.length && value.every((v) => v && typeof v === 'object' && Object.keys(v).sort().join() === 'id,value')) {
       return value.map((v) => (v as { value: string }).value);
     }
     return value.map((v) => toSite(v));

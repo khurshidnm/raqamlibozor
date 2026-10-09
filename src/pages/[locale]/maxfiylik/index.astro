@@ -1,0 +1,22 @@
+---
+import LegalPage from '../../../components/LegalPage.astro';
+import type { Landing, Settings } from '../../../lib/content';
+import { getLandingEntries, getSettings } from '../../../lib/content';
+
+export async function getStaticPaths() {
+  const settings = await getSettings();
+  const entries = await getLandingEntries();
+  return entries
+    .filter((entry) => entry.id !== settings.defaultLocale)
+    .map((entry) => ({ params: { locale: entry.id }, props: { landing: entry, settings } }));
+}
+
+interface Props {
+  landing: Landing;
+  settings: Settings;
+}
+
+const { landing, settings } = Astro.props;
+---
+
+<LegalPage landing={landing} settings={settings} slug="maxfiylik" />

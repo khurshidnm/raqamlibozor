@@ -37,7 +37,7 @@ const alternates =
         path: newsPath(entry.id, settings.defaultLocale),
       }))
     : [{ hreflang: landing.data.lang, path }];
-const rss = landing.id === settings.defaultLocale ? '/news/rss.xml' : undefined;
+const rss = localePath(landing.id, settings.defaultLocale) + 'news/rss.xml';
 ---
 
 <Base

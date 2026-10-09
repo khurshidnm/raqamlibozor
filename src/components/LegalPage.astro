@@ -5,18 +5,22 @@ import Base from '../layouts/Base.astro';
 import Nav from './Nav.astro';
 import Footer from './Footer.astro';
 import type { Landing, Settings } from '../lib/content';
-import { getMedia, localePath } from '../lib/content';
-import type { LegalDoc } from '../lib/legal';
+import { getLandingEntries, getMedia, localePath } from '../lib/content';
 
 interface Props {
   landing: Landing;
   settings: Settings;
-  doc: LegalDoc;
+  slug: 'oferta' | 'maxfiylik';
 }
 
-const { landing, settings, doc } = Astro.props;
+const { landing, settings, slug } = Astro.props;
+const doc = landing.data.legal[slug];
 const home = localePath(landing.id, settings.defaultLocale);
-const path = `/${doc.slug}/`;
+const path = `${localePath(landing.id, settings.defaultLocale)}${slug}/`;
+const alternates = (await getLandingEntries()).map((entry) => ({
+  hreflang: entry.data.lang,
+  path: `${localePath(entry.id, settings.defaultLocale)}${slug}/`,
+}));
 const site = Astro.site ?? new URL(settings.siteUrl);
 const og = await getMedia(settings.socialImage);
 const ogImage = await getImage({ src: og.image, width: 1200, height: 630, fit: 'cover', format: 'jpeg', quality: 82 });
@@ -25,7 +29,8 @@ const ogImage = await getImage({ src: og.image, width: 1200, height: 630, fit: '
 <Base
   settings={settings}
   landing={landing}
-  alternates={[{ hreflang: landing.data.lang, path }]}
+  alternates={alternates}
+  xDefault={`${localePath(settings.defaultLocale, settings.defaultLocale)}${slug}/`}
   title={`${doc.title} — ${settings.siteName}`}
   description={doc.description}
   ogImage={{ url: new URL(ogImage.src, site).href, width: 1200, height: 630, alt: og.alt || settings.siteName }}
@@ -49,7 +54,9 @@ const ogImage = await getImage({ src: og.image, width: 1200, height: 630, fit: '
             </>
           ))}
           <p>
-            <em>Oxirgi yangilanish: {doc.updated}</em>
+            <em>
+              {landing.data.legal.updatedLabel}: {doc.updated}
+            </em>
           </p>
         </div>
       </main>

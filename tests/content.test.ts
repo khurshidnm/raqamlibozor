@@ -160,3 +160,33 @@ describe.each(newsFiles)('news/%s', (file) => {
     });
   }
 });
+
+describe('locale parity', () => {
+  /** Key paths with array indices collapsed, so only the structure is compared. */
+  const shape = (value: unknown, prefix = ''): string[] => {
+    if (Array.isArray(value)) return value.flatMap((v) => shape(v, `${prefix}[]`));
+    if (value && typeof value === 'object') {
+      return Object.entries(value).flatMap(([k, v]) => shape(v, `${prefix}.${k}`));
+    }
+    return [prefix];
+  };
+  const base = readJson<Record<string, unknown>>('src/content/landing/uz.json');
+  const others = landingFiles.filter((f) => f !== 'uz.json');
+  it('ships uz, ru and en', () => {
+    expect(landingFiles.sort()).toEqual(['en.json', 'ru.json', 'uz.json']);
+  });
+  it.each(others)('%s has the same structure as uz.json', (file) => {
+    const other = readJson<Record<string, unknown>>(`src/content/landing/${file}`);
+    expect([...new Set(shape(other))].sort()).toEqual([...new Set(shape(base))].sort());
+    expect(JSON.stringify(other.hero).match(/"title"/g)?.length).toBe(
+      JSON.stringify(base.hero).match(/"title"/g)?.length,
+    );
+  });
+  it('has news in every language', () => {
+    const locales = newsFiles.map((f) => {
+      const { data } = splitFrontMatter(readFileSync(join(root, 'src/content/news', f), 'utf8'));
+      return (data as { locale: string }).locale;
+    });
+    for (const l of ['uz', 'ru', 'en']) expect(locales).toContain(l);
+  });
+});

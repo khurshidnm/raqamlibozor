@@ -40,6 +40,25 @@ export function initNav(): void {
     { passive: true },
   );
 
+  const lang = $('.lang', nav);
+  const langButton = $<HTMLButtonElement>('.lang__btn', nav);
+  if (lang && langButton) {
+    const setLang = (next: boolean): void => {
+      lang.classList.toggle('is-open', next);
+      langButton.setAttribute('aria-expanded', String(next));
+    };
+    langButton.addEventListener('click', () => setLang(!lang.classList.contains('is-open')));
+    document.addEventListener('click', (e) => {
+      if (!lang.contains(e.target as Node)) setLang(false);
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && lang.classList.contains('is-open')) {
+        setLang(false);
+        langButton.focus();
+      }
+    });
+  }
+
   if (!button || !panel) return;
   button.addEventListener('click', () => setOpen(!open));
   panel.addEventListener('click', (e) => {

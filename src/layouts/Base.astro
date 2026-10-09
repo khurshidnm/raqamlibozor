@@ -107,17 +107,39 @@ const a11y = landing.data.a11y;
       <script type="application/ld+json" set:html={JSON.stringify(item).replaceAll('<', '\\u003c')} />
     ))}
   </head>
-  <body>
+  <body data-gtm={settings.gtmId || undefined} data-ym={settings.yandexMetrikaId || undefined}>
+    {settings.gtmId && (
+      <noscript>
+        <iframe
+          src={`https://www.googletagmanager.com/ns.html?id=${settings.gtmId}`}
+          height="0"
+          width="0"
+          style="display:none;visibility:hidden"
+          title="Google Tag Manager"
+        />
+      </noscript>
+    )}
     <Loader label={settings.siteName} />
     <a class="skip-link" href="#main">
       {a11y.skipToContent}
     </a>
     <slot />
+    {settings.yandexMetrikaId && (
+      <noscript>
+        <img
+          src={`https://mc.yandex.ru/watch/${settings.yandexMetrikaId}`}
+          style="position:absolute;left:-9999px"
+          alt=""
+        />
+      </noscript>
+    )}
     <script>
+      import { initAnalytics } from '../scripts/analytics';
       import { initPageZoom } from '../scripts/page-zoom';
       import { initAppear } from '../scripts/appear';
       import { initLoader } from '../scripts/loader';
       initPageZoom();
+      initAnalytics();
       /* Reveal animations start once the loader is gone, so they are not wasted behind it. */
       void initLoader().then(initAppear);
     </script>

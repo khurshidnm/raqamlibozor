@@ -118,6 +118,10 @@ The "Bozorlar" menu item and the globe section's button open an interactive map 
 - **Text and names**: the page title, intro, every label of the map and the region names are in **Landing pages → Markets map page**, so they can be translated per language like the rest of the copy. Market names are shown as entered.
 - The outlines (`src/components/map/shapes.ts`, `districts.ts`) are 2020 UN OCHA / geoBoundaries data and are not editable in the CMS.
 
+### Analytics (Google Tag Manager, Yandex Metrika)
+
+In the CMS open **Site settings** and fill **Google Tag Manager ID** (`GTM-XXXXXXX`) and/or **Yandex Metrika counter ID** (digits), then `npm run content:pull` and rebuild. Empty means disabled. The loader is `src/scripts/analytics.ts` (no inline scripts), and the build adds only the needed hosts to the Content-Security-Policy in `_headers`. If GTM tags load other domains or use Custom HTML tags, extend the policy in `src/integrations/build-extras.ts`. Yandex Webvisor is off by default.
+
 ### Languages
 
 The site ships in **Oʻzbek (default, `/`)**, **Русский (`/ru/`)** and **English (`/en/`)**. Each language is one Landing document (files `src/content/landing/{uz,ru,en}.json`) covering the whole page: SEO, navigation, hero, sections, map, news, FAQ, contact, footer, 404 and the **Legal pages** tab (offer and privacy policy). News posts carry a `locale` and are written per language. The nav has a language switcher; news posts have different slugs per language, so switching from a post opens the news list of the other language. Market and district names are shown as entered (Uzbek). The 404 page is shared by all languages. The legal texts are drafts: have a lawyer review them.

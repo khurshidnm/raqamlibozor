@@ -25,6 +25,16 @@ export const Settings: GlobalConfig = {
           'HTTPS URL accepting POST {"phone": "+998901234567"}. Point it at this CMS: https://<cms-host>/api/lead. Empty keeps the form in demo mode.',
       },
     }),
+    optionalText('gtmId', 'Google Tag Manager ID', {
+      admin: { description: 'Container ID like GTM-ABC1234. Empty disables Google Tag Manager.' },
+      validate: (value: string | null | undefined) =>
+        !value || /^GTM-[A-Z0-9]+$/.test(value) || 'Use the format GTM-XXXXXXX',
+    }),
+    optionalText('yandexMetrikaId', 'Yandex Metrika counter ID', {
+      admin: { description: 'Numeric counter number, e.g. 12345678. Empty disables Yandex Metrika.' },
+      validate: (value: string | null | undefined) =>
+        !value || /^\d{5,12}$/.test(value) || 'Use the numeric counter ID',
+    }),
     group('organization', 'Organisation (structured data)', [text('name', 'Name'), text('url', 'Website')]),
     media('socialImage', 'Default social share image'),
     num('globeFrames', 'Globe frame count', {

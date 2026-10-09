@@ -13,7 +13,7 @@ import { contentRoot, mediaKeys } from './shared';
 const content = path.join(contentRoot, 'src/content');
 const assets = path.join(contentRoot, 'src/assets/media');
 const mediaDir = path.resolve(path.dirname(new URL(import.meta.url).pathname), '../media');
-const emptyStrings = new Set(['href', 'alt', 'demoEndpoint', 'note']);
+const emptyStrings = new Set(['href', 'alt', 'demoEndpoint', 'gtmId', 'yandexMetrikaId', 'note']);
 
 /** Drops CMS bookkeeping, resolves media relations to ids and unwraps string lists. */
 function toSite(value: unknown, key = ''): unknown {

@@ -247,6 +247,16 @@ export function settingsSchema<M extends z.ZodType>(media: M) {
     defaultLocale: z.string().min(2),
     themeColor: z.string().regex(/^#[0-9a-f]{6}$/i),
     demoEndpoint: z.string().nullable().default(''),
+    gtmId: z
+      .string()
+      .regex(/^(GTM-[A-Z0-9]+)?$/)
+      .nullable()
+      .default(''),
+    yandexMetrikaId: z
+      .string()
+      .regex(/^(\d{5,12})?$/)
+      .nullable()
+      .default(''),
     organization: z.object({ name: z.string().min(1), url: z.url() }),
     socialImage: media,
     globeFrames: z.number().int().min(1).max(999).default(80),

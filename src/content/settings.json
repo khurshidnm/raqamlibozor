@@ -4,6 +4,8 @@
   "defaultLocale": "uz",
   "themeColor": "#178f20",
   "demoEndpoint": "",
+  "gtmId": "",
+  "yandexMetrikaId": "",
   "organization": {
     "name": "RealSoft",
     "url": "https://realsoft.uz"

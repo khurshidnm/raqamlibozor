@@ -14,14 +14,25 @@ const isAstroIslandRuntime = (script: string): boolean =>
   /dispatchEvent\(new Event\(["'`]astro:load["'`]\)\)/.test(script);
 
 /** Netlify / Cloudflare Pages `_headers`; other hosts can copy the values into their config. */
-function headersFile(scriptHashes: string[]): string {
+function headersFile(scriptHashes: string[], tags: { gtm: boolean; ym: boolean }): string {
+  const scriptHosts = [
+    ...(tags.gtm ? ['https://www.googletagmanager.com', 'https://www.google-analytics.com'] : []),
+    ...(tags.ym ? ['https://mc.yandex.ru', 'https://yastatic.net'] : []),
+  ];
+  const imgHosts = [
+    ...(tags.gtm
+      ? ['https://www.googletagmanager.com', 'https://www.google-analytics.com', 'https://*.google-analytics.com']
+      : []),
+    ...(tags.ym ? ['https://mc.yandex.ru', 'https://mc.yandex.com'] : []),
+  ];
   const csp = [
     "default-src 'self'",
-    `script-src 'self' ${scriptHashes.map((h) => `'sha256-${h}'`).join(' ')}`,
+    `script-src 'self' ${[...scriptHashes.map((h) => `'sha256-${h}'`), ...scriptHosts].join(' ')}`,
     "style-src 'self' 'unsafe-inline'",
-    "img-src 'self' data:",
+    `img-src 'self' data: ${imgHosts.join(' ')}`.trim(),
     "font-src 'self'",
     "connect-src 'self' https:",
+    ...(tags.gtm ? ['frame-src https://www.googletagmanager.com'] : []),
     "form-action 'self'",
     "frame-ancestors 'none'",
     "base-uri 'self'",
@@ -95,13 +106,16 @@ export function buildExtras(): AstroIntegration {
             );
           }
         }
-        writeFileSync(join(out, '_headers'), headersFile([...inline].map(sha256)));
+        const settings = JSON.parse(
+          readFileSync(fileURLToPath(new URL('../content/settings.json', import.meta.url)), 'utf8'),
+        ) as LaunchSettings & { gtmId?: string | null; yandexMetrikaId?: string | null };
+        writeFileSync(
+          join(out, '_headers'),
+          headersFile([...inline].map(sha256), { gtm: Boolean(settings.gtmId), ym: Boolean(settings.yandexMetrikaId) }),
+        );
         logger.info(`_headers written with ${inline.size} inline script hash(es)`);
 
         /* Release checks: warn locally, fail the build for production deploys that set STRICT_BUILD=true. */
-        const settings = JSON.parse(
-          readFileSync(fileURLToPath(new URL('../content/settings.json', import.meta.url)), 'utf8'),
-        ) as LaunchSettings;
         const issues = launchIssues(process.env, settings);
         for (const issue of issues) logger.warn(issue);
         if (issues.length && process.env.STRICT_BUILD === 'true') {

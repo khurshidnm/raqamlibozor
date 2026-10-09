@@ -1,0 +1,10 @@
+---
+import LegalPage from '../../components/LegalPage.astro';
+import { getLanding, getSettings } from '../../lib/content';
+import { legalDocs } from '../../lib/legal';
+
+const settings = await getSettings();
+const landing = await getLanding(settings.defaultLocale);
+---
+
+<LegalPage landing={landing} settings={settings} doc={legalDocs.oferta} />

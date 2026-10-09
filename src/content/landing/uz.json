@@ -540,15 +540,11 @@
         "links": [
           {
             "label": "Ommaviy oferta",
-            "href": ""
-          },
-          {
-            "label": "RealSoft rezidenti",
-            "href": "https://realsoft.uz"
+            "href": "/oferta/"
           },
           {
             "label": "Maxfiylik siyosati",
-            "href": ""
+            "href": "/maxfiylik/"
           }
         ]
       },

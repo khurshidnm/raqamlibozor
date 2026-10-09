@@ -1,0 +1,59 @@
+---
+import '../styles/news.css';
+import { getImage } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import Nav from './Nav.astro';
+import Footer from './Footer.astro';
+import type { Landing, Settings } from '../lib/content';
+import { getMedia, localePath } from '../lib/content';
+import type { LegalDoc } from '../lib/legal';
+
+interface Props {
+  landing: Landing;
+  settings: Settings;
+  doc: LegalDoc;
+}
+
+const { landing, settings, doc } = Astro.props;
+const home = localePath(landing.id, settings.defaultLocale);
+const path = `/${doc.slug}/`;
+const site = Astro.site ?? new URL(settings.siteUrl);
+const og = await getMedia(settings.socialImage);
+const ogImage = await getImage({ src: og.image, width: 1200, height: 630, fit: 'cover', format: 'jpeg', quality: 82 });
+---
+
+<Base
+  settings={settings}
+  landing={landing}
+  alternates={[{ hreflang: landing.data.lang, path }]}
+  title={`${doc.title} — ${settings.siteName}`}
+  description={doc.description}
+  ogImage={{ url: new URL(ogImage.src, site).href, width: 1200, height: 630, alt: og.alt || settings.siteName }}
+  path={path}
+>
+  <div class="page">
+    <Nav landing={landing} siteName={settings.siteName} home={home} defaultLocale={settings.defaultLocale} />
+    <div class="shell">
+      <main class="main post" id="main">
+        <header class="post__head">
+          <h1 class="post__title">{doc.title}</h1>
+          <p class="post__lead">{doc.description}</p>
+        </header>
+        <div class="prose">
+          {doc.sections.map((s) => (
+            <>
+              <h2>{s.heading}</h2>
+              {s.paragraphs.map((p) => (
+                <p>{p}</p>
+              ))}
+            </>
+          ))}
+          <p>
+            <em>Oxirgi yangilanish: {doc.updated}</em>
+          </p>
+        </div>
+      </main>
+      <Footer landing={landing} defaultLocale={settings.defaultLocale} />
+    </div>
+  </div>
+</Base>
